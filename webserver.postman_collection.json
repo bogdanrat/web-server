@@ -1,0 +1,140 @@
+{
+	"info": {
+		"_postman_id": "cf12ffee-67da-4a53-8dd2-a4862355fd29",
+		"name": "webserver",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "get users",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{jwt}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "localhost:3000/api/users",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "sign up",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"Bogdan Rat\",\n    \"email\": \"bogdanalexandru.rat@gmail.com\",\n    \"password\": \"test\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:3000/sign-up",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"sign-up"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "login",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"email\": \"bogdanalexandru.rat@gmail.com\",\n    \"password\": \"test\",\n    \"qr_code\": \"053798\"   \n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:3000/login",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "logout",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{jwt}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "localhost:3000/logout",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"logout"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "refresh token",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"refresh_token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJFbWFpbCI6ImJvZ2RhbmFsZXhhbmRydS5yYXRAZ21haWwuY29tIiwiUmVmcmVzaFVVSUQiOiI1ZmQxN2JlYy1kNTJmLTQ0MWItYTYxNC1iMDU4ZmI4YmUzZjIiLCJleHAiOjE2MjE2MTE5NjEsImlzcyI6IkF1dGhTZXJ2aWNlIn0.4FsVrgD_FX024mN_HwCU5CXtVH8IeVQf_zv9mEsUtjs\"\n}\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:3000/token/refresh",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"token",
+						"refresh"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
