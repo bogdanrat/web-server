@@ -5,7 +5,7 @@ import (
 	"log"
 )
 
-func HandleSignUpMessages(message *redis.Message) {
+func HandleAuthServiceMessages(message *redis.Message) {
 	if message == nil {
 		return
 	}

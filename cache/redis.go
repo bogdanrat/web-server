@@ -1,6 +1,8 @@
 package cache
 
 import (
+	"fmt"
+	"github.com/bogdanrat/web-server/config"
 	"github.com/go-redis/redis/v7"
 	"log"
 	"time"
@@ -21,14 +23,14 @@ type RedisSubscription struct {
 	closeChan    chan bool
 }
 
-func NewRedis() (*Redis, error) {
+func NewRedis(config config.RedisConfig) (*Redis, error) {
 	if RedisClient != nil {
 		return RedisClient.(*Redis), nil
 	}
 
 	client := redis.NewClient(&redis.Options{
-		Addr:     address,
-		Password: "",
+		Addr:     fmt.Sprintf("%s:%s", config.Host, config.Port),
+		Password: config.Password,
 		DB:       0,
 	})
 

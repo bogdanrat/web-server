@@ -23,15 +23,23 @@ type DbConfig struct {
 	SslMode  string
 }
 
+type RedisConfig struct {
+	Host     string
+	Port     string
+	Password string
+}
+
 type AuthenticationConfig struct {
 	AccessTokenDuration  int // minutes
 	RefreshTokenDuration int //minutes
 	MFA                  bool
+	Channel              string
 }
 
 type Config struct {
 	Server         ServerConfig
 	DB             DbConfig
+	Redis          RedisConfig
 	Authentication AuthenticationConfig
 }
 

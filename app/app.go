@@ -23,7 +23,7 @@ func Init() error {
 	}
 	log.Println("Database connection established.")
 
-	redisCache, err := cache.NewRedis()
+	redisCache, err := cache.NewRedis(config.AppConfig.Redis)
 	if err != nil {
 		return fmt.Errorf("could not establish cache connection: %s", err.Error())
 	}
@@ -32,7 +32,7 @@ func Init() error {
 	handler.InitRepository(postgresDB)
 	handler.InitCache(redisCache)
 
-	redisCache.Subscribe("self", cache.HandleSignUpMessages, "signup")
+	redisCache.Subscribe("self", cache.HandleAuthServiceMessages, config.AppConfig.Authentication.Channel)
 
 	return nil
 }

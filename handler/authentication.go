@@ -79,7 +79,7 @@ func SignUp(c *gin.Context) {
 	}
 
 	if reflect.ValueOf(cacheClient).Elem().Type().AssignableTo(reflect.TypeOf(cache.Redis{})) {
-		cacheClient.(*cache.Redis).Publish("signup", user.Email)
+		cacheClient.(*cache.Redis).Publish(config.AppConfig.Authentication.Channel, user.Email)
 	}
 }
 
