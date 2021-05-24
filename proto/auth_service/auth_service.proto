@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+package auth_service;
+option go_package = "/;auth_service";
+
+service Auth {
+  rpc SignUp(SignUpRequest) returns (SignUpResponse);
+}
+
+message User {
+  string name = 1;
+  string email = 2;
+  string password = 3;
+}
+
+message SignUpRequest {
+  User user = 1;
+}
+
+message SignUpResponse {
+  string qrSecret = 1;
+}
