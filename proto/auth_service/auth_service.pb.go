@@ -24,18 +24,16 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-type User struct {
+type GenerateQRCodeRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Name     string `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
-	Email    string `protobuf:"bytes,2,opt,name=email,proto3" json:"email,omitempty"`
-	Password string `protobuf:"bytes,3,opt,name=password,proto3" json:"password,omitempty"`
+	Email string `protobuf:"bytes,1,opt,name=email,proto3" json:"email,omitempty"`
 }
 
-func (x *User) Reset() {
-	*x = User{}
+func (x *GenerateQRCodeRequest) Reset() {
+	*x = GenerateQRCodeRequest{}
 	if protoimpl.UnsafeEnabled {
 		mi := &file_auth_service_proto_msgTypes[0]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -43,13 +41,13 @@ func (x *User) Reset() {
 	}
 }
 
-func (x *User) String() string {
+func (x *GenerateQRCodeRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*User) ProtoMessage() {}
+func (*GenerateQRCodeRequest) ProtoMessage() {}
 
-func (x *User) ProtoReflect() protoreflect.Message {
+func (x *GenerateQRCodeRequest) ProtoReflect() protoreflect.Message {
 	mi := &file_auth_service_proto_msgTypes[0]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -61,42 +59,29 @@ func (x *User) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use User.ProtoReflect.Descriptor instead.
-func (*User) Descriptor() ([]byte, []int) {
+// Deprecated: Use GenerateQRCodeRequest.ProtoReflect.Descriptor instead.
+func (*GenerateQRCodeRequest) Descriptor() ([]byte, []int) {
 	return file_auth_service_proto_rawDescGZIP(), []int{0}
 }
 
-func (x *User) GetName() string {
-	if x != nil {
-		return x.Name
-	}
-	return ""
-}
-
-func (x *User) GetEmail() string {
+func (x *GenerateQRCodeRequest) GetEmail() string {
 	if x != nil {
 		return x.Email
 	}
 	return ""
 }
 
-func (x *User) GetPassword() string {
-	if x != nil {
-		return x.Password
-	}
-	return ""
-}
-
-type SignUpRequest struct {
+type GenerateQRCodeResponse struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	User *User `protobuf:"bytes,1,opt,name=user,proto3" json:"user,omitempty"`
+	Image  []byte `protobuf:"bytes,1,opt,name=image,proto3" json:"image,omitempty"`
+	Secret string `protobuf:"bytes,2,opt,name=secret,proto3" json:"secret,omitempty"`
 }
 
-func (x *SignUpRequest) Reset() {
-	*x = SignUpRequest{}
+func (x *GenerateQRCodeResponse) Reset() {
+	*x = GenerateQRCodeResponse{}
 	if protoimpl.UnsafeEnabled {
 		mi := &file_auth_service_proto_msgTypes[1]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -104,13 +89,13 @@ func (x *SignUpRequest) Reset() {
 	}
 }
 
-func (x *SignUpRequest) String() string {
+func (x *GenerateQRCodeResponse) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*SignUpRequest) ProtoMessage() {}
+func (*GenerateQRCodeResponse) ProtoMessage() {}
 
-func (x *SignUpRequest) ProtoReflect() protoreflect.Message {
+func (x *GenerateQRCodeResponse) ProtoReflect() protoreflect.Message {
 	mi := &file_auth_service_proto_msgTypes[1]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -122,61 +107,21 @@ func (x *SignUpRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use SignUpRequest.ProtoReflect.Descriptor instead.
-func (*SignUpRequest) Descriptor() ([]byte, []int) {
+// Deprecated: Use GenerateQRCodeResponse.ProtoReflect.Descriptor instead.
+func (*GenerateQRCodeResponse) Descriptor() ([]byte, []int) {
 	return file_auth_service_proto_rawDescGZIP(), []int{1}
 }
 
-func (x *SignUpRequest) GetUser() *User {
+func (x *GenerateQRCodeResponse) GetImage() []byte {
 	if x != nil {
-		return x.User
+		return x.Image
 	}
 	return nil
 }
 
-type SignUpResponse struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
-
-	QrSecret string `protobuf:"bytes,1,opt,name=qrSecret,proto3" json:"qrSecret,omitempty"`
-}
-
-func (x *SignUpResponse) Reset() {
-	*x = SignUpResponse{}
-	if protoimpl.UnsafeEnabled {
-		mi := &file_auth_service_proto_msgTypes[2]
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		ms.StoreMessageInfo(mi)
-	}
-}
-
-func (x *SignUpResponse) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*SignUpResponse) ProtoMessage() {}
-
-func (x *SignUpResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_auth_service_proto_msgTypes[2]
-	if protoimpl.UnsafeEnabled && x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use SignUpResponse.ProtoReflect.Descriptor instead.
-func (*SignUpResponse) Descriptor() ([]byte, []int) {
-	return file_auth_service_proto_rawDescGZIP(), []int{2}
-}
-
-func (x *SignUpResponse) GetQrSecret() string {
+func (x *GenerateQRCodeResponse) GetSecret() string {
 	if x != nil {
-		return x.QrSecret
+		return x.Secret
 	}
 	return ""
 }
@@ -186,24 +131,22 @@ var File_auth_service_proto protoreflect.FileDescriptor
 var file_auth_service_proto_rawDesc = []byte{
 	0x0a, 0x12, 0x61, 0x75, 0x74, 0x68, 0x5f, 0x73, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x2e, 0x70,
 	0x72, 0x6f, 0x74, 0x6f, 0x12, 0x0c, 0x61, 0x75, 0x74, 0x68, 0x5f, 0x73, 0x65, 0x72, 0x76, 0x69,
-	0x63, 0x65, 0x22, 0x4c, 0x0a, 0x04, 0x55, 0x73, 0x65, 0x72, 0x12, 0x12, 0x0a, 0x04, 0x6e, 0x61,
-	0x6d, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x04, 0x6e, 0x61, 0x6d, 0x65, 0x12, 0x14,
-	0x0a, 0x05, 0x65, 0x6d, 0x61, 0x69, 0x6c, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x05, 0x65,
-	0x6d, 0x61, 0x69, 0x6c, 0x12, 0x1a, 0x0a, 0x08, 0x70, 0x61, 0x73, 0x73, 0x77, 0x6f, 0x72, 0x64,
-	0x18, 0x03, 0x20, 0x01, 0x28, 0x09, 0x52, 0x08, 0x70, 0x61, 0x73, 0x73, 0x77, 0x6f, 0x72, 0x64,
-	0x22, 0x37, 0x0a, 0x0d, 0x53, 0x69, 0x67, 0x6e, 0x55, 0x70, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73,
-	0x74, 0x12, 0x26, 0x0a, 0x04, 0x75, 0x73, 0x65, 0x72, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0b, 0x32,
-	0x12, 0x2e, 0x61, 0x75, 0x74, 0x68, 0x5f, 0x73, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x2e, 0x55,
-	0x73, 0x65, 0x72, 0x52, 0x04, 0x75, 0x73, 0x65, 0x72, 0x22, 0x2c, 0x0a, 0x0e, 0x53, 0x69, 0x67,
-	0x6e, 0x55, 0x70, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x1a, 0x0a, 0x08, 0x71,
-	0x72, 0x53, 0x65, 0x63, 0x72, 0x65, 0x74, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x08, 0x71,
-	0x72, 0x53, 0x65, 0x63, 0x72, 0x65, 0x74, 0x32, 0x4b, 0x0a, 0x04, 0x41, 0x75, 0x74, 0x68, 0x12,
-	0x43, 0x0a, 0x06, 0x53, 0x69, 0x67, 0x6e, 0x55, 0x70, 0x12, 0x1b, 0x2e, 0x61, 0x75, 0x74, 0x68,
-	0x5f, 0x73, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x2e, 0x53, 0x69, 0x67, 0x6e, 0x55, 0x70, 0x52,
-	0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x1c, 0x2e, 0x61, 0x75, 0x74, 0x68, 0x5f, 0x73, 0x65,
-	0x72, 0x76, 0x69, 0x63, 0x65, 0x2e, 0x53, 0x69, 0x67, 0x6e, 0x55, 0x70, 0x52, 0x65, 0x73, 0x70,
-	0x6f, 0x6e, 0x73, 0x65, 0x42, 0x10, 0x5a, 0x0e, 0x2f, 0x3b, 0x61, 0x75, 0x74, 0x68, 0x5f, 0x73,
-	0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
+	0x63, 0x65, 0x22, 0x2d, 0x0a, 0x15, 0x47, 0x65, 0x6e, 0x65, 0x72, 0x61, 0x74, 0x65, 0x51, 0x52,
+	0x43, 0x6f, 0x64, 0x65, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x14, 0x0a, 0x05, 0x65,
+	0x6d, 0x61, 0x69, 0x6c, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x05, 0x65, 0x6d, 0x61, 0x69,
+	0x6c, 0x22, 0x46, 0x0a, 0x16, 0x47, 0x65, 0x6e, 0x65, 0x72, 0x61, 0x74, 0x65, 0x51, 0x52, 0x43,
+	0x6f, 0x64, 0x65, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x14, 0x0a, 0x05, 0x69,
+	0x6d, 0x61, 0x67, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0c, 0x52, 0x05, 0x69, 0x6d, 0x61, 0x67,
+	0x65, 0x12, 0x16, 0x0a, 0x06, 0x73, 0x65, 0x63, 0x72, 0x65, 0x74, 0x18, 0x02, 0x20, 0x01, 0x28,
+	0x09, 0x52, 0x06, 0x73, 0x65, 0x63, 0x72, 0x65, 0x74, 0x32, 0x63, 0x0a, 0x04, 0x41, 0x75, 0x74,
+	0x68, 0x12, 0x5b, 0x0a, 0x0e, 0x47, 0x65, 0x6e, 0x65, 0x72, 0x61, 0x74, 0x65, 0x51, 0x52, 0x43,
+	0x6f, 0x64, 0x65, 0x12, 0x23, 0x2e, 0x61, 0x75, 0x74, 0x68, 0x5f, 0x73, 0x65, 0x72, 0x76, 0x69,
+	0x63, 0x65, 0x2e, 0x47, 0x65, 0x6e, 0x65, 0x72, 0x61, 0x74, 0x65, 0x51, 0x52, 0x43, 0x6f, 0x64,
+	0x65, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x24, 0x2e, 0x61, 0x75, 0x74, 0x68, 0x5f,
+	0x73, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x2e, 0x47, 0x65, 0x6e, 0x65, 0x72, 0x61, 0x74, 0x65,
+	0x51, 0x52, 0x43, 0x6f, 0x64, 0x65, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x42, 0x10,
+	0x5a, 0x0e, 0x2f, 0x3b, 0x61, 0x75, 0x74, 0x68, 0x5f, 0x73, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65,
+	0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
@@ -218,21 +161,19 @@ func file_auth_service_proto_rawDescGZIP() []byte {
 	return file_auth_service_proto_rawDescData
 }
 
-var file_auth_service_proto_msgTypes = make([]protoimpl.MessageInfo, 3)
+var file_auth_service_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
 var file_auth_service_proto_goTypes = []interface{}{
-	(*User)(nil),           // 0: auth_service.User
-	(*SignUpRequest)(nil),  // 1: auth_service.SignUpRequest
-	(*SignUpResponse)(nil), // 2: auth_service.SignUpResponse
+	(*GenerateQRCodeRequest)(nil),  // 0: auth_service.GenerateQRCodeRequest
+	(*GenerateQRCodeResponse)(nil), // 1: auth_service.GenerateQRCodeResponse
 }
 var file_auth_service_proto_depIdxs = []int32{
-	0, // 0: auth_service.SignUpRequest.user:type_name -> auth_service.User
-	1, // 1: auth_service.Auth.SignUp:input_type -> auth_service.SignUpRequest
-	2, // 2: auth_service.Auth.SignUp:output_type -> auth_service.SignUpResponse
-	2, // [2:3] is the sub-list for method output_type
-	1, // [1:2] is the sub-list for method input_type
-	1, // [1:1] is the sub-list for extension type_name
-	1, // [1:1] is the sub-list for extension extendee
-	0, // [0:1] is the sub-list for field type_name
+	0, // 0: auth_service.Auth.GenerateQRCode:input_type -> auth_service.GenerateQRCodeRequest
+	1, // 1: auth_service.Auth.GenerateQRCode:output_type -> auth_service.GenerateQRCodeResponse
+	1, // [1:2] is the sub-list for method output_type
+	0, // [0:1] is the sub-list for method input_type
+	0, // [0:0] is the sub-list for extension type_name
+	0, // [0:0] is the sub-list for extension extendee
+	0, // [0:0] is the sub-list for field type_name
 }
 
 func init() { file_auth_service_proto_init() }
@@ -242,7 +183,7 @@ func file_auth_service_proto_init() {
 	}
 	if !protoimpl.UnsafeEnabled {
 		file_auth_service_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*User); i {
+			switch v := v.(*GenerateQRCodeRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -254,19 +195,7 @@ func file_auth_service_proto_init() {
 			}
 		}
 		file_auth_service_proto_msgTypes[1].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*SignUpRequest); i {
-			case 0:
-				return &v.state
-			case 1:
-				return &v.sizeCache
-			case 2:
-				return &v.unknownFields
-			default:
-				return nil
-			}
-		}
-		file_auth_service_proto_msgTypes[2].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*SignUpResponse); i {
+			switch v := v.(*GenerateQRCodeResponse); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -284,7 +213,7 @@ func file_auth_service_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_auth_service_proto_rawDesc,
 			NumEnums:      0,
-			NumMessages:   3,
+			NumMessages:   2,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
@@ -310,7 +239,7 @@ const _ = grpc.SupportPackageIsVersion6
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
 type AuthClient interface {
-	SignUp(ctx context.Context, in *SignUpRequest, opts ...grpc.CallOption) (*SignUpResponse, error)
+	GenerateQRCode(ctx context.Context, in *GenerateQRCodeRequest, opts ...grpc.CallOption) (*GenerateQRCodeResponse, error)
 }
 
 type authClient struct {
@@ -321,9 +250,9 @@ func NewAuthClient(cc grpc.ClientConnInterface) AuthClient {
 	return &authClient{cc}
 }
 
-func (c *authClient) SignUp(ctx context.Context, in *SignUpRequest, opts ...grpc.CallOption) (*SignUpResponse, error) {
-	out := new(SignUpResponse)
-	err := c.cc.Invoke(ctx, "/auth_service.Auth/SignUp", in, out, opts...)
+func (c *authClient) GenerateQRCode(ctx context.Context, in *GenerateQRCodeRequest, opts ...grpc.CallOption) (*GenerateQRCodeResponse, error) {
+	out := new(GenerateQRCodeResponse)
+	err := c.cc.Invoke(ctx, "/auth_service.Auth/GenerateQRCode", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -332,35 +261,35 @@ func (c *authClient) SignUp(ctx context.Context, in *SignUpRequest, opts ...grpc
 
 // AuthServer is the server API for Auth service.
 type AuthServer interface {
-	SignUp(context.Context, *SignUpRequest) (*SignUpResponse, error)
+	GenerateQRCode(context.Context, *GenerateQRCodeRequest) (*GenerateQRCodeResponse, error)
 }
 
 // UnimplementedAuthServer can be embedded to have forward compatible implementations.
 type UnimplementedAuthServer struct {
 }
 
-func (*UnimplementedAuthServer) SignUp(context.Context, *SignUpRequest) (*SignUpResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method SignUp not implemented")
+func (*UnimplementedAuthServer) GenerateQRCode(context.Context, *GenerateQRCodeRequest) (*GenerateQRCodeResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GenerateQRCode not implemented")
 }
 
 func RegisterAuthServer(s *grpc.Server, srv AuthServer) {
 	s.RegisterService(&_Auth_serviceDesc, srv)
 }
 
-func _Auth_SignUp_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(SignUpRequest)
+func _Auth_GenerateQRCode_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GenerateQRCodeRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(AuthServer).SignUp(ctx, in)
+		return srv.(AuthServer).GenerateQRCode(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/auth_service.Auth/SignUp",
+		FullMethod: "/auth_service.Auth/GenerateQRCode",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AuthServer).SignUp(ctx, req.(*SignUpRequest))
+		return srv.(AuthServer).GenerateQRCode(ctx, req.(*GenerateQRCodeRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -370,8 +299,8 @@ var _Auth_serviceDesc = grpc.ServiceDesc{
 	HandlerType: (*AuthServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "SignUp",
-			Handler:    _Auth_SignUp_Handler,
+			MethodName: "GenerateQRCode",
+			Handler:    _Auth_GenerateQRCode_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

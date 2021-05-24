@@ -1,4 +1,4 @@
-package auth
+package main
 
 import (
 	"github.com/bogdanrat/web-server/service/auth/handler"
@@ -8,7 +8,7 @@ import (
 	"net"
 )
 
-func Start() {
+func main() {
 	listener, err := net.Listen("tcp", ":50051")
 	if err != nil {
 		log.Fatalf("failed to listen: %v", err)

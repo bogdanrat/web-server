@@ -7,6 +7,6 @@ import (
 
 type AuthServer struct{}
 
-func (s *AuthServer) SignUp(context.Context, *pb.SignUpRequest) (*pb.SignUpResponse, error) {
+func (s *AuthServer) GenerateQRCode(context.Context, *pb.GenerateQRCodeRequest) (*pb.GenerateQRCodeResponse, error) {
 	return nil, nil
 }
