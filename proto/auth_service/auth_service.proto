@@ -5,6 +5,7 @@ option go_package = "/;auth_service";
 
 service Auth {
   rpc GenerateQRCode(GenerateQRCodeRequest) returns (GenerateQRCodeResponse);
+  rpc ValidateQRCode(ValidateQRCodeRequest) returns (ValidateQRCodeResponse);
 }
 
 message GenerateQRCodeRequest {
@@ -14,4 +15,13 @@ message GenerateQRCodeRequest {
 message GenerateQRCodeResponse {
   bytes image = 1;
   string secret = 2;
+}
+
+message ValidateQRCodeRequest {
+  string qrCode = 1;
+  string qrSecret = 2;
+}
+
+message ValidateQRCodeResponse {
+  bool validated = 1;
 }
