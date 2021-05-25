@@ -1,15 +1,16 @@
 package middleware
 
 import (
-	"github.com/bogdanrat/web-server/auth"
+	"context"
 	"github.com/bogdanrat/web-server/cache"
 	"github.com/bogdanrat/web-server/models"
+	pb "github.com/bogdanrat/web-server/service/auth/proto"
 	"github.com/bogdanrat/web-server/util"
 	"github.com/gin-gonic/gin"
 )
 
 // Authorization validates jwt and authorizes users based by Header 'Authorization Bearer {{token}}'
-func Authorization(cacheClient cache.Client) gin.HandlerFunc {
+func Authorization(cacheClient cache.Client, authClient pb.AuthClient) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		token, jsonErr := util.ExtractToken(c.Request)
 		if jsonErr != nil {
@@ -20,7 +21,7 @@ func Authorization(cacheClient cache.Client) gin.HandlerFunc {
 			return
 		}
 
-		claims, err := auth.ValidateAccessToken(token)
+		response, err := authClient.ValidateAccessToken(context.Background(), &pb.ValidateAccessTokenRequest{SignedToken: token})
 		if err != nil {
 			jsonErr = models.NewUnauthorizedError(err.Error())
 			c.JSON(jsonErr.StatusCode, jsonErr)
@@ -28,7 +29,7 @@ func Authorization(cacheClient cache.Client) gin.HandlerFunc {
 			return
 		}
 
-		_, err = cacheClient.Get(claims.AccessUUID)
+		_, err = cacheClient.Get(response.AccessUuid)
 		if err != nil {
 			jsonErr = models.NewUnauthorizedError("authorization token expired")
 			c.JSON(jsonErr.StatusCode, jsonErr)
