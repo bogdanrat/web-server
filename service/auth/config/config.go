@@ -30,7 +30,7 @@ var (
 )
 
 func ReadFlags() {
-	configFile = flag.String("config", "./service/auth/config.json", "app config file")
+	configFile = flag.String("config", "./config.json", "app config file")
 	flag.Parse()
 }
 

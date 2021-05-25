@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/bogdanrat/web-server/app"
+	"github.com/bogdanrat/web-server/service/core/app"
 	"log"
 )
 

@@ -2,7 +2,7 @@ package cache
 
 import (
 	"fmt"
-	"github.com/bogdanrat/web-server/config"
+	"github.com/bogdanrat/web-server/service/core/config"
 	"github.com/go-redis/redis/v7"
 	"log"
 	"time"

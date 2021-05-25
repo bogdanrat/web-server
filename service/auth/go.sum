@@ -26,6 +26,8 @@ github.com/bgentry/speakeasy v0.1.0/go.mod h1:+zsyZBPWlz7T6j88CTgSN5bM796AkVf0kB
 github.com/bketelsen/crypt v0.0.3-0.20200106085610-5cbc8cc4026c/go.mod h1:MKsuJmJgSg28kpZDP6UIiPt0e0Oz0kqKNGyRaWEPv84=
 github.com/bogdanrat/web-server v0.0.0-20210524125729-a39d25dcba12 h1:0ZWG2mPH8YpYu+rEBqIqIEQZX6iJ/4KfGcs5UFPjoH8=
 github.com/bogdanrat/web-server v0.0.0-20210524125729-a39d25dcba12/go.mod h1:S+KE7eYV1EA+6DSCUeEPWgcnU+a3pUZSpenF9qBgiDo=
+github.com/bogdanrat/web-server/contracts v0.0.0-20210525184813-14ea474ff934 h1:iKS6e6g3L2QhhHFLflbT9uHDeRuMUBfPH8vdZgJzoc4=
+github.com/bogdanrat/web-server/contracts v0.0.0-20210525184813-14ea474ff934/go.mod h1:fpY+JNP1ZFi2bIZEWFncTsIWjDCKsHAfQOIcBuWBj0M=
 github.com/census-instrumentation/opencensus-proto v0.2.1/go.mod h1:f6KPmirojxKA12rnyqOA5BBL4O983OfeGPqjHWSTneU=
 github.com/cespare/xxhash v1.1.0/go.mod h1:XrSqR1VqqWfGrhpAt58auRo0WTKS1nRRg3ghfAqPWnc=
 github.com/client9/misspell v0.3.4/go.mod h1:qj6jICC3Q7zFZvVWo7KLAzC3yx5G7kyvSDkc90ppPyw=

@@ -4,6 +4,7 @@ go 1.16
 
 require (
 	github.com/bogdanrat/web-server v0.0.0-20210524125729-a39d25dcba12
+	github.com/bogdanrat/web-server/contracts v0.0.0-20210525184813-14ea474ff934 // indirect
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/dgryski/dgoogauth v0.0.0-20190221195224-5a805980a5f3
 	github.com/spf13/viper v1.7.1

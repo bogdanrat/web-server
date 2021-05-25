@@ -1,7 +1,7 @@
 package lib
 
 import (
-	"github.com/bogdanrat/web-server/models"
+	"github.com/bogdanrat/web-server/contracts/models"
 	epb "google.golang.org/genproto/googleapis/rpc/errdetails"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"

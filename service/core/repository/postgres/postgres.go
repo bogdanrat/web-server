@@ -4,9 +4,9 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
-	"github.com/bogdanrat/web-server/config"
-	"github.com/bogdanrat/web-server/models"
-	"github.com/bogdanrat/web-server/repository"
+	"github.com/bogdanrat/web-server/contracts/models"
+	"github.com/bogdanrat/web-server/service/core/config"
+	"github.com/bogdanrat/web-server/service/core/repository"
 	_ "github.com/lib/pq"
 	"time"
 )

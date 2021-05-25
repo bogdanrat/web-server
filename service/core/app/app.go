@@ -2,11 +2,11 @@ package app
 
 import (
 	"fmt"
-	"github.com/bogdanrat/web-server/cache"
-	"github.com/bogdanrat/web-server/config"
-	"github.com/bogdanrat/web-server/repository/postgres"
-	"github.com/bogdanrat/web-server/router"
-	pb "github.com/bogdanrat/web-server/service/auth/proto"
+	pb "github.com/bogdanrat/web-server/contracts/proto/auth_service"
+	"github.com/bogdanrat/web-server/service/core/cache"
+	"github.com/bogdanrat/web-server/service/core/config"
+	"github.com/bogdanrat/web-server/service/core/repository/postgres"
+	"github.com/bogdanrat/web-server/service/core/router"
 	"google.golang.org/grpc"
 	"log"
 	"net/http"

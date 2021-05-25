@@ -2,11 +2,11 @@ package middleware
 
 import (
 	"context"
-	"github.com/bogdanrat/web-server/cache"
-	"github.com/bogdanrat/web-server/lib"
-	"github.com/bogdanrat/web-server/models"
-	pb "github.com/bogdanrat/web-server/service/auth/proto"
-	"github.com/bogdanrat/web-server/util"
+	"github.com/bogdanrat/web-server/contracts/models"
+	pb "github.com/bogdanrat/web-server/contracts/proto/auth_service"
+	"github.com/bogdanrat/web-server/service/core/cache"
+	"github.com/bogdanrat/web-server/service/core/lib"
+	"github.com/bogdanrat/web-server/service/core/util"
 	"github.com/gin-gonic/gin"
 )
 

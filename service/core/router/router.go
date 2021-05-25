@@ -1,13 +1,13 @@
 package router
 
 import (
-	"github.com/bogdanrat/web-server/cache"
-	"github.com/bogdanrat/web-server/config"
-	"github.com/bogdanrat/web-server/handler/authentication"
-	"github.com/bogdanrat/web-server/handler/users"
-	"github.com/bogdanrat/web-server/middleware"
-	"github.com/bogdanrat/web-server/repository"
-	pb "github.com/bogdanrat/web-server/service/auth/proto"
+	pb "github.com/bogdanrat/web-server/contracts/proto/auth_service"
+	"github.com/bogdanrat/web-server/service/core/cache"
+	"github.com/bogdanrat/web-server/service/core/config"
+	"github.com/bogdanrat/web-server/service/core/handler/authentication"
+	"github.com/bogdanrat/web-server/service/core/handler/users"
+	"github.com/bogdanrat/web-server/service/core/middleware"
+	"github.com/bogdanrat/web-server/service/core/repository"
 	"github.com/gin-gonic/gin"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/encoding/gzip"

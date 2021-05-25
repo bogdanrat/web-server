@@ -1,6 +1,6 @@
 package repository
 
-import "github.com/bogdanrat/web-server/models"
+import "github.com/bogdanrat/web-server/contracts/models"
 
 type DatabaseRepository interface {
 	GetAllUsers() ([]*models.User, error)

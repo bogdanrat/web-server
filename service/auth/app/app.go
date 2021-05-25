@@ -2,10 +2,10 @@ package app
 
 import (
 	"fmt"
+	pb "github.com/bogdanrat/web-server/contracts/proto/auth_service"
 	"github.com/bogdanrat/web-server/service/auth/config"
 	"github.com/bogdanrat/web-server/service/auth/handler"
 	"github.com/bogdanrat/web-server/service/auth/interceptor"
-	pb "github.com/bogdanrat/web-server/service/auth/proto"
 	"go.opencensus.io/examples/exporter"
 	"go.opencensus.io/plugin/ocgrpc"
 	"go.opencensus.io/stats/view"

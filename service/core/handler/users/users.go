@@ -1,7 +1,7 @@
 package users
 
 import (
-	"github.com/bogdanrat/web-server/repository"
+	"github.com/bogdanrat/web-server/service/core/repository"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )

@@ -1,7 +1,7 @@
 package lib
 
 import (
-	pb "github.com/bogdanrat/web-server/service/auth/proto"
+	pb "github.com/bogdanrat/web-server/contracts/proto/auth_service"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/twinj/uuid"
 	"google.golang.org/grpc/codes"
