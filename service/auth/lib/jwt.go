@@ -6,6 +6,7 @@ import (
 	"github.com/twinj/uuid"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
+	"strings"
 	"time"
 )
 
@@ -87,6 +88,9 @@ func ValidateAccessToken(signedToken string) (*JwtAccessClaims, error) {
 	)
 
 	if err != nil {
+		if strings.Contains(err.Error(), "expired") {
+			return nil, status.Errorf(codes.PermissionDenied, err.Error())
+		}
 		return nil, status.Errorf(codes.InvalidArgument, "invalid token format")
 	}
 
