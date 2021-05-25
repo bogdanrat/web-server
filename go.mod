@@ -3,7 +3,7 @@ module github.com/bogdanrat/web-server
 go 1.16
 
 require (
-	github.com/bogdanrat/web-server/service/auth v0.0.0-20210525153555-2a51a932c2fc
+	github.com/bogdanrat/web-server/service/auth v0.0.0-20210525161924-3777b06c0c96
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/fsnotify/fsnotify v1.4.9 // indirect; indirectgo m
 	github.com/gin-gonic/gin v1.7.2

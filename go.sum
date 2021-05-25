@@ -34,6 +34,12 @@ github.com/bogdanrat/web-server/service/auth v0.0.0-20210525152026-475aacca4001 
 github.com/bogdanrat/web-server/service/auth v0.0.0-20210525152026-475aacca4001/go.mod h1:VbzwBYNW37XyAAOiHU6Pi4KBit3uQpJJRp6PxSffgJI=
 github.com/bogdanrat/web-server/service/auth v0.0.0-20210525153555-2a51a932c2fc h1:jr8qMRULtSNnBWwfLT86yFrLOa7mna6WcqjUIBkWqrU=
 github.com/bogdanrat/web-server/service/auth v0.0.0-20210525153555-2a51a932c2fc/go.mod h1:VbzwBYNW37XyAAOiHU6Pi4KBit3uQpJJRp6PxSffgJI=
+github.com/bogdanrat/web-server/service/auth v0.0.0-20210525160630-228763a154bd h1:73cM8kx2LbEwVRG9IG/eTnoRxLa9RhPsScJKHKEpgNQ=
+github.com/bogdanrat/web-server/service/auth v0.0.0-20210525160630-228763a154bd/go.mod h1:VbzwBYNW37XyAAOiHU6Pi4KBit3uQpJJRp6PxSffgJI=
+github.com/bogdanrat/web-server/service/auth v0.0.0-20210525161158-532a302fc84d h1:56aiyOa0/r6RzmfyadkNcpZibEoUx+39KUiY3i6GBFc=
+github.com/bogdanrat/web-server/service/auth v0.0.0-20210525161158-532a302fc84d/go.mod h1:VbzwBYNW37XyAAOiHU6Pi4KBit3uQpJJRp6PxSffgJI=
+github.com/bogdanrat/web-server/service/auth v0.0.0-20210525161924-3777b06c0c96 h1:FCXHC0kIQFMQyVMjfmhtDJp+OXz72JLLlsjUZHq243E=
+github.com/bogdanrat/web-server/service/auth v0.0.0-20210525161924-3777b06c0c96/go.mod h1:VbzwBYNW37XyAAOiHU6Pi4KBit3uQpJJRp6PxSffgJI=
 github.com/census-instrumentation/opencensus-proto v0.2.1/go.mod h1:f6KPmirojxKA12rnyqOA5BBL4O983OfeGPqjHWSTneU=
 github.com/cespare/xxhash v1.1.0/go.mod h1:XrSqR1VqqWfGrhpAt58auRo0WTKS1nRRg3ghfAqPWnc=
 github.com/client9/misspell v0.3.4/go.mod h1:qj6jICC3Q7zFZvVWo7KLAzC3yx5G7kyvSDkc90ppPyw=

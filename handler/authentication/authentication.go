@@ -114,7 +114,7 @@ func (h *Handler) Login(c *gin.Context) {
 			return
 		}
 
-		deadline := time.Now().Add(time.Second * 120)
+		deadline := time.Now().Add(time.Second * 2)
 		ctx, cancel := context.WithDeadline(context.Background(), deadline)
 		defer cancel()
 
