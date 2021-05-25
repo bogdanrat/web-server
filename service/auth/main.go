@@ -5,6 +5,7 @@ import (
 	"github.com/bogdanrat/web-server/service/auth/interceptor"
 	pb "github.com/bogdanrat/web-server/service/auth/proto"
 	"google.golang.org/grpc"
+	_ "google.golang.org/grpc/encoding/gzip"
 	"log"
 	"net"
 )
