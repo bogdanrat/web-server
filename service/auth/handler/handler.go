@@ -90,17 +90,28 @@ func (s *AuthServer) GenerateToken(ctx context.Context, req *pb.GenerateTokenReq
 func (s *AuthServer) ValidateAccessToken(ctx context.Context, req *pb.ValidateAccessTokenRequest) (*pb.ValidateAccessTokenResponse, error) {
 	claims, err := lib.ValidateAccessToken(req.SignedToken)
 	if err != nil {
-		if errorStatus, _ := status.FromError(err); errorStatus.Code() == codes.InvalidArgument {
-			details, err := errorStatus.WithDetails(&epb.BadRequest_FieldViolation{
+		errorStatus, _ := status.FromError(err)
+		var details *status.Status
+		switch errorStatus.Code() {
+		case codes.InvalidArgument:
+			details, err = errorStatus.WithDetails(&epb.BadRequest_FieldViolation{
 				Field:       "SignedToken",
 				Description: "Invalid JWT format",
 			})
-			if err != nil {
-				return nil, errorStatus.Err()
-			}
-			return nil, details.Err()
+
+		case codes.PermissionDenied:
+			details, err = errorStatus.WithDetails(&epb.PreconditionFailure{
+				Violations: []*epb.PreconditionFailure_Violation{
+					{Description: err.Error()},
+				},
+			})
+		default:
+			return nil, err
 		}
-		return nil, err
+		if err != nil {
+			return nil, errorStatus.Err()
+		}
+		return nil, details.Err()
 	}
 
 	if ctx.Err() == context.DeadlineExceeded {
