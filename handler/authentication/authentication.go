@@ -11,23 +11,34 @@ import (
 	pb "github.com/bogdanrat/web-server/service/auth/proto"
 	"github.com/bogdanrat/web-server/util"
 	"github.com/gin-gonic/gin"
+	"google.golang.org/grpc"
 	"net/http"
 	"reflect"
 	"strconv"
 	"time"
 )
 
+type rpc struct {
+	Client      pb.AuthClient
+	CallOptions []grpc.CallOption
+	Deadline    int64
+}
+
 type Handler struct {
 	Repository repository.DatabaseRepository
 	Cache      cache.Client
-	RPC        pb.AuthClient
+	RPC        *rpc
 }
 
-func NewHandler(repo repository.DatabaseRepository, cacheClient cache.Client, authClient pb.AuthClient) *Handler {
+func NewHandler(repo repository.DatabaseRepository, cacheClient cache.Client, authClient pb.AuthClient, callOptions []grpc.CallOption, deadline int64) *Handler {
 	return &Handler{
 		Repository: repo,
 		Cache:      cacheClient,
-		RPC:        authClient,
+		RPC: &rpc{
+			Client:      authClient,
+			CallOptions: callOptions,
+			Deadline:    deadline,
+		},
 	}
 }
 
@@ -40,7 +51,7 @@ func (h *Handler) SignUp(c *gin.Context) {
 	}
 
 	if _, err := h.Repository.GetUserByEmail(request.Email); err == nil {
-		jsonErr := models.NewBadRequestError("email already registered")
+		jsonErr := models.NewBadRequestError(fmt.Sprintf("email %s already registered", request.Email), "email")
 		c.JSON(jsonErr.StatusCode, jsonErr)
 		return
 	}
@@ -60,11 +71,15 @@ func (h *Handler) SignUp(c *gin.Context) {
 	if config.AppConfig.Authentication.MFA {
 		// Deadlines: the entire request chain needs to respond by the deadline set by the app that initiated the request.
 		// Timeouts: applied at each RPC, at each service invocation, not for the entire life cycle of the request.
-		deadline := time.Now().Add(time.Second * 2)
+		deadline := time.Now().Add(time.Millisecond * time.Duration(h.RPC.Deadline))
 		ctx, cancel := context.WithDeadline(context.Background(), deadline)
 		defer cancel()
 
-		response, err := h.RPC.GenerateQRCode(ctx, &pb.GenerateQRCodeRequest{Email: request.Email})
+		response, err := h.RPC.Client.GenerateQRCode(
+			ctx,
+			&pb.GenerateQRCodeRequest{Email: request.Email},
+			h.RPC.CallOptions...,
+		)
 		if jsonErr := lib.HandleRPCError(err); jsonErr != nil {
 			c.JSON(jsonErr.StatusCode, jsonErr)
 			return
@@ -114,11 +129,15 @@ func (h *Handler) Login(c *gin.Context) {
 			return
 		}
 
-		deadline := time.Now().Add(time.Second * 2)
+		deadline := time.Now().Add(time.Millisecond * time.Duration(h.RPC.Deadline))
 		ctx, cancel := context.WithDeadline(context.Background(), deadline)
 		defer cancel()
 
-		response, err := h.RPC.ValidateQRCode(ctx, &pb.ValidateQRCodeRequest{QrCode: request.QRCode, QrSecret: *user.QRSecret})
+		response, err := h.RPC.Client.ValidateQRCode(
+			ctx,
+			&pb.ValidateQRCodeRequest{QrCode: request.QRCode, QrSecret: *user.QRSecret},
+			h.RPC.CallOptions...,
+		)
 		if jsonErr := lib.HandleRPCError(err); jsonErr != nil {
 			c.JSON(jsonErr.StatusCode, jsonErr)
 			return
@@ -138,12 +157,20 @@ func (h *Handler) Login(c *gin.Context) {
 		return
 	}
 
-	response, err := h.RPC.GenerateToken(context.Background(), &pb.GenerateTokenRequest{
-		Email: request.Email,
-		// TODO: take from config
-		AccessTokenDuration:  2,
-		RefreshTokenDuration: 1140,
-	})
+	deadline := time.Now().Add(time.Millisecond * time.Duration(h.RPC.Deadline))
+	ctx, cancel := context.WithDeadline(context.Background(), deadline)
+	defer cancel()
+
+	response, err := h.RPC.Client.GenerateToken(
+		ctx,
+		&pb.GenerateTokenRequest{
+			Email: request.Email,
+			// TODO: take from config
+			AccessTokenDuration:  2,
+			RefreshTokenDuration: 1140,
+		},
+		h.RPC.CallOptions...,
+	)
 	if jsonErr := lib.HandleRPCError(err); jsonErr != nil {
 		c.JSON(jsonErr.StatusCode, jsonErr)
 		return
@@ -177,7 +204,15 @@ func (h *Handler) Logout(c *gin.Context) {
 		return
 	}
 
-	response, err := h.RPC.ValidateAccessToken(context.Background(), &pb.ValidateAccessTokenRequest{SignedToken: token})
+	deadline := time.Now().Add(time.Millisecond * time.Duration(h.RPC.Deadline))
+	ctx, cancel := context.WithDeadline(context.Background(), deadline)
+	defer cancel()
+
+	response, err := h.RPC.Client.ValidateAccessToken(
+		ctx,
+		&pb.ValidateAccessTokenRequest{SignedToken: token},
+		h.RPC.CallOptions...,
+	)
 	if jsonErr = lib.HandleRPCError(err); jsonErr != nil {
 		c.JSON(jsonErr.StatusCode, jsonErr)
 		return
@@ -210,7 +245,16 @@ func (h *Handler) RefreshToken(c *gin.Context) {
 	}
 
 	refreshToken := mapToken["refresh_token"]
-	validateResponse, err := h.RPC.ValidateRefreshToken(context.Background(), &pb.ValidateRefreshTokenRequest{SignedToken: refreshToken})
+
+	deadline := time.Now().Add(time.Millisecond * time.Duration(h.RPC.Deadline))
+	ctx, cancel := context.WithDeadline(context.Background(), deadline)
+	defer cancel()
+
+	validateResponse, err := h.RPC.Client.ValidateRefreshToken(
+		ctx,
+		&pb.ValidateRefreshTokenRequest{SignedToken: refreshToken},
+		h.RPC.CallOptions...,
+	)
 	if jsonErr := lib.HandleRPCError(err); jsonErr != nil {
 		c.JSON(jsonErr.StatusCode, jsonErr)
 		return
@@ -224,12 +268,19 @@ func (h *Handler) RefreshToken(c *gin.Context) {
 		return
 	}
 
+	ctx, cancel = context.WithDeadline(context.Background(), deadline)
+	defer cancel()
+
 	// create new pairs of access & refresh tokens
-	generateResponse, err := h.RPC.GenerateToken(context.Background(), &pb.GenerateTokenRequest{
-		Email:                validateResponse.Email,
-		AccessTokenDuration:  2,
-		RefreshTokenDuration: 1140,
-	})
+	generateResponse, err := h.RPC.Client.GenerateToken(
+		ctx,
+		&pb.GenerateTokenRequest{
+			Email:                validateResponse.Email,
+			AccessTokenDuration:  2,
+			RefreshTokenDuration: 1140,
+		},
+		h.RPC.CallOptions...,
+	)
 	if jsonErr := lib.HandleRPCError(err); jsonErr != nil {
 		c.JSON(jsonErr.StatusCode, jsonErr)
 		return
