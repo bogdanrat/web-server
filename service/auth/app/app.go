@@ -29,8 +29,13 @@ func Init() error {
 		return err
 	}
 
+	serverOptions := []grpc.ServerOption{
+		grpc.UnaryInterceptor(interceptor.RequestDurationInterceptor),
+	}
+
 	if config.AppConfig.OpenCensus.Enabled {
 		initOpenCensus()
+		serverOptions = append(serverOptions, grpc.StatsHandler(&ocgrpc.ServerHandler{}))
 	}
 
 	listener, err = net.Listen("tcp", config.AppConfig.Service.Address)
@@ -38,15 +43,15 @@ func Init() error {
 		return fmt.Errorf("failed to listen: %v", err)
 	}
 
-	grpcServer = grpc.NewServer(
-		grpc.UnaryInterceptor(interceptor.RequestDurationInterceptor))
+	grpcServer = grpc.NewServer(serverOptions...)
+	grpc.StatsHandler(&ocgrpc.ServerHandler{})
 	pb.RegisterAuthServer(grpcServer, &handler.AuthServer{})
 
 	return nil
 }
 
 func Start() {
-	log.Printf("Starting gRPC listener on: %s\n", config.AppConfig.Service.Address)
+	log.Printf("gRPC listening on: %s\n", config.AppConfig.Service.Address)
 	if err := grpcServer.Serve(listener); err != nil {
 		log.Fatalf("failed to serve: %v", err)
 	}
