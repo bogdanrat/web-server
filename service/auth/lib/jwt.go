@@ -1,10 +1,11 @@
 package lib
 
 import (
-	"errors"
 	pb "github.com/bogdanrat/web-server/service/auth/proto"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/twinj/uuid"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 	"time"
 )
 
@@ -45,7 +46,7 @@ func GenerateToken(email string, accessTokenDuration int64, refreshTokenDuration
 	accessToken, err := token.SignedString([]byte(AccessSecretKey))
 
 	if err != nil {
-		return nil, err
+		return nil, status.Errorf(codes.Internal, "could not sign access token")
 	}
 
 	// generate refresh token
@@ -62,7 +63,7 @@ func GenerateToken(email string, accessTokenDuration int64, refreshTokenDuration
 	refreshToken, err := token.SignedString([]byte(RefreshSecretKey))
 
 	if err != nil {
-		return nil, err
+		return nil, status.Errorf(codes.Internal, "could not sign refresh token")
 	}
 
 	return &pb.Token{
@@ -72,7 +73,7 @@ func GenerateToken(email string, accessTokenDuration int64, refreshTokenDuration
 		RefreshToken:        refreshToken,
 		RefreshTokenExpires: refreshClaims.ExpiresAt,
 		RefreshUuid:         refreshClaims.RefreshUUID,
-	}, nil
+	}, status.New(codes.OK, "").Err()
 }
 
 // ValidateAccessToken validates the JWT Access AccessToken
@@ -86,16 +87,16 @@ func ValidateAccessToken(signedToken string) (*JwtAccessClaims, error) {
 	)
 
 	if err != nil {
-		return nil, err
+		return nil, status.Errorf(codes.Internal, "%s", err)
 	}
 
 	claims, ok := token.Claims.(*JwtAccessClaims)
 	if !ok {
-		return nil, errors.New("could not parse jwt access claim")
+		return nil, status.Errorf(codes.Internal, "could not parse jwt access claim")
 	}
 
 	if claims.ExpiresAt < time.Now().Local().Unix() {
-		return nil, errors.New("jwt access token expired")
+		return nil, status.Errorf(codes.PermissionDenied, "jwt access token expired")
 	}
 
 	return claims, nil
@@ -111,16 +112,16 @@ func ValidateRefreshToken(signedToken string) (*JwtRefreshClaims, error) {
 	)
 
 	if err != nil {
-		return nil, err
+		return nil, status.Errorf(codes.Internal, "%s", err)
 	}
 
 	claims, ok := token.Claims.(*JwtRefreshClaims)
 	if !ok {
-		return nil, errors.New("could not parse jwt refresh claim")
+		return nil, status.Errorf(codes.Internal, "could not parse jwt refresh claim")
 	}
 
 	if claims.ExpiresAt < time.Now().Local().Unix() {
-		return nil, errors.New("jwt refresh token expired")
+		return nil, status.Errorf(codes.PermissionDenied, "jwt refresh token expired")
 	}
 
 	return claims, nil

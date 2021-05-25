@@ -6,6 +6,8 @@ import (
 	"fmt"
 	"github.com/bogdanrat/web-server/util"
 	"github.com/dgryski/dgoogauth"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 	"image"
 	"net/url"
 	"rsc.io/qr"
@@ -58,7 +60,7 @@ func ValidateQRCode(code string, secret string) (bool, error) {
 
 	authenticated, err := otpc.Authenticate(code)
 	if err != nil {
-		return false, err
+		return false, status.Errorf(codes.InvalidArgument, "could not authenticate qr code: %s", err)
 	}
 
 	return authenticated, nil
