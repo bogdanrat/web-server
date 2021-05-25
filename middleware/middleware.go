@@ -3,6 +3,7 @@ package middleware
 import (
 	"context"
 	"github.com/bogdanrat/web-server/cache"
+	"github.com/bogdanrat/web-server/lib"
 	"github.com/bogdanrat/web-server/models"
 	pb "github.com/bogdanrat/web-server/service/auth/proto"
 	"github.com/bogdanrat/web-server/util"
@@ -22,8 +23,7 @@ func Authorization(cacheClient cache.Client, authClient pb.AuthClient) gin.Handl
 		}
 
 		response, err := authClient.ValidateAccessToken(context.Background(), &pb.ValidateAccessTokenRequest{SignedToken: token})
-		if err != nil {
-			jsonErr = models.NewUnauthorizedError(err.Error())
+		if jsonErr = lib.HandleRPCError(err); jsonErr != nil {
 			c.JSON(jsonErr.StatusCode, jsonErr)
 			c.Abort()
 			return

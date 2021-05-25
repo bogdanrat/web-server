@@ -1,50 +1,78 @@
 package models
 
-import "net/http"
+import (
+	"net/http"
+	"strings"
+)
 
 type JSONError struct {
-	StatusCode int    `json:"status_code"`
-	Message    string `json:"message"`
+	StatusCode  int    `json:"status_code,omitempty"`
+	Description string `json:"description,omitempty"`
+	Field       string `json:"field,omitempty"`
 }
 
-func NewBadRequestError(message string) *JSONError {
-	return &JSONError{
-		StatusCode: http.StatusBadRequest,
-		Message:    message,
+func NewBadRequestError(description string, field ...string) *JSONError {
+	err := &JSONError{
+		StatusCode:  http.StatusBadRequest,
+		Description: description,
 	}
+	if len(field) > 0 {
+		err.Field = strings.Join(field, ";")
+	}
+	return err
 }
 
-func NewNotFoundError(message string) *JSONError {
-	return &JSONError{
-		StatusCode: http.StatusNotFound,
-		Message:    message,
+func NewNotFoundError(description string, field ...string) *JSONError {
+	err := &JSONError{
+		StatusCode:  http.StatusNotFound,
+		Description: description,
 	}
+	if len(field) > 0 {
+		err.Field = strings.Join(field, ";")
+	}
+	return err
 }
 
-func NewUnauthorizedError(message string) *JSONError {
-	return &JSONError{
-		StatusCode: http.StatusUnauthorized,
-		Message:    message,
+func NewUnauthorizedError(description string, field ...string) *JSONError {
+	err := &JSONError{
+		StatusCode:  http.StatusUnauthorized,
+		Description: description,
 	}
+	if len(field) > 0 {
+		err.Field = strings.Join(field, ";")
+	}
+	return err
 }
 
-func NewInternalServerError(message string) *JSONError {
-	return &JSONError{
-		StatusCode: http.StatusInternalServerError,
-		Message:    message,
+func NewInternalServerError(description string, field ...string) *JSONError {
+	err := &JSONError{
+		StatusCode:  http.StatusInternalServerError,
+		Description: description,
 	}
+	if len(field) > 0 {
+		err.Field = strings.Join(field, ";")
+	}
+	return err
 }
 
-func NewAlreadyReportedError(message string) *JSONError {
-	return &JSONError{
-		StatusCode: http.StatusAlreadyReported,
-		Message:    message,
+func NewAlreadyReportedError(description string, field ...string) *JSONError {
+	err := &JSONError{
+		StatusCode:  http.StatusAlreadyReported,
+		Description: description,
 	}
+	if len(field) > 0 {
+		err.Field = strings.Join(field, ";")
+	}
+	return err
 }
 
-func NewUnprocessableEntityError(message string) *JSONError {
-	return &JSONError{
-		StatusCode: http.StatusUnprocessableEntity,
-		Message:    message,
+func NewUnprocessableEntityError(description string, field ...string) *JSONError {
+	err := &JSONError{
+		StatusCode:  http.StatusUnprocessableEntity,
+		Description: description,
 	}
+	if len(field) > 0 {
+		err.Field = strings.Join(field, ";")
+	}
+	return err
 }

@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/bogdanrat/web-server/cache"
 	"github.com/bogdanrat/web-server/config"
+	"github.com/bogdanrat/web-server/lib"
 	"github.com/bogdanrat/web-server/models"
 	"github.com/bogdanrat/web-server/repository"
 	pb "github.com/bogdanrat/web-server/service/auth/proto"
@@ -38,12 +39,6 @@ func (h *Handler) SignUp(c *gin.Context) {
 		return
 	}
 
-	if !util.IsValidEmail(request.Email) {
-		jsonErr := models.NewBadRequestError("invalid email")
-		c.JSON(jsonErr.StatusCode, jsonErr)
-		return
-	}
-
 	if _, err := h.Repository.GetUserByEmail(request.Email); err == nil {
 		jsonErr := models.NewBadRequestError("email already registered")
 		c.JSON(jsonErr.StatusCode, jsonErr)
@@ -61,10 +56,16 @@ func (h *Handler) SignUp(c *gin.Context) {
 		return
 	}
 
+	// If MFA is enabled, send a request to get a QR code
 	if config.AppConfig.Authentication.MFA {
-		response, err := h.RPC.GenerateQRCode(context.Background(), &pb.GenerateQRCodeRequest{Email: request.Email})
-		if err != nil {
-			jsonErr := models.NewInternalServerError("unable generate qr code")
+		// Deadlines: the entire request chain needs to respond by the deadline set by the app that initiated the request.
+		// Timeouts: applied at each RPC, at each service invocation, not for the entire life cycle of the request.
+		deadline := time.Now().Add(time.Second * 2)
+		ctx, cancel := context.WithDeadline(context.Background(), deadline)
+		defer cancel()
+
+		response, err := h.RPC.GenerateQRCode(ctx, &pb.GenerateQRCodeRequest{Email: request.Email})
+		if jsonErr := lib.HandleRPCError(err); jsonErr != nil {
 			c.JSON(jsonErr.StatusCode, jsonErr)
 			return
 		}
@@ -101,27 +102,30 @@ func (h *Handler) Login(c *gin.Context) {
 
 	user, err := h.Repository.GetUserByEmail(request.Email)
 	if err != nil {
-		jsonErr := models.NewNotFoundError(fmt.Sprintf("user with email %s not found", request.Email))
+		jsonErr := models.NewNotFoundError("user not found", "email")
 		c.JSON(jsonErr.StatusCode, jsonErr)
 		return
 	}
 
 	if config.AppConfig.Authentication.MFA {
 		if user.QRSecret == nil {
-			jsonErr := models.NewUnprocessableEntityError("missing qr code when mfa is enabled")
+			jsonErr := models.NewUnprocessableEntityError("missing qr code when mfa is enabled", "qr_secret", "")
 			c.JSON(jsonErr.StatusCode, jsonErr)
 			return
 		}
 
-		response, err := h.RPC.ValidateQRCode(context.Background(), &pb.ValidateQRCodeRequest{QrCode: request.QRCode, QrSecret: *user.QRSecret})
-		if err != nil {
-			jsonErr := models.NewBadRequestError("invalid qr code format")
+		deadline := time.Now().Add(time.Second * 120)
+		ctx, cancel := context.WithDeadline(context.Background(), deadline)
+		defer cancel()
+
+		response, err := h.RPC.ValidateQRCode(ctx, &pb.ValidateQRCodeRequest{QrCode: request.QRCode, QrSecret: *user.QRSecret})
+		if jsonErr := lib.HandleRPCError(err); jsonErr != nil {
 			c.JSON(jsonErr.StatusCode, jsonErr)
 			return
 		}
 
 		if !response.Validated {
-			jsonErr := models.NewUnauthorizedError("invalid qr code")
+			jsonErr := models.NewUnauthorizedError("invalid qr code", "qr_code")
 			c.JSON(jsonErr.StatusCode, jsonErr)
 			return
 		}
@@ -129,18 +133,18 @@ func (h *Handler) Login(c *gin.Context) {
 
 	err = user.CheckPassword(request.Password)
 	if err != nil {
-		jsonErr := models.NewUnauthorizedError("invalid user credentials")
+		jsonErr := models.NewUnauthorizedError("invalid user credentials", "password")
 		c.JSON(jsonErr.StatusCode, jsonErr)
 		return
 	}
 
 	response, err := h.RPC.GenerateToken(context.Background(), &pb.GenerateTokenRequest{
-		Email:                request.Email,
+		Email: request.Email,
+		// TODO: take from config
 		AccessTokenDuration:  2,
 		RefreshTokenDuration: 1140,
 	})
-	if err != nil {
-		jsonErr := models.NewInternalServerError("could not sign token")
+	if jsonErr := lib.HandleRPCError(err); jsonErr != nil {
 		c.JSON(jsonErr.StatusCode, jsonErr)
 		return
 	}
@@ -174,8 +178,7 @@ func (h *Handler) Logout(c *gin.Context) {
 	}
 
 	response, err := h.RPC.ValidateAccessToken(context.Background(), &pb.ValidateAccessTokenRequest{SignedToken: token})
-	if err != nil {
-		jsonErr = models.NewUnauthorizedError(err.Error())
+	if jsonErr = lib.HandleRPCError(err); jsonErr != nil {
 		c.JSON(jsonErr.StatusCode, jsonErr)
 		return
 	}
@@ -201,15 +204,14 @@ func (h *Handler) Logout(c *gin.Context) {
 func (h *Handler) RefreshToken(c *gin.Context) {
 	mapToken := make(map[string]string, 0)
 	if err := c.ShouldBindJSON(&mapToken); err != nil {
-		jsonErr := models.NewBadRequestError("token malformed")
+		jsonErr := models.NewBadRequestError("token malformed", "refresh_token")
 		c.JSON(jsonErr.StatusCode, jsonErr)
 		return
 	}
 
 	refreshToken := mapToken["refresh_token"]
 	validateResponse, err := h.RPC.ValidateRefreshToken(context.Background(), &pb.ValidateRefreshTokenRequest{SignedToken: refreshToken})
-	if err != nil {
-		jsonErr := models.NewUnauthorizedError(err.Error())
+	if jsonErr := lib.HandleRPCError(err); jsonErr != nil {
 		c.JSON(jsonErr.StatusCode, jsonErr)
 		return
 	}
@@ -228,10 +230,8 @@ func (h *Handler) RefreshToken(c *gin.Context) {
 		AccessTokenDuration:  2,
 		RefreshTokenDuration: 1140,
 	})
-	if err != nil {
-		jsonErr := models.NewInternalServerError("could not sign token")
+	if jsonErr := lib.HandleRPCError(err); jsonErr != nil {
 		c.JSON(jsonErr.StatusCode, jsonErr)
-		c.Abort()
 		return
 	}
 

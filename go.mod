@@ -3,7 +3,7 @@ module github.com/bogdanrat/web-server
 go 1.16
 
 require (
-	github.com/bogdanrat/web-server/service/auth v0.0.0-20210525064138-acf94311a072
+	github.com/bogdanrat/web-server/service/auth v0.0.0-20210525153555-2a51a932c2fc
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/fsnotify/fsnotify v1.4.9 // indirect; indirectgo m
 	github.com/gin-gonic/gin v1.7.2
@@ -23,9 +23,9 @@ require (
 	github.com/twinj/uuid v1.0.0
 	github.com/ugorji/go v1.2.6 // indirect
 	golang.org/x/crypto v0.0.0-20210513164829-c07d793c2f9a
-	golang.org/x/net v0.0.0-20210521195947-fe42d452be8f // indirect
-	golang.org/x/sys v0.0.0-20210521203332-0cec03c779c1 // indirect
-	google.golang.org/genproto v0.0.0-20210524171403-669157292da3 // indirect
+	golang.org/x/net v0.0.0-20210525063256-abc453219eb5 // indirect
+	golang.org/x/sys v0.0.0-20210525143221-35b2ab0089ea // indirect
+	google.golang.org/genproto v0.0.0-20210524171403-669157292da3
 	google.golang.org/grpc v1.38.0
 	google.golang.org/protobuf v1.26.0
 	gopkg.in/ini.v1 v1.62.0 // indirect
