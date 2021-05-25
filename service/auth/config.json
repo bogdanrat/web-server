@@ -1,0 +1,10 @@
+{
+  "Service": {
+    "Address": ":50051"
+  },
+  "OpenCensus": {
+    "Enabled": true,
+    "StatsPage": "debug",
+    "Address": "localhost:8081"
+  }
+}
