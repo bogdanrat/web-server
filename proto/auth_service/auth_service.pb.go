@@ -228,6 +228,407 @@ func (x *ValidateQRCodeResponse) GetValidated() bool {
 	return false
 }
 
+type GenerateTokenRequest struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Email                string `protobuf:"bytes,1,opt,name=email,proto3" json:"email,omitempty"`
+	AccessTokenDuration  int64  `protobuf:"varint,2,opt,name=accessTokenDuration,proto3" json:"accessTokenDuration,omitempty"`
+	RefreshTokenDuration int64  `protobuf:"varint,3,opt,name=refreshTokenDuration,proto3" json:"refreshTokenDuration,omitempty"`
+}
+
+func (x *GenerateTokenRequest) Reset() {
+	*x = GenerateTokenRequest{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_auth_service_proto_msgTypes[4]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *GenerateTokenRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GenerateTokenRequest) ProtoMessage() {}
+
+func (x *GenerateTokenRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_auth_service_proto_msgTypes[4]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GenerateTokenRequest.ProtoReflect.Descriptor instead.
+func (*GenerateTokenRequest) Descriptor() ([]byte, []int) {
+	return file_auth_service_proto_rawDescGZIP(), []int{4}
+}
+
+func (x *GenerateTokenRequest) GetEmail() string {
+	if x != nil {
+		return x.Email
+	}
+	return ""
+}
+
+func (x *GenerateTokenRequest) GetAccessTokenDuration() int64 {
+	if x != nil {
+		return x.AccessTokenDuration
+	}
+	return 0
+}
+
+func (x *GenerateTokenRequest) GetRefreshTokenDuration() int64 {
+	if x != nil {
+		return x.RefreshTokenDuration
+	}
+	return 0
+}
+
+type GenerateTokenResponse struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Token *Token `protobuf:"bytes,1,opt,name=token,proto3" json:"token,omitempty"`
+}
+
+func (x *GenerateTokenResponse) Reset() {
+	*x = GenerateTokenResponse{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_auth_service_proto_msgTypes[5]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *GenerateTokenResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GenerateTokenResponse) ProtoMessage() {}
+
+func (x *GenerateTokenResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_auth_service_proto_msgTypes[5]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GenerateTokenResponse.ProtoReflect.Descriptor instead.
+func (*GenerateTokenResponse) Descriptor() ([]byte, []int) {
+	return file_auth_service_proto_rawDescGZIP(), []int{5}
+}
+
+func (x *GenerateTokenResponse) GetToken() *Token {
+	if x != nil {
+		return x.Token
+	}
+	return nil
+}
+
+type Token struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	AccessToken         string `protobuf:"bytes,1,opt,name=accessToken,proto3" json:"accessToken,omitempty"`
+	AccessTokenExpires  int64  `protobuf:"varint,2,opt,name=accessTokenExpires,proto3" json:"accessTokenExpires,omitempty"`
+	AccessUuid          string `protobuf:"bytes,3,opt,name=accessUuid,proto3" json:"accessUuid,omitempty"`
+	RefreshToken        string `protobuf:"bytes,4,opt,name=refreshToken,proto3" json:"refreshToken,omitempty"`
+	RefreshTokenExpires int64  `protobuf:"varint,5,opt,name=refreshTokenExpires,proto3" json:"refreshTokenExpires,omitempty"`
+	RefreshUuid         string `protobuf:"bytes,6,opt,name=refreshUuid,proto3" json:"refreshUuid,omitempty"`
+}
+
+func (x *Token) Reset() {
+	*x = Token{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_auth_service_proto_msgTypes[6]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *Token) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*Token) ProtoMessage() {}
+
+func (x *Token) ProtoReflect() protoreflect.Message {
+	mi := &file_auth_service_proto_msgTypes[6]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use Token.ProtoReflect.Descriptor instead.
+func (*Token) Descriptor() ([]byte, []int) {
+	return file_auth_service_proto_rawDescGZIP(), []int{6}
+}
+
+func (x *Token) GetAccessToken() string {
+	if x != nil {
+		return x.AccessToken
+	}
+	return ""
+}
+
+func (x *Token) GetAccessTokenExpires() int64 {
+	if x != nil {
+		return x.AccessTokenExpires
+	}
+	return 0
+}
+
+func (x *Token) GetAccessUuid() string {
+	if x != nil {
+		return x.AccessUuid
+	}
+	return ""
+}
+
+func (x *Token) GetRefreshToken() string {
+	if x != nil {
+		return x.RefreshToken
+	}
+	return ""
+}
+
+func (x *Token) GetRefreshTokenExpires() int64 {
+	if x != nil {
+		return x.RefreshTokenExpires
+	}
+	return 0
+}
+
+func (x *Token) GetRefreshUuid() string {
+	if x != nil {
+		return x.RefreshUuid
+	}
+	return ""
+}
+
+type ValidateAccessTokenRequest struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	SignedToken string `protobuf:"bytes,1,opt,name=signedToken,proto3" json:"signedToken,omitempty"`
+}
+
+func (x *ValidateAccessTokenRequest) Reset() {
+	*x = ValidateAccessTokenRequest{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_auth_service_proto_msgTypes[7]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *ValidateAccessTokenRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ValidateAccessTokenRequest) ProtoMessage() {}
+
+func (x *ValidateAccessTokenRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_auth_service_proto_msgTypes[7]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ValidateAccessTokenRequest.ProtoReflect.Descriptor instead.
+func (*ValidateAccessTokenRequest) Descriptor() ([]byte, []int) {
+	return file_auth_service_proto_rawDescGZIP(), []int{7}
+}
+
+func (x *ValidateAccessTokenRequest) GetSignedToken() string {
+	if x != nil {
+		return x.SignedToken
+	}
+	return ""
+}
+
+type ValidateAccessTokenResponse struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Email      string `protobuf:"bytes,1,opt,name=email,proto3" json:"email,omitempty"`
+	AccessUuid string `protobuf:"bytes,2,opt,name=accessUuid,proto3" json:"accessUuid,omitempty"`
+}
+
+func (x *ValidateAccessTokenResponse) Reset() {
+	*x = ValidateAccessTokenResponse{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_auth_service_proto_msgTypes[8]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *ValidateAccessTokenResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ValidateAccessTokenResponse) ProtoMessage() {}
+
+func (x *ValidateAccessTokenResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_auth_service_proto_msgTypes[8]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ValidateAccessTokenResponse.ProtoReflect.Descriptor instead.
+func (*ValidateAccessTokenResponse) Descriptor() ([]byte, []int) {
+	return file_auth_service_proto_rawDescGZIP(), []int{8}
+}
+
+func (x *ValidateAccessTokenResponse) GetEmail() string {
+	if x != nil {
+		return x.Email
+	}
+	return ""
+}
+
+func (x *ValidateAccessTokenResponse) GetAccessUuid() string {
+	if x != nil {
+		return x.AccessUuid
+	}
+	return ""
+}
+
+type ValidateRefreshTokenRequest struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	SignedToken string `protobuf:"bytes,1,opt,name=signedToken,proto3" json:"signedToken,omitempty"`
+}
+
+func (x *ValidateRefreshTokenRequest) Reset() {
+	*x = ValidateRefreshTokenRequest{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_auth_service_proto_msgTypes[9]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *ValidateRefreshTokenRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ValidateRefreshTokenRequest) ProtoMessage() {}
+
+func (x *ValidateRefreshTokenRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_auth_service_proto_msgTypes[9]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ValidateRefreshTokenRequest.ProtoReflect.Descriptor instead.
+func (*ValidateRefreshTokenRequest) Descriptor() ([]byte, []int) {
+	return file_auth_service_proto_rawDescGZIP(), []int{9}
+}
+
+func (x *ValidateRefreshTokenRequest) GetSignedToken() string {
+	if x != nil {
+		return x.SignedToken
+	}
+	return ""
+}
+
+type ValidateRefreshTokenResponse struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Email       string `protobuf:"bytes,1,opt,name=email,proto3" json:"email,omitempty"`
+	RefreshUuid string `protobuf:"bytes,2,opt,name=refreshUuid,proto3" json:"refreshUuid,omitempty"`
+}
+
+func (x *ValidateRefreshTokenResponse) Reset() {
+	*x = ValidateRefreshTokenResponse{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_auth_service_proto_msgTypes[10]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *ValidateRefreshTokenResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ValidateRefreshTokenResponse) ProtoMessage() {}
+
+func (x *ValidateRefreshTokenResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_auth_service_proto_msgTypes[10]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ValidateRefreshTokenResponse.ProtoReflect.Descriptor instead.
+func (*ValidateRefreshTokenResponse) Descriptor() ([]byte, []int) {
+	return file_auth_service_proto_rawDescGZIP(), []int{10}
+}
+
+func (x *ValidateRefreshTokenResponse) GetEmail() string {
+	if x != nil {
+		return x.Email
+	}
+	return ""
+}
+
+func (x *ValidateRefreshTokenResponse) GetRefreshUuid() string {
+	if x != nil {
+		return x.RefreshUuid
+	}
+	return ""
+}
+
 var File_auth_service_proto protoreflect.FileDescriptor
 
 var file_auth_service_proto_rawDesc = []byte{
@@ -248,19 +649,86 @@ var file_auth_service_proto_rawDesc = []byte{
 	0x53, 0x65, 0x63, 0x72, 0x65, 0x74, 0x22, 0x36, 0x0a, 0x16, 0x56, 0x61, 0x6c, 0x69, 0x64, 0x61,
 	0x74, 0x65, 0x51, 0x52, 0x43, 0x6f, 0x64, 0x65, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65,
 	0x12, 0x1c, 0x0a, 0x09, 0x76, 0x61, 0x6c, 0x69, 0x64, 0x61, 0x74, 0x65, 0x64, 0x18, 0x01, 0x20,
-	0x01, 0x28, 0x08, 0x52, 0x09, 0x76, 0x61, 0x6c, 0x69, 0x64, 0x61, 0x74, 0x65, 0x64, 0x32, 0xc0,
-	0x01, 0x0a, 0x04, 0x41, 0x75, 0x74, 0x68, 0x12, 0x5b, 0x0a, 0x0e, 0x47, 0x65, 0x6e, 0x65, 0x72,
-	0x61, 0x74, 0x65, 0x51, 0x52, 0x43, 0x6f, 0x64, 0x65, 0x12, 0x23, 0x2e, 0x61, 0x75, 0x74, 0x68,
+	0x01, 0x28, 0x08, 0x52, 0x09, 0x76, 0x61, 0x6c, 0x69, 0x64, 0x61, 0x74, 0x65, 0x64, 0x22, 0x92,
+	0x01, 0x0a, 0x14, 0x47, 0x65, 0x6e, 0x65, 0x72, 0x61, 0x74, 0x65, 0x54, 0x6f, 0x6b, 0x65, 0x6e,
+	0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x14, 0x0a, 0x05, 0x65, 0x6d, 0x61, 0x69, 0x6c,
+	0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x05, 0x65, 0x6d, 0x61, 0x69, 0x6c, 0x12, 0x30, 0x0a,
+	0x13, 0x61, 0x63, 0x63, 0x65, 0x73, 0x73, 0x54, 0x6f, 0x6b, 0x65, 0x6e, 0x44, 0x75, 0x72, 0x61,
+	0x74, 0x69, 0x6f, 0x6e, 0x18, 0x02, 0x20, 0x01, 0x28, 0x03, 0x52, 0x13, 0x61, 0x63, 0x63, 0x65,
+	0x73, 0x73, 0x54, 0x6f, 0x6b, 0x65, 0x6e, 0x44, 0x75, 0x72, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x12,
+	0x32, 0x0a, 0x14, 0x72, 0x65, 0x66, 0x72, 0x65, 0x73, 0x68, 0x54, 0x6f, 0x6b, 0x65, 0x6e, 0x44,
+	0x75, 0x72, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x18, 0x03, 0x20, 0x01, 0x28, 0x03, 0x52, 0x14, 0x72,
+	0x65, 0x66, 0x72, 0x65, 0x73, 0x68, 0x54, 0x6f, 0x6b, 0x65, 0x6e, 0x44, 0x75, 0x72, 0x61, 0x74,
+	0x69, 0x6f, 0x6e, 0x22, 0x42, 0x0a, 0x15, 0x47, 0x65, 0x6e, 0x65, 0x72, 0x61, 0x74, 0x65, 0x54,
+	0x6f, 0x6b, 0x65, 0x6e, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x29, 0x0a, 0x05,
+	0x74, 0x6f, 0x6b, 0x65, 0x6e, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x13, 0x2e, 0x61, 0x75,
+	0x74, 0x68, 0x5f, 0x73, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x2e, 0x54, 0x6f, 0x6b, 0x65, 0x6e,
+	0x52, 0x05, 0x74, 0x6f, 0x6b, 0x65, 0x6e, 0x22, 0xf1, 0x01, 0x0a, 0x05, 0x54, 0x6f, 0x6b, 0x65,
+	0x6e, 0x12, 0x20, 0x0a, 0x0b, 0x61, 0x63, 0x63, 0x65, 0x73, 0x73, 0x54, 0x6f, 0x6b, 0x65, 0x6e,
+	0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0b, 0x61, 0x63, 0x63, 0x65, 0x73, 0x73, 0x54, 0x6f,
+	0x6b, 0x65, 0x6e, 0x12, 0x2e, 0x0a, 0x12, 0x61, 0x63, 0x63, 0x65, 0x73, 0x73, 0x54, 0x6f, 0x6b,
+	0x65, 0x6e, 0x45, 0x78, 0x70, 0x69, 0x72, 0x65, 0x73, 0x18, 0x02, 0x20, 0x01, 0x28, 0x03, 0x52,
+	0x12, 0x61, 0x63, 0x63, 0x65, 0x73, 0x73, 0x54, 0x6f, 0x6b, 0x65, 0x6e, 0x45, 0x78, 0x70, 0x69,
+	0x72, 0x65, 0x73, 0x12, 0x1e, 0x0a, 0x0a, 0x61, 0x63, 0x63, 0x65, 0x73, 0x73, 0x55, 0x75, 0x69,
+	0x64, 0x18, 0x03, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0a, 0x61, 0x63, 0x63, 0x65, 0x73, 0x73, 0x55,
+	0x75, 0x69, 0x64, 0x12, 0x22, 0x0a, 0x0c, 0x72, 0x65, 0x66, 0x72, 0x65, 0x73, 0x68, 0x54, 0x6f,
+	0x6b, 0x65, 0x6e, 0x18, 0x04, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0c, 0x72, 0x65, 0x66, 0x72, 0x65,
+	0x73, 0x68, 0x54, 0x6f, 0x6b, 0x65, 0x6e, 0x12, 0x30, 0x0a, 0x13, 0x72, 0x65, 0x66, 0x72, 0x65,
+	0x73, 0x68, 0x54, 0x6f, 0x6b, 0x65, 0x6e, 0x45, 0x78, 0x70, 0x69, 0x72, 0x65, 0x73, 0x18, 0x05,
+	0x20, 0x01, 0x28, 0x03, 0x52, 0x13, 0x72, 0x65, 0x66, 0x72, 0x65, 0x73, 0x68, 0x54, 0x6f, 0x6b,
+	0x65, 0x6e, 0x45, 0x78, 0x70, 0x69, 0x72, 0x65, 0x73, 0x12, 0x20, 0x0a, 0x0b, 0x72, 0x65, 0x66,
+	0x72, 0x65, 0x73, 0x68, 0x55, 0x75, 0x69, 0x64, 0x18, 0x06, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0b,
+	0x72, 0x65, 0x66, 0x72, 0x65, 0x73, 0x68, 0x55, 0x75, 0x69, 0x64, 0x22, 0x3e, 0x0a, 0x1a, 0x56,
+	0x61, 0x6c, 0x69, 0x64, 0x61, 0x74, 0x65, 0x41, 0x63, 0x63, 0x65, 0x73, 0x73, 0x54, 0x6f, 0x6b,
+	0x65, 0x6e, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x20, 0x0a, 0x0b, 0x73, 0x69, 0x67,
+	0x6e, 0x65, 0x64, 0x54, 0x6f, 0x6b, 0x65, 0x6e, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0b,
+	0x73, 0x69, 0x67, 0x6e, 0x65, 0x64, 0x54, 0x6f, 0x6b, 0x65, 0x6e, 0x22, 0x53, 0x0a, 0x1b, 0x56,
+	0x61, 0x6c, 0x69, 0x64, 0x61, 0x74, 0x65, 0x41, 0x63, 0x63, 0x65, 0x73, 0x73, 0x54, 0x6f, 0x6b,
+	0x65, 0x6e, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x14, 0x0a, 0x05, 0x65, 0x6d,
+	0x61, 0x69, 0x6c, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x05, 0x65, 0x6d, 0x61, 0x69, 0x6c,
+	0x12, 0x1e, 0x0a, 0x0a, 0x61, 0x63, 0x63, 0x65, 0x73, 0x73, 0x55, 0x75, 0x69, 0x64, 0x18, 0x02,
+	0x20, 0x01, 0x28, 0x09, 0x52, 0x0a, 0x61, 0x63, 0x63, 0x65, 0x73, 0x73, 0x55, 0x75, 0x69, 0x64,
+	0x22, 0x3f, 0x0a, 0x1b, 0x56, 0x61, 0x6c, 0x69, 0x64, 0x61, 0x74, 0x65, 0x52, 0x65, 0x66, 0x72,
+	0x65, 0x73, 0x68, 0x54, 0x6f, 0x6b, 0x65, 0x6e, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12,
+	0x20, 0x0a, 0x0b, 0x73, 0x69, 0x67, 0x6e, 0x65, 0x64, 0x54, 0x6f, 0x6b, 0x65, 0x6e, 0x18, 0x01,
+	0x20, 0x01, 0x28, 0x09, 0x52, 0x0b, 0x73, 0x69, 0x67, 0x6e, 0x65, 0x64, 0x54, 0x6f, 0x6b, 0x65,
+	0x6e, 0x22, 0x56, 0x0a, 0x1c, 0x56, 0x61, 0x6c, 0x69, 0x64, 0x61, 0x74, 0x65, 0x52, 0x65, 0x66,
+	0x72, 0x65, 0x73, 0x68, 0x54, 0x6f, 0x6b, 0x65, 0x6e, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73,
+	0x65, 0x12, 0x14, 0x0a, 0x05, 0x65, 0x6d, 0x61, 0x69, 0x6c, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09,
+	0x52, 0x05, 0x65, 0x6d, 0x61, 0x69, 0x6c, 0x12, 0x20, 0x0a, 0x0b, 0x72, 0x65, 0x66, 0x72, 0x65,
+	0x73, 0x68, 0x55, 0x75, 0x69, 0x64, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0b, 0x72, 0x65,
+	0x66, 0x72, 0x65, 0x73, 0x68, 0x55, 0x75, 0x69, 0x64, 0x32, 0xf5, 0x03, 0x0a, 0x04, 0x41, 0x75,
+	0x74, 0x68, 0x12, 0x5b, 0x0a, 0x0e, 0x47, 0x65, 0x6e, 0x65, 0x72, 0x61, 0x74, 0x65, 0x51, 0x52,
+	0x43, 0x6f, 0x64, 0x65, 0x12, 0x23, 0x2e, 0x61, 0x75, 0x74, 0x68, 0x5f, 0x73, 0x65, 0x72, 0x76,
+	0x69, 0x63, 0x65, 0x2e, 0x47, 0x65, 0x6e, 0x65, 0x72, 0x61, 0x74, 0x65, 0x51, 0x52, 0x43, 0x6f,
+	0x64, 0x65, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x24, 0x2e, 0x61, 0x75, 0x74, 0x68,
 	0x5f, 0x73, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x2e, 0x47, 0x65, 0x6e, 0x65, 0x72, 0x61, 0x74,
-	0x65, 0x51, 0x52, 0x43, 0x6f, 0x64, 0x65, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x24,
-	0x2e, 0x61, 0x75, 0x74, 0x68, 0x5f, 0x73, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x2e, 0x47, 0x65,
-	0x6e, 0x65, 0x72, 0x61, 0x74, 0x65, 0x51, 0x52, 0x43, 0x6f, 0x64, 0x65, 0x52, 0x65, 0x73, 0x70,
-	0x6f, 0x6e, 0x73, 0x65, 0x12, 0x5b, 0x0a, 0x0e, 0x56, 0x61, 0x6c, 0x69, 0x64, 0x61, 0x74, 0x65,
-	0x51, 0x52, 0x43, 0x6f, 0x64, 0x65, 0x12, 0x23, 0x2e, 0x61, 0x75, 0x74, 0x68, 0x5f, 0x73, 0x65,
+	0x65, 0x51, 0x52, 0x43, 0x6f, 0x64, 0x65, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12,
+	0x5b, 0x0a, 0x0e, 0x56, 0x61, 0x6c, 0x69, 0x64, 0x61, 0x74, 0x65, 0x51, 0x52, 0x43, 0x6f, 0x64,
+	0x65, 0x12, 0x23, 0x2e, 0x61, 0x75, 0x74, 0x68, 0x5f, 0x73, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65,
+	0x2e, 0x56, 0x61, 0x6c, 0x69, 0x64, 0x61, 0x74, 0x65, 0x51, 0x52, 0x43, 0x6f, 0x64, 0x65, 0x52,
+	0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x24, 0x2e, 0x61, 0x75, 0x74, 0x68, 0x5f, 0x73, 0x65,
 	0x72, 0x76, 0x69, 0x63, 0x65, 0x2e, 0x56, 0x61, 0x6c, 0x69, 0x64, 0x61, 0x74, 0x65, 0x51, 0x52,
-	0x43, 0x6f, 0x64, 0x65, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x24, 0x2e, 0x61, 0x75,
-	0x74, 0x68, 0x5f, 0x73, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x2e, 0x56, 0x61, 0x6c, 0x69, 0x64,
-	0x61, 0x74, 0x65, 0x51, 0x52, 0x43, 0x6f, 0x64, 0x65, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73,
+	0x43, 0x6f, 0x64, 0x65, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x58, 0x0a, 0x0d,
+	0x47, 0x65, 0x6e, 0x65, 0x72, 0x61, 0x74, 0x65, 0x54, 0x6f, 0x6b, 0x65, 0x6e, 0x12, 0x22, 0x2e,
+	0x61, 0x75, 0x74, 0x68, 0x5f, 0x73, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x2e, 0x47, 0x65, 0x6e,
+	0x65, 0x72, 0x61, 0x74, 0x65, 0x54, 0x6f, 0x6b, 0x65, 0x6e, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73,
+	0x74, 0x1a, 0x23, 0x2e, 0x61, 0x75, 0x74, 0x68, 0x5f, 0x73, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65,
+	0x2e, 0x47, 0x65, 0x6e, 0x65, 0x72, 0x61, 0x74, 0x65, 0x54, 0x6f, 0x6b, 0x65, 0x6e, 0x52, 0x65,
+	0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x6a, 0x0a, 0x13, 0x56, 0x61, 0x6c, 0x69, 0x64, 0x61,
+	0x74, 0x65, 0x41, 0x63, 0x63, 0x65, 0x73, 0x73, 0x54, 0x6f, 0x6b, 0x65, 0x6e, 0x12, 0x28, 0x2e,
+	0x61, 0x75, 0x74, 0x68, 0x5f, 0x73, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x2e, 0x56, 0x61, 0x6c,
+	0x69, 0x64, 0x61, 0x74, 0x65, 0x41, 0x63, 0x63, 0x65, 0x73, 0x73, 0x54, 0x6f, 0x6b, 0x65, 0x6e,
+	0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x29, 0x2e, 0x61, 0x75, 0x74, 0x68, 0x5f, 0x73,
+	0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x2e, 0x56, 0x61, 0x6c, 0x69, 0x64, 0x61, 0x74, 0x65, 0x41,
+	0x63, 0x63, 0x65, 0x73, 0x73, 0x54, 0x6f, 0x6b, 0x65, 0x6e, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e,
+	0x73, 0x65, 0x12, 0x6d, 0x0a, 0x14, 0x56, 0x61, 0x6c, 0x69, 0x64, 0x61, 0x74, 0x65, 0x52, 0x65,
+	0x66, 0x72, 0x65, 0x73, 0x68, 0x54, 0x6f, 0x6b, 0x65, 0x6e, 0x12, 0x29, 0x2e, 0x61, 0x75, 0x74,
+	0x68, 0x5f, 0x73, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x2e, 0x56, 0x61, 0x6c, 0x69, 0x64, 0x61,
+	0x74, 0x65, 0x52, 0x65, 0x66, 0x72, 0x65, 0x73, 0x68, 0x54, 0x6f, 0x6b, 0x65, 0x6e, 0x52, 0x65,
+	0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x2a, 0x2e, 0x61, 0x75, 0x74, 0x68, 0x5f, 0x73, 0x65, 0x72,
+	0x76, 0x69, 0x63, 0x65, 0x2e, 0x56, 0x61, 0x6c, 0x69, 0x64, 0x61, 0x74, 0x65, 0x52, 0x65, 0x66,
+	0x72, 0x65, 0x73, 0x68, 0x54, 0x6f, 0x6b, 0x65, 0x6e, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73,
 	0x65, 0x42, 0x10, 0x5a, 0x0e, 0x2f, 0x3b, 0x61, 0x75, 0x74, 0x68, 0x5f, 0x73, 0x65, 0x72, 0x76,
 	0x69, 0x63, 0x65, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
@@ -277,23 +745,37 @@ func file_auth_service_proto_rawDescGZIP() []byte {
 	return file_auth_service_proto_rawDescData
 }
 
-var file_auth_service_proto_msgTypes = make([]protoimpl.MessageInfo, 4)
+var file_auth_service_proto_msgTypes = make([]protoimpl.MessageInfo, 11)
 var file_auth_service_proto_goTypes = []interface{}{
-	(*GenerateQRCodeRequest)(nil),  // 0: auth_service.GenerateQRCodeRequest
-	(*GenerateQRCodeResponse)(nil), // 1: auth_service.GenerateQRCodeResponse
-	(*ValidateQRCodeRequest)(nil),  // 2: auth_service.ValidateQRCodeRequest
-	(*ValidateQRCodeResponse)(nil), // 3: auth_service.ValidateQRCodeResponse
+	(*GenerateQRCodeRequest)(nil),        // 0: auth_service.GenerateQRCodeRequest
+	(*GenerateQRCodeResponse)(nil),       // 1: auth_service.GenerateQRCodeResponse
+	(*ValidateQRCodeRequest)(nil),        // 2: auth_service.ValidateQRCodeRequest
+	(*ValidateQRCodeResponse)(nil),       // 3: auth_service.ValidateQRCodeResponse
+	(*GenerateTokenRequest)(nil),         // 4: auth_service.GenerateTokenRequest
+	(*GenerateTokenResponse)(nil),        // 5: auth_service.GenerateTokenResponse
+	(*Token)(nil),                        // 6: auth_service.Token
+	(*ValidateAccessTokenRequest)(nil),   // 7: auth_service.ValidateAccessTokenRequest
+	(*ValidateAccessTokenResponse)(nil),  // 8: auth_service.ValidateAccessTokenResponse
+	(*ValidateRefreshTokenRequest)(nil),  // 9: auth_service.ValidateRefreshTokenRequest
+	(*ValidateRefreshTokenResponse)(nil), // 10: auth_service.ValidateRefreshTokenResponse
 }
 var file_auth_service_proto_depIdxs = []int32{
-	0, // 0: auth_service.Auth.GenerateQRCode:input_type -> auth_service.GenerateQRCodeRequest
-	2, // 1: auth_service.Auth.ValidateQRCode:input_type -> auth_service.ValidateQRCodeRequest
-	1, // 2: auth_service.Auth.GenerateQRCode:output_type -> auth_service.GenerateQRCodeResponse
-	3, // 3: auth_service.Auth.ValidateQRCode:output_type -> auth_service.ValidateQRCodeResponse
-	2, // [2:4] is the sub-list for method output_type
-	0, // [0:2] is the sub-list for method input_type
-	0, // [0:0] is the sub-list for extension type_name
-	0, // [0:0] is the sub-list for extension extendee
-	0, // [0:0] is the sub-list for field type_name
+	6,  // 0: auth_service.GenerateTokenResponse.token:type_name -> auth_service.Token
+	0,  // 1: auth_service.Auth.GenerateQRCode:input_type -> auth_service.GenerateQRCodeRequest
+	2,  // 2: auth_service.Auth.ValidateQRCode:input_type -> auth_service.ValidateQRCodeRequest
+	4,  // 3: auth_service.Auth.GenerateToken:input_type -> auth_service.GenerateTokenRequest
+	7,  // 4: auth_service.Auth.ValidateAccessToken:input_type -> auth_service.ValidateAccessTokenRequest
+	9,  // 5: auth_service.Auth.ValidateRefreshToken:input_type -> auth_service.ValidateRefreshTokenRequest
+	1,  // 6: auth_service.Auth.GenerateQRCode:output_type -> auth_service.GenerateQRCodeResponse
+	3,  // 7: auth_service.Auth.ValidateQRCode:output_type -> auth_service.ValidateQRCodeResponse
+	5,  // 8: auth_service.Auth.GenerateToken:output_type -> auth_service.GenerateTokenResponse
+	8,  // 9: auth_service.Auth.ValidateAccessToken:output_type -> auth_service.ValidateAccessTokenResponse
+	10, // 10: auth_service.Auth.ValidateRefreshToken:output_type -> auth_service.ValidateRefreshTokenResponse
+	6,  // [6:11] is the sub-list for method output_type
+	1,  // [1:6] is the sub-list for method input_type
+	1,  // [1:1] is the sub-list for extension type_name
+	1,  // [1:1] is the sub-list for extension extendee
+	0,  // [0:1] is the sub-list for field type_name
 }
 
 func init() { file_auth_service_proto_init() }
@@ -350,6 +832,90 @@ func file_auth_service_proto_init() {
 				return nil
 			}
 		}
+		file_auth_service_proto_msgTypes[4].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*GenerateTokenRequest); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_auth_service_proto_msgTypes[5].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*GenerateTokenResponse); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_auth_service_proto_msgTypes[6].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*Token); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_auth_service_proto_msgTypes[7].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*ValidateAccessTokenRequest); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_auth_service_proto_msgTypes[8].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*ValidateAccessTokenResponse); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_auth_service_proto_msgTypes[9].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*ValidateRefreshTokenRequest); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_auth_service_proto_msgTypes[10].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*ValidateRefreshTokenResponse); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
 	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
@@ -357,7 +923,7 @@ func file_auth_service_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_auth_service_proto_rawDesc,
 			NumEnums:      0,
-			NumMessages:   4,
+			NumMessages:   11,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
@@ -385,6 +951,9 @@ const _ = grpc.SupportPackageIsVersion6
 type AuthClient interface {
 	GenerateQRCode(ctx context.Context, in *GenerateQRCodeRequest, opts ...grpc.CallOption) (*GenerateQRCodeResponse, error)
 	ValidateQRCode(ctx context.Context, in *ValidateQRCodeRequest, opts ...grpc.CallOption) (*ValidateQRCodeResponse, error)
+	GenerateToken(ctx context.Context, in *GenerateTokenRequest, opts ...grpc.CallOption) (*GenerateTokenResponse, error)
+	ValidateAccessToken(ctx context.Context, in *ValidateAccessTokenRequest, opts ...grpc.CallOption) (*ValidateAccessTokenResponse, error)
+	ValidateRefreshToken(ctx context.Context, in *ValidateRefreshTokenRequest, opts ...grpc.CallOption) (*ValidateRefreshTokenResponse, error)
 }
 
 type authClient struct {
@@ -413,10 +982,40 @@ func (c *authClient) ValidateQRCode(ctx context.Context, in *ValidateQRCodeReque
 	return out, nil
 }
 
+func (c *authClient) GenerateToken(ctx context.Context, in *GenerateTokenRequest, opts ...grpc.CallOption) (*GenerateTokenResponse, error) {
+	out := new(GenerateTokenResponse)
+	err := c.cc.Invoke(ctx, "/auth_service.Auth/GenerateToken", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *authClient) ValidateAccessToken(ctx context.Context, in *ValidateAccessTokenRequest, opts ...grpc.CallOption) (*ValidateAccessTokenResponse, error) {
+	out := new(ValidateAccessTokenResponse)
+	err := c.cc.Invoke(ctx, "/auth_service.Auth/ValidateAccessToken", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *authClient) ValidateRefreshToken(ctx context.Context, in *ValidateRefreshTokenRequest, opts ...grpc.CallOption) (*ValidateRefreshTokenResponse, error) {
+	out := new(ValidateRefreshTokenResponse)
+	err := c.cc.Invoke(ctx, "/auth_service.Auth/ValidateRefreshToken", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // AuthServer is the server API for Auth service.
 type AuthServer interface {
 	GenerateQRCode(context.Context, *GenerateQRCodeRequest) (*GenerateQRCodeResponse, error)
 	ValidateQRCode(context.Context, *ValidateQRCodeRequest) (*ValidateQRCodeResponse, error)
+	GenerateToken(context.Context, *GenerateTokenRequest) (*GenerateTokenResponse, error)
+	ValidateAccessToken(context.Context, *ValidateAccessTokenRequest) (*ValidateAccessTokenResponse, error)
+	ValidateRefreshToken(context.Context, *ValidateRefreshTokenRequest) (*ValidateRefreshTokenResponse, error)
 }
 
 // UnimplementedAuthServer can be embedded to have forward compatible implementations.
@@ -428,6 +1027,15 @@ func (*UnimplementedAuthServer) GenerateQRCode(context.Context, *GenerateQRCodeR
 }
 func (*UnimplementedAuthServer) ValidateQRCode(context.Context, *ValidateQRCodeRequest) (*ValidateQRCodeResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ValidateQRCode not implemented")
+}
+func (*UnimplementedAuthServer) GenerateToken(context.Context, *GenerateTokenRequest) (*GenerateTokenResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GenerateToken not implemented")
+}
+func (*UnimplementedAuthServer) ValidateAccessToken(context.Context, *ValidateAccessTokenRequest) (*ValidateAccessTokenResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ValidateAccessToken not implemented")
+}
+func (*UnimplementedAuthServer) ValidateRefreshToken(context.Context, *ValidateRefreshTokenRequest) (*ValidateRefreshTokenResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ValidateRefreshToken not implemented")
 }
 
 func RegisterAuthServer(s *grpc.Server, srv AuthServer) {
@@ -470,6 +1078,60 @@ func _Auth_ValidateQRCode_Handler(srv interface{}, ctx context.Context, dec func
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Auth_GenerateToken_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GenerateTokenRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AuthServer).GenerateToken(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/auth_service.Auth/GenerateToken",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AuthServer).GenerateToken(ctx, req.(*GenerateTokenRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Auth_ValidateAccessToken_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ValidateAccessTokenRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AuthServer).ValidateAccessToken(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/auth_service.Auth/ValidateAccessToken",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AuthServer).ValidateAccessToken(ctx, req.(*ValidateAccessTokenRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Auth_ValidateRefreshToken_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ValidateRefreshTokenRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AuthServer).ValidateRefreshToken(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/auth_service.Auth/ValidateRefreshToken",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AuthServer).ValidateRefreshToken(ctx, req.(*ValidateRefreshTokenRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 var _Auth_serviceDesc = grpc.ServiceDesc{
 	ServiceName: "auth_service.Auth",
 	HandlerType: (*AuthServer)(nil),
@@ -481,6 +1143,18 @@ var _Auth_serviceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ValidateQRCode",
 			Handler:    _Auth_ValidateQRCode_Handler,
+		},
+		{
+			MethodName: "GenerateToken",
+			Handler:    _Auth_GenerateToken_Handler,
+		},
+		{
+			MethodName: "ValidateAccessToken",
+			Handler:    _Auth_ValidateAccessToken_Handler,
+		},
+		{
+			MethodName: "ValidateRefreshToken",
+			Handler:    _Auth_ValidateRefreshToken_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
