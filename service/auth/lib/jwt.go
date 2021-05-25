@@ -87,7 +87,7 @@ func ValidateAccessToken(signedToken string) (*JwtAccessClaims, error) {
 	)
 
 	if err != nil {
-		return nil, status.Errorf(codes.Internal, "%s", err)
+		return nil, status.Errorf(codes.InvalidArgument, "invalid token format")
 	}
 
 	claims, ok := token.Claims.(*JwtAccessClaims)
@@ -112,7 +112,7 @@ func ValidateRefreshToken(signedToken string) (*JwtRefreshClaims, error) {
 	)
 
 	if err != nil {
-		return nil, status.Errorf(codes.Internal, "%s", err)
+		return nil, status.Errorf(codes.InvalidArgument, "invalid token format")
 	}
 
 	claims, ok := token.Claims.(*JwtRefreshClaims)

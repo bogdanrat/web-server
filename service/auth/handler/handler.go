@@ -79,13 +79,33 @@ func (s *AuthServer) GenerateToken(ctx context.Context, req *pb.GenerateTokenReq
 		return nil, status.Errorf(codes.Internal, "could not generate token: %s", err)
 	}
 
+	if ctx.Err() == context.DeadlineExceeded {
+		log.Printf("RPC has reached deadline exceeded state: %s\n", ctx.Err())
+		return nil, ctx.Err()
+	}
+
 	return &pb.GenerateTokenResponse{Token: token}, status.New(codes.OK, "").Err()
 }
 
 func (s *AuthServer) ValidateAccessToken(ctx context.Context, req *pb.ValidateAccessTokenRequest) (*pb.ValidateAccessTokenResponse, error) {
 	claims, err := lib.ValidateAccessToken(req.SignedToken)
 	if err != nil {
+		if errorStatus, _ := status.FromError(err); errorStatus.Code() == codes.InvalidArgument {
+			details, err := errorStatus.WithDetails(&epb.BadRequest_FieldViolation{
+				Field:       "SignedToken",
+				Description: "Invalid JWT format",
+			})
+			if err != nil {
+				return nil, errorStatus.Err()
+			}
+			return nil, details.Err()
+		}
 		return nil, err
+	}
+
+	if ctx.Err() == context.DeadlineExceeded {
+		log.Printf("RPC has reached deadline exceeded state: %s\n", ctx.Err())
+		return nil, ctx.Err()
 	}
 
 	return &pb.ValidateAccessTokenResponse{
@@ -97,7 +117,22 @@ func (s *AuthServer) ValidateAccessToken(ctx context.Context, req *pb.ValidateAc
 func (s *AuthServer) ValidateRefreshToken(ctx context.Context, req *pb.ValidateRefreshTokenRequest) (*pb.ValidateRefreshTokenResponse, error) {
 	claims, err := lib.ValidateRefreshToken(req.SignedToken)
 	if err != nil {
+		if errorStatus, _ := status.FromError(err); errorStatus.Code() == codes.InvalidArgument {
+			details, err := errorStatus.WithDetails(&epb.BadRequest_FieldViolation{
+				Field:       "SignedToken",
+				Description: "Invalid JWT format",
+			})
+			if err != nil {
+				return nil, errorStatus.Err()
+			}
+			return nil, details.Err()
+		}
 		return nil, err
+	}
+
+	if ctx.Err() == context.DeadlineExceeded {
+		log.Printf("RPC has reached deadline exceeded state: %s\n", ctx.Err())
+		return nil, ctx.Err()
 	}
 
 	return &pb.ValidateRefreshTokenResponse{
