@@ -1,0 +1,13 @@
+{
+  "Service": {
+    "Address": ":50052"
+  },
+  "Upload": {
+    "MaxFileSize": 10000000
+  },
+  "AWS": {
+    "Region": "eu-central-1",
+    "Profile": "bogdan",
+    "Bucket": "web-server-storage-service-bucket"
+  }
+}

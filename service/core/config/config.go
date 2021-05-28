@@ -30,15 +30,27 @@ type RedisConfig struct {
 }
 
 type AuthenticationConfig struct {
-	AccessTokenDuration  int // minutes
-	RefreshTokenDuration int // minutes
+	AccessTokenDuration  int64 // minutes
+	RefreshTokenDuration int64 // minutes
 	MFA                  bool
 	Channel              string
 }
 
+type ServicesConfig struct {
+	Auth    AuthConfig
+	Storage StorageConfig
+}
+
 type GRPCConfig struct {
+	Address        string
 	Deadline       int64 // milliseconds
 	UseCompression bool
+}
+type AuthConfig struct {
+	GRPC GRPCConfig
+}
+type StorageConfig struct {
+	GRPC GRPCConfig
 }
 
 type Config struct {
@@ -46,7 +58,7 @@ type Config struct {
 	DB             DbConfig
 	Redis          RedisConfig
 	Authentication AuthenticationConfig
-	GRPC           GRPCConfig
+	Services       ServicesConfig
 }
 
 var (

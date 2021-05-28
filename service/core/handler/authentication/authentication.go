@@ -18,7 +18,7 @@ import (
 	"time"
 )
 
-type rpc struct {
+type RPCConfig struct {
 	Client      pb.AuthClient
 	CallOptions []grpc.CallOption
 	Deadline    int64
@@ -27,18 +27,14 @@ type rpc struct {
 type Handler struct {
 	Repository repository.DatabaseRepository
 	Cache      cache.Client
-	RPC        *rpc
+	RPC        *RPCConfig
 }
 
-func NewHandler(repo repository.DatabaseRepository, cacheClient cache.Client, authClient pb.AuthClient, callOptions []grpc.CallOption, deadline int64) *Handler {
+func NewHandler(repo repository.DatabaseRepository, cacheClient cache.Client, rpcConfig *RPCConfig) *Handler {
 	return &Handler{
 		Repository: repo,
 		Cache:      cacheClient,
-		RPC: &rpc{
-			Client:      authClient,
-			CallOptions: callOptions,
-			Deadline:    deadline,
-		},
+		RPC:        rpcConfig,
 	}
 }
 
@@ -164,10 +160,9 @@ func (h *Handler) Login(c *gin.Context) {
 	response, err := h.RPC.Client.GenerateToken(
 		ctx,
 		&pb.GenerateTokenRequest{
-			Email: request.Email,
-			// TODO: take from config
-			AccessTokenDuration:  2,
-			RefreshTokenDuration: 1140,
+			Email:                request.Email,
+			AccessTokenDuration:  config.AppConfig.Authentication.AccessTokenDuration,
+			RefreshTokenDuration: config.AppConfig.Authentication.RefreshTokenDuration,
 		},
 		h.RPC.CallOptions...,
 	)

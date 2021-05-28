@@ -13,7 +13,7 @@ func HandleRPCError(err error) *models.JSONError {
 		errorCode := status.Code(err)
 
 		switch errorCode {
-		case codes.InvalidArgument:
+		case codes.InvalidArgument, codes.ResourceExhausted:
 			errorStatus := status.Convert(err)
 			for _, details := range errorStatus.Details() {
 				switch info := details.(type) {

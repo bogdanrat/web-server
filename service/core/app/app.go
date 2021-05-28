@@ -3,6 +3,7 @@ package app
 import (
 	"fmt"
 	pb "github.com/bogdanrat/web-server/contracts/proto/auth_service"
+	"github.com/bogdanrat/web-server/contracts/proto/storage_service"
 	"github.com/bogdanrat/web-server/service/core/cache"
 	"github.com/bogdanrat/web-server/service/core/config"
 	"github.com/bogdanrat/web-server/service/core/repository/postgres"
@@ -13,7 +14,8 @@ import (
 )
 
 const (
-	address = "localhost:50051"
+	address  = "localhost:50051"
+	address2 = "localhost:50052"
 )
 
 var (
@@ -38,12 +40,21 @@ func Init() error {
 	}
 	log.Println("Cache connection established.")
 
-	conn, err := initGRPCConnection()
+	conn, err := initGRPCConnection(config.AppConfig.Services.Auth.GRPC.Address)
 	if err != nil {
 		return err
 	}
+	log.Printf("GRPC Dial %s successful.", config.AppConfig.Services.Auth.GRPC.Address)
+	authClient := pb.NewAuthClient(conn)
 
-	httpRouter = router.New(postgresDB, redisCache, pb.NewAuthClient(conn))
+	conn, err = initGRPCConnection(config.AppConfig.Services.Storage.GRPC.Address)
+	if err != nil {
+		return err
+	}
+	log.Printf("GRPC Dial %s successful.", config.AppConfig.Services.Storage.GRPC.Address)
+	storageClient := storage_service.NewStorageClient(conn)
+
+	httpRouter = router.New(postgresDB, redisCache, authClient, storageClient)
 
 	redisCache.Subscribe("self", cache.HandleAuthServiceMessages, config.AppConfig.Authentication.Channel)
 
@@ -61,8 +72,8 @@ func Start() {
 	}
 }
 
-func initGRPCConnection() (*grpc.ClientConn, error) {
-	conn, err := grpc.Dial(address,
+func initGRPCConnection(addr string) (*grpc.ClientConn, error) {
+	conn, err := grpc.Dial(addr,
 		grpc.WithInsecure(),
 	)
 	if err != nil {
