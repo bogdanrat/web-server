@@ -35,13 +35,13 @@ func (h *Handler) PostFile(c *gin.Context) {
 	file, err := c.FormFile("file")
 	if err != nil {
 		jsonErr := models.NewBadRequestError("missing file", "file")
-		c.JSON(jsonErr.StatusCode, jsonErr.Description)
+		c.JSON(jsonErr.StatusCode, jsonErr)
 		return
 	}
 
 	jsonErr := h.uploadFile(file)
 	if jsonErr != nil {
-		c.JSON(jsonErr.StatusCode, jsonErr.Description)
+		c.JSON(jsonErr.StatusCode, jsonErr)
 		return
 	}
 
@@ -110,4 +110,89 @@ func (h *Handler) uploadFile(file *multipart.FileHeader) *models.JSONError {
 	}
 
 	return nil
+}
+
+func (h *Handler) GetFiles(c *gin.Context) {
+	deadline := time.Now().Add(time.Millisecond * time.Duration(h.RPC.Deadline))
+	ctx, cancel := context.WithDeadline(context.Background(), deadline)
+	defer cancel()
+
+	stream, err := h.RPC.Client.GetFiles(ctx, &storage_service.GetFilesRequest{})
+	if err != nil {
+		if jsonErr := lib.HandleRPCError(err); err != nil {
+			c.JSON(jsonErr.StatusCode, jsonErr)
+			return
+		}
+	}
+
+	files := make([]*models.GetFilesResponse, 0)
+
+	for {
+		response, err := stream.Recv()
+		if err != nil {
+			if err == io.EOF {
+				break
+			}
+			if jsonErr := lib.HandleRPCError(err); err != nil {
+				c.JSON(jsonErr.StatusCode, jsonErr.Description)
+				return
+			}
+		}
+
+		file := &models.GetFilesResponse{
+			Key:          response.Object.GetKey(),
+			Size:         response.Object.GetSize(),
+			StorageClass: response.Object.GetStorageClass(),
+		}
+		lastModified, err := time.Parse(time.RFC3339, response.Object.GetLastModified())
+		if err == nil && !lastModified.IsZero() {
+			file.LastModified = &lastModified
+		}
+
+		files = append(files, file)
+	}
+
+	c.JSON(http.StatusOK, files)
+}
+
+func (h *Handler) DeleteFile(c *gin.Context) {
+	request := &models.DeleteFileRequest{}
+
+	if err := c.ShouldBindJSON(request); err != nil {
+		jsonErr := models.NewBadRequestError("object key is required", "key")
+		c.JSON(jsonErr.StatusCode, jsonErr)
+		return
+	}
+
+	deadline := time.Now().Add(time.Millisecond * time.Duration(h.RPC.Deadline))
+	ctx, cancel := context.WithDeadline(context.Background(), deadline)
+	defer cancel()
+
+	_, err := h.RPC.Client.DeleteFile(ctx, &storage_service.DeleteFileRequest{
+		Key: request.Key,
+	})
+	if err != nil {
+		if jsonErr := lib.HandleRPCError(err); err != nil {
+			c.JSON(jsonErr.StatusCode, jsonErr)
+			return
+		}
+	}
+
+	c.Status(http.StatusOK)
+}
+
+func (h *Handler) DeleteFiles(c *gin.Context) {
+	deadline := time.Now().Add(time.Millisecond * time.Duration(h.RPC.Deadline))
+	ctx, cancel := context.WithDeadline(context.Background(), deadline)
+	defer cancel()
+
+	_, err := h.RPC.Client.DeleteFiles(ctx, &storage_service.DeleteFilesRequest{})
+	if err != nil {
+		if jsonErr := lib.HandleRPCError(err); err != nil {
+			c.JSON(jsonErr.StatusCode, jsonErr)
+			return
+		}
+	}
+
+	c.Status(http.StatusOK)
 }

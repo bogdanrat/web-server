@@ -58,6 +58,9 @@ func New(repo repository.DatabaseRepository, cacheClient cache.Client, authClien
 	protectedGroup.GET("/users", usersHandler.GetUsers)
 
 	protectedGroup.POST("/file", fileHandler.PostFile)
+	protectedGroup.GET("/files", fileHandler.GetFiles)
+	protectedGroup.DELETE("/file", fileHandler.DeleteFile)
+	protectedGroup.DELETE("/files", fileHandler.DeleteFiles)
 
 	return router
 }

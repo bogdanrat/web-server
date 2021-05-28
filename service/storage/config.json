@@ -8,6 +8,9 @@
   "AWS": {
     "Region": "eu-central-1",
     "Profile": "bogdan",
-    "Bucket": "web-server-storage-service-bucket"
+    "S3": {
+      "Bucket": "web-server-storage-service-bucket",
+      "BucketVersioning": false
+    }
   }
 }

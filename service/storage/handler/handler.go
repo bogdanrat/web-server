@@ -72,7 +72,7 @@ func (s *StorageServer) UploadFile(stream pb.Storage_UploadFileServer) error {
 	}
 
 	reader := bytes.NewReader(fileData.Bytes())
-	_, err = s.Storage.UploadFile(config.AppConfig.AWS.Bucket, fileName, reader)
+	_, err = s.Storage.UploadFile(fileName, reader)
 
 	if err != nil {
 		return logError(status.Errorf(codes.Internal, "cannot upload file: %v", err))
@@ -88,6 +88,52 @@ func (s *StorageServer) UploadFile(stream pb.Storage_UploadFileServer) error {
 
 	log.Printf("Uploaded image %s, size: %d", fileName, fileSize)
 	return nil
+}
+
+func (s *StorageServer) GetFiles(req *pb.GetFilesRequest, stream pb.Storage_GetFilesServer) error {
+	objects, err := s.Storage.GetFiles()
+	if err != nil {
+		return logError(status.Errorf(codes.Internal, "cannot get files: %v", err))
+	}
+
+	for _, object := range objects {
+		if err = contextError(stream.Context()); err != nil {
+			return logError(err)
+		}
+
+		err = stream.Send(&pb.GetFilesResponse{
+			Object: object,
+		})
+		if err != nil {
+			return logError(status.Errorf(codes.DataLoss, "cannot send file: %v", err))
+		}
+	}
+
+	return nil
+}
+
+func (s *StorageServer) DeleteFile(ctx context.Context, req *pb.DeleteFileRequest) (*pb.DeleteFileResponse, error) {
+	if err := s.Storage.DeleteFile(req.Key); err != nil {
+		return nil, logError(status.Errorf(codes.Internal, "cannot delete: %v", err))
+	}
+
+	if err := contextError(ctx); err != nil {
+		return nil, logError(err)
+	}
+
+	return &pb.DeleteFileResponse{}, nil
+}
+
+func (s *StorageServer) DeleteFiles(ctx context.Context, req *pb.DeleteFilesRequest) (*pb.DeleteFilesResponse, error) {
+	if err := s.Storage.DeleteFiles(); err != nil {
+		return nil, logError(status.Errorf(codes.Internal, "cannot delete: %v", err))
+	}
+
+	if err := contextError(ctx); err != nil {
+		return nil, logError(err)
+	}
+
+	return &pb.DeleteFilesResponse{}, nil
 }
 
 func contextError(ctx context.Context) error {

@@ -18,10 +18,15 @@ type UploadConfig struct {
 	MaxFileSize uint32
 }
 
+type S3Config struct {
+	Bucket           string
+	BucketVersioning bool
+}
+
 type AWSConfig struct {
 	Region  string
 	Profile string
-	Bucket  string
+	S3      S3Config
 }
 
 type Config struct {
