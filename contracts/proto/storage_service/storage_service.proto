@@ -8,6 +8,7 @@ service Storage {
   rpc UploadFile(stream UploadFileRequest) returns (UploadFileResponse);
   rpc GetFiles(GetFilesRequest) returns (stream GetFilesResponse);
   rpc DeleteFile(DeleteFileRequest) returns (DeleteFileResponse);
+  rpc DeleteFiles(DeleteFilesRequest) returns (DeleteFilesResponse);
 }
 
 // The file is divided into multiple chunks which are sent on by one to the server in each request message.
@@ -45,4 +46,9 @@ message DeleteFileRequest {
   string key = 1;
 }
 message DeleteFileResponse {
+}
+
+message DeleteFilesRequest {
+}
+message DeleteFilesResponse {
 }
