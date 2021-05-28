@@ -45,5 +45,4 @@ message DeleteFileRequest {
   string key = 1;
 }
 message DeleteFileResponse {
-  bool delete_marker = 1;
 }

@@ -12,7 +12,3 @@ type GetFilesResponse struct {
 type DeleteFileRequest struct {
 	Key string `json:"key"`
 }
-
-type DeleteFileResponse struct {
-	DeleteMarker bool `json:"delete_marker"`
-}
