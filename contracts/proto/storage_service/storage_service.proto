@@ -1,0 +1,27 @@
+syntax = "proto3";
+
+package storage_service;
+option go_package = "/;storage_service";
+
+
+service Storage {
+  rpc UploadFile(stream UploadFileRequest) returns (UploadFileResponse);
+}
+
+// The file is divided into multiple chunks which are sent on by one to the server in each request message.
+// oneof: specify that only one of a range of fields can be set in any message: the first request will only contain the metadata (file info)
+message UploadFileRequest {
+  oneof data {
+    FileInfo info = 1;
+    bytes chunk_data = 2;
+  }
+}
+
+message FileInfo {
+  string file_type = 1;
+}
+
+message UploadFileResponse {
+  string uri = 1;
+  uint32 size = 2;
+}
