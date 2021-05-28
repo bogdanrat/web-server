@@ -6,6 +6,7 @@ option go_package = "/;storage_service";
 
 service Storage {
   rpc UploadFile(stream UploadFileRequest) returns (UploadFileResponse);
+  rpc GetFiles(GetFilesRequest) returns (stream GetFilesResponse);
 }
 
 // The file is divided into multiple chunks which are sent on by one to the server in each request message.
@@ -23,4 +24,18 @@ message FileInfo {
 }
 
 message UploadFileResponse {
+}
+
+message GetFilesRequest {
+}
+
+message GetFilesResponse {
+    S3Object object = 1;
+}
+
+message S3Object {
+  string key = 1;
+  string last_modified = 2;
+  uint64 size = 3;
+  string storage_class = 4;
 }

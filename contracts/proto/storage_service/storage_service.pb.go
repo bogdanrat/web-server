@@ -199,6 +199,162 @@ func (*UploadFileResponse) Descriptor() ([]byte, []int) {
 	return file_storage_service_proto_rawDescGZIP(), []int{2}
 }
 
+type GetFilesRequest struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+}
+
+func (x *GetFilesRequest) Reset() {
+	*x = GetFilesRequest{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_storage_service_proto_msgTypes[3]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *GetFilesRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetFilesRequest) ProtoMessage() {}
+
+func (x *GetFilesRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_storage_service_proto_msgTypes[3]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetFilesRequest.ProtoReflect.Descriptor instead.
+func (*GetFilesRequest) Descriptor() ([]byte, []int) {
+	return file_storage_service_proto_rawDescGZIP(), []int{3}
+}
+
+type GetFilesResponse struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Object *S3Object `protobuf:"bytes,1,opt,name=object,proto3" json:"object,omitempty"`
+}
+
+func (x *GetFilesResponse) Reset() {
+	*x = GetFilesResponse{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_storage_service_proto_msgTypes[4]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *GetFilesResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetFilesResponse) ProtoMessage() {}
+
+func (x *GetFilesResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_storage_service_proto_msgTypes[4]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetFilesResponse.ProtoReflect.Descriptor instead.
+func (*GetFilesResponse) Descriptor() ([]byte, []int) {
+	return file_storage_service_proto_rawDescGZIP(), []int{4}
+}
+
+func (x *GetFilesResponse) GetObject() *S3Object {
+	if x != nil {
+		return x.Object
+	}
+	return nil
+}
+
+type S3Object struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Key          string `protobuf:"bytes,1,opt,name=key,proto3" json:"key,omitempty"`
+	LastModified string `protobuf:"bytes,2,opt,name=last_modified,json=lastModified,proto3" json:"last_modified,omitempty"`
+	Size         uint64 `protobuf:"varint,3,opt,name=size,proto3" json:"size,omitempty"`
+	StorageClass string `protobuf:"bytes,4,opt,name=storage_class,json=storageClass,proto3" json:"storage_class,omitempty"`
+}
+
+func (x *S3Object) Reset() {
+	*x = S3Object{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_storage_service_proto_msgTypes[5]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *S3Object) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*S3Object) ProtoMessage() {}
+
+func (x *S3Object) ProtoReflect() protoreflect.Message {
+	mi := &file_storage_service_proto_msgTypes[5]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use S3Object.ProtoReflect.Descriptor instead.
+func (*S3Object) Descriptor() ([]byte, []int) {
+	return file_storage_service_proto_rawDescGZIP(), []int{5}
+}
+
+func (x *S3Object) GetKey() string {
+	if x != nil {
+		return x.Key
+	}
+	return ""
+}
+
+func (x *S3Object) GetLastModified() string {
+	if x != nil {
+		return x.LastModified
+	}
+	return ""
+}
+
+func (x *S3Object) GetSize() uint64 {
+	if x != nil {
+		return x.Size
+	}
+	return 0
+}
+
+func (x *S3Object) GetStorageClass() string {
+	if x != nil {
+		return x.StorageClass
+	}
+	return ""
+}
+
 var File_storage_service_proto protoreflect.FileDescriptor
 
 var file_storage_service_proto_rawDesc = []byte{
@@ -216,15 +372,34 @@ var file_storage_service_proto_rawDesc = []byte{
 	0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x08, 0x66, 0x69, 0x6c, 0x65, 0x4e, 0x61, 0x6d, 0x65,
 	0x12, 0x12, 0x0a, 0x04, 0x73, 0x69, 0x7a, 0x65, 0x18, 0x02, 0x20, 0x01, 0x28, 0x0d, 0x52, 0x04,
 	0x73, 0x69, 0x7a, 0x65, 0x22, 0x14, 0x0a, 0x12, 0x55, 0x70, 0x6c, 0x6f, 0x61, 0x64, 0x46, 0x69,
-	0x6c, 0x65, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x32, 0x62, 0x0a, 0x07, 0x53, 0x74,
-	0x6f, 0x72, 0x61, 0x67, 0x65, 0x12, 0x57, 0x0a, 0x0a, 0x55, 0x70, 0x6c, 0x6f, 0x61, 0x64, 0x46,
-	0x69, 0x6c, 0x65, 0x12, 0x22, 0x2e, 0x73, 0x74, 0x6f, 0x72, 0x61, 0x67, 0x65, 0x5f, 0x73, 0x65,
-	0x72, 0x76, 0x69, 0x63, 0x65, 0x2e, 0x55, 0x70, 0x6c, 0x6f, 0x61, 0x64, 0x46, 0x69, 0x6c, 0x65,
-	0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x23, 0x2e, 0x73, 0x74, 0x6f, 0x72, 0x61, 0x67,
-	0x65, 0x5f, 0x73, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x2e, 0x55, 0x70, 0x6c, 0x6f, 0x61, 0x64,
-	0x46, 0x69, 0x6c, 0x65, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x28, 0x01, 0x42, 0x13,
-	0x5a, 0x11, 0x2f, 0x3b, 0x73, 0x74, 0x6f, 0x72, 0x61, 0x67, 0x65, 0x5f, 0x73, 0x65, 0x72, 0x76,
-	0x69, 0x63, 0x65, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
+	0x6c, 0x65, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x11, 0x0a, 0x0f, 0x47, 0x65,
+	0x74, 0x46, 0x69, 0x6c, 0x65, 0x73, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x22, 0x45, 0x0a,
+	0x10, 0x47, 0x65, 0x74, 0x46, 0x69, 0x6c, 0x65, 0x73, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73,
+	0x65, 0x12, 0x31, 0x0a, 0x06, 0x6f, 0x62, 0x6a, 0x65, 0x63, 0x74, 0x18, 0x01, 0x20, 0x01, 0x28,
+	0x0b, 0x32, 0x19, 0x2e, 0x73, 0x74, 0x6f, 0x72, 0x61, 0x67, 0x65, 0x5f, 0x73, 0x65, 0x72, 0x76,
+	0x69, 0x63, 0x65, 0x2e, 0x53, 0x33, 0x4f, 0x62, 0x6a, 0x65, 0x63, 0x74, 0x52, 0x06, 0x6f, 0x62,
+	0x6a, 0x65, 0x63, 0x74, 0x22, 0x7a, 0x0a, 0x08, 0x53, 0x33, 0x4f, 0x62, 0x6a, 0x65, 0x63, 0x74,
+	0x12, 0x10, 0x0a, 0x03, 0x6b, 0x65, 0x79, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x03, 0x6b,
+	0x65, 0x79, 0x12, 0x23, 0x0a, 0x0d, 0x6c, 0x61, 0x73, 0x74, 0x5f, 0x6d, 0x6f, 0x64, 0x69, 0x66,
+	0x69, 0x65, 0x64, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0c, 0x6c, 0x61, 0x73, 0x74, 0x4d,
+	0x6f, 0x64, 0x69, 0x66, 0x69, 0x65, 0x64, 0x12, 0x12, 0x0a, 0x04, 0x73, 0x69, 0x7a, 0x65, 0x18,
+	0x03, 0x20, 0x01, 0x28, 0x04, 0x52, 0x04, 0x73, 0x69, 0x7a, 0x65, 0x12, 0x23, 0x0a, 0x0d, 0x73,
+	0x74, 0x6f, 0x72, 0x61, 0x67, 0x65, 0x5f, 0x63, 0x6c, 0x61, 0x73, 0x73, 0x18, 0x04, 0x20, 0x01,
+	0x28, 0x09, 0x52, 0x0c, 0x73, 0x74, 0x6f, 0x72, 0x61, 0x67, 0x65, 0x43, 0x6c, 0x61, 0x73, 0x73,
+	0x32, 0xb5, 0x01, 0x0a, 0x07, 0x53, 0x74, 0x6f, 0x72, 0x61, 0x67, 0x65, 0x12, 0x57, 0x0a, 0x0a,
+	0x55, 0x70, 0x6c, 0x6f, 0x61, 0x64, 0x46, 0x69, 0x6c, 0x65, 0x12, 0x22, 0x2e, 0x73, 0x74, 0x6f,
+	0x72, 0x61, 0x67, 0x65, 0x5f, 0x73, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x2e, 0x55, 0x70, 0x6c,
+	0x6f, 0x61, 0x64, 0x46, 0x69, 0x6c, 0x65, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x23,
+	0x2e, 0x73, 0x74, 0x6f, 0x72, 0x61, 0x67, 0x65, 0x5f, 0x73, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65,
+	0x2e, 0x55, 0x70, 0x6c, 0x6f, 0x61, 0x64, 0x46, 0x69, 0x6c, 0x65, 0x52, 0x65, 0x73, 0x70, 0x6f,
+	0x6e, 0x73, 0x65, 0x28, 0x01, 0x12, 0x51, 0x0a, 0x08, 0x47, 0x65, 0x74, 0x46, 0x69, 0x6c, 0x65,
+	0x73, 0x12, 0x20, 0x2e, 0x73, 0x74, 0x6f, 0x72, 0x61, 0x67, 0x65, 0x5f, 0x73, 0x65, 0x72, 0x76,
+	0x69, 0x63, 0x65, 0x2e, 0x47, 0x65, 0x74, 0x46, 0x69, 0x6c, 0x65, 0x73, 0x52, 0x65, 0x71, 0x75,
+	0x65, 0x73, 0x74, 0x1a, 0x21, 0x2e, 0x73, 0x74, 0x6f, 0x72, 0x61, 0x67, 0x65, 0x5f, 0x73, 0x65,
+	0x72, 0x76, 0x69, 0x63, 0x65, 0x2e, 0x47, 0x65, 0x74, 0x46, 0x69, 0x6c, 0x65, 0x73, 0x52, 0x65,
+	0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x30, 0x01, 0x42, 0x13, 0x5a, 0x11, 0x2f, 0x3b, 0x73, 0x74,
+	0x6f, 0x72, 0x61, 0x67, 0x65, 0x5f, 0x73, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x62, 0x06, 0x70,
+	0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
@@ -239,21 +414,27 @@ func file_storage_service_proto_rawDescGZIP() []byte {
 	return file_storage_service_proto_rawDescData
 }
 
-var file_storage_service_proto_msgTypes = make([]protoimpl.MessageInfo, 3)
+var file_storage_service_proto_msgTypes = make([]protoimpl.MessageInfo, 6)
 var file_storage_service_proto_goTypes = []interface{}{
 	(*UploadFileRequest)(nil),  // 0: storage_service.UploadFileRequest
 	(*FileInfo)(nil),           // 1: storage_service.FileInfo
 	(*UploadFileResponse)(nil), // 2: storage_service.UploadFileResponse
+	(*GetFilesRequest)(nil),    // 3: storage_service.GetFilesRequest
+	(*GetFilesResponse)(nil),   // 4: storage_service.GetFilesResponse
+	(*S3Object)(nil),           // 5: storage_service.S3Object
 }
 var file_storage_service_proto_depIdxs = []int32{
 	1, // 0: storage_service.UploadFileRequest.info:type_name -> storage_service.FileInfo
-	0, // 1: storage_service.Storage.UploadFile:input_type -> storage_service.UploadFileRequest
-	2, // 2: storage_service.Storage.UploadFile:output_type -> storage_service.UploadFileResponse
-	2, // [2:3] is the sub-list for method output_type
-	1, // [1:2] is the sub-list for method input_type
-	1, // [1:1] is the sub-list for extension type_name
-	1, // [1:1] is the sub-list for extension extendee
-	0, // [0:1] is the sub-list for field type_name
+	5, // 1: storage_service.GetFilesResponse.object:type_name -> storage_service.S3Object
+	0, // 2: storage_service.Storage.UploadFile:input_type -> storage_service.UploadFileRequest
+	3, // 3: storage_service.Storage.GetFiles:input_type -> storage_service.GetFilesRequest
+	2, // 4: storage_service.Storage.UploadFile:output_type -> storage_service.UploadFileResponse
+	4, // 5: storage_service.Storage.GetFiles:output_type -> storage_service.GetFilesResponse
+	4, // [4:6] is the sub-list for method output_type
+	2, // [2:4] is the sub-list for method input_type
+	2, // [2:2] is the sub-list for extension type_name
+	2, // [2:2] is the sub-list for extension extendee
+	0, // [0:2] is the sub-list for field type_name
 }
 
 func init() { file_storage_service_proto_init() }
@@ -298,6 +479,42 @@ func file_storage_service_proto_init() {
 				return nil
 			}
 		}
+		file_storage_service_proto_msgTypes[3].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*GetFilesRequest); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_storage_service_proto_msgTypes[4].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*GetFilesResponse); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_storage_service_proto_msgTypes[5].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*S3Object); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
 	}
 	file_storage_service_proto_msgTypes[0].OneofWrappers = []interface{}{
 		(*UploadFileRequest_Info)(nil),
@@ -309,7 +526,7 @@ func file_storage_service_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_storage_service_proto_rawDesc,
 			NumEnums:      0,
-			NumMessages:   3,
+			NumMessages:   6,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
@@ -336,6 +553,7 @@ const _ = grpc.SupportPackageIsVersion6
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
 type StorageClient interface {
 	UploadFile(ctx context.Context, opts ...grpc.CallOption) (Storage_UploadFileClient, error)
+	GetFiles(ctx context.Context, in *GetFilesRequest, opts ...grpc.CallOption) (Storage_GetFilesClient, error)
 }
 
 type storageClient struct {
@@ -380,9 +598,42 @@ func (x *storageUploadFileClient) CloseAndRecv() (*UploadFileResponse, error) {
 	return m, nil
 }
 
+func (c *storageClient) GetFiles(ctx context.Context, in *GetFilesRequest, opts ...grpc.CallOption) (Storage_GetFilesClient, error) {
+	stream, err := c.cc.NewStream(ctx, &_Storage_serviceDesc.Streams[1], "/storage_service.Storage/GetFiles", opts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &storageGetFilesClient{stream}
+	if err := x.ClientStream.SendMsg(in); err != nil {
+		return nil, err
+	}
+	if err := x.ClientStream.CloseSend(); err != nil {
+		return nil, err
+	}
+	return x, nil
+}
+
+type Storage_GetFilesClient interface {
+	Recv() (*GetFilesResponse, error)
+	grpc.ClientStream
+}
+
+type storageGetFilesClient struct {
+	grpc.ClientStream
+}
+
+func (x *storageGetFilesClient) Recv() (*GetFilesResponse, error) {
+	m := new(GetFilesResponse)
+	if err := x.ClientStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
 // StorageServer is the server API for Storage service.
 type StorageServer interface {
 	UploadFile(Storage_UploadFileServer) error
+	GetFiles(*GetFilesRequest, Storage_GetFilesServer) error
 }
 
 // UnimplementedStorageServer can be embedded to have forward compatible implementations.
@@ -391,6 +642,9 @@ type UnimplementedStorageServer struct {
 
 func (*UnimplementedStorageServer) UploadFile(Storage_UploadFileServer) error {
 	return status.Errorf(codes.Unimplemented, "method UploadFile not implemented")
+}
+func (*UnimplementedStorageServer) GetFiles(*GetFilesRequest, Storage_GetFilesServer) error {
+	return status.Errorf(codes.Unimplemented, "method GetFiles not implemented")
 }
 
 func RegisterStorageServer(s *grpc.Server, srv StorageServer) {
@@ -423,6 +677,27 @@ func (x *storageUploadFileServer) Recv() (*UploadFileRequest, error) {
 	return m, nil
 }
 
+func _Storage_GetFiles_Handler(srv interface{}, stream grpc.ServerStream) error {
+	m := new(GetFilesRequest)
+	if err := stream.RecvMsg(m); err != nil {
+		return err
+	}
+	return srv.(StorageServer).GetFiles(m, &storageGetFilesServer{stream})
+}
+
+type Storage_GetFilesServer interface {
+	Send(*GetFilesResponse) error
+	grpc.ServerStream
+}
+
+type storageGetFilesServer struct {
+	grpc.ServerStream
+}
+
+func (x *storageGetFilesServer) Send(m *GetFilesResponse) error {
+	return x.ServerStream.SendMsg(m)
+}
+
 var _Storage_serviceDesc = grpc.ServiceDesc{
 	ServiceName: "storage_service.Storage",
 	HandlerType: (*StorageServer)(nil),
@@ -432,6 +707,11 @@ var _Storage_serviceDesc = grpc.ServiceDesc{
 			StreamName:    "UploadFile",
 			Handler:       _Storage_UploadFile_Handler,
 			ClientStreams: true,
+		},
+		{
+			StreamName:    "GetFiles",
+			Handler:       _Storage_GetFiles_Handler,
+			ServerStreams: true,
 		},
 	},
 	Metadata: "storage_service.proto",
