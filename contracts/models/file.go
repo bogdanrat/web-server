@@ -8,3 +8,7 @@ type GetFilesResponse struct {
 	Size         uint64     `json:"size"`
 	StorageClass string     `json:"storage_class"`
 }
+
+type DeleteFileRequest struct {
+	Key string `json:"key"`
+}
