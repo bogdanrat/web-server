@@ -10,17 +10,26 @@
 <body>
 <h1>Upload File:</h1>
 <form method="post" action="/files" enctype="multipart/form-data" novalidate>
-    <label for="files">Filenames:</label>
+    <label for="files">Choose files:</label>
     <input type="file" name="files" id="files" multiple>
     <input type="submit" name="submit" value="Upload">
 </form>
 <hr>
+<label for="file_name">Enter file name:</label>
+<input type="text" id="file_name" placeholder="file name">
 <button id="download">Download</button>
 
 <script>
     document.getElementById("download").addEventListener("click", ev => {
+        const fileNameInput = document.getElementById("file_name")
+        if (fileNameInput.value === "") {
+            alert("file name is required");
+            return;
+        }
+        console.log("filename:", fileNameInput.value);
+
         const data = JSON.stringify({
-            "file_name": "images/Cassette player.jpg"
+            "file_name": fileNameInput.value
         })
         fetch("http://localhost:3000/file", {
             credentials: "same-origin",
@@ -29,6 +38,10 @@
             headers: {"Content-Type": "application/json"},
             body: data,
         }).then(response => {
+            if (response.status !== 200) {
+                return;
+            }
+
             const contentDisposition = response.headers.get('content-disposition');
             let fileName = "unnamed.jpg"
 
@@ -40,7 +53,7 @@
                 }
             }
 
-            response.blob().then(function(myBlob) {
+            response.blob().then(function (myBlob) {
                 const a = document.createElement('a');
                 const objectURL = window.URL.createObjectURL(myBlob);
 
@@ -57,7 +70,7 @@
             });
 
         }).catch(err => {
-            console.log(err);
+            alert(err);
         });
     });
 </script>

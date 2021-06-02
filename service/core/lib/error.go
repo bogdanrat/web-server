@@ -25,6 +25,16 @@ func HandleRPCError(err error) *models.JSONError {
 			}
 		case codes.PermissionDenied:
 			jsonErr = models.NewUnauthorizedError(err.Error())
+		case codes.NotFound:
+			errorStatus := status.Convert(err)
+			for _, details := range errorStatus.Details() {
+				switch info := details.(type) {
+				case *epb.BadRequest_FieldViolation:
+					jsonErr = models.NewBadRequestError(info.Description, info.Field)
+				default:
+					jsonErr = models.NewInternalServerError(err.Error())
+				}
+			}
 		default:
 			jsonErr = models.NewInternalServerError(err.Error())
 		}

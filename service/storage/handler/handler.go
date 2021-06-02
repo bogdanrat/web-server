@@ -14,6 +14,7 @@ import (
 	"google.golang.org/grpc/status"
 	"io"
 	"log"
+	"strings"
 )
 
 type StorageServer struct {
@@ -94,6 +95,18 @@ func (s *StorageServer) UploadFile(stream pb.Storage_UploadFileServer) error {
 func (s *StorageServer) GetFile(req *pb.GetFileRequest, stream pb.Storage_GetFileServer) error {
 	writer := &bytes.Buffer{}
 	if err := s.Storage.GetFile(req.GetFileName(), writer); err != nil {
+		if strings.Contains(err.Error(), "404") {
+			errorStatus := status.New(codes.NotFound, "object does not exist")
+			details, err := errorStatus.WithDetails(&epb.BadRequest_FieldViolation{
+				Field:       "file_name",
+				Description: fmt.Sprintf("file %s does not exist", req.GetFileName()),
+			})
+			if err != nil {
+				return logError(errorStatus.Err())
+			}
+			return logError(details.Err())
+		}
+
 		return logError(status.Errorf(codes.Internal, "cannot get file: %v", err))
 	}
 

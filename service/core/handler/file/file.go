@@ -134,7 +134,7 @@ func (h *Handler) uploadFile(file *multipart.FileHeader) *models.JSONError {
 }
 
 func (h *Handler) GetFile(c *gin.Context) {
-	_ = render.Template(c.Writer, c.Request, "home.page.tmpl")
+	_ = render.Template(c.Writer, c.Request, "file.page.tmpl")
 }
 
 func (h *Handler) PostFile(c *gin.Context) {
@@ -156,7 +156,6 @@ func (h *Handler) PostFile(c *gin.Context) {
 	})
 
 	if err != nil {
-		// TODO: handle file not found, also in storage service
 		if jsonErr := lib.HandleRPCError(err); err != nil {
 			c.JSON(jsonErr.StatusCode, jsonErr)
 			return
@@ -174,6 +173,7 @@ func (h *Handler) PostFile(c *gin.Context) {
 			}
 			if jsonErr := lib.HandleRPCError(err); err != nil {
 				c.JSON(jsonErr.StatusCode, jsonErr)
+				c.Status(jsonErr.StatusCode)
 				return
 			}
 		}
