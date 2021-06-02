@@ -2,12 +2,14 @@ package file
 
 import (
 	"bufio"
+	"bytes"
 	"context"
 	"fmt"
 	"github.com/bogdanrat/web-server/contracts/models"
 	"github.com/bogdanrat/web-server/contracts/proto/storage_service"
 	"github.com/bogdanrat/web-server/service/core/config"
 	"github.com/bogdanrat/web-server/service/core/lib"
+	"github.com/bogdanrat/web-server/service/core/render"
 	"github.com/gin-gonic/gin"
 	"google.golang.org/grpc"
 	"io"
@@ -129,6 +131,68 @@ func (h *Handler) uploadFile(file *multipart.FileHeader) *models.JSONError {
 	}
 
 	return nil
+}
+
+func (h *Handler) GetFile(c *gin.Context) {
+	_ = render.Template(c.Writer, c.Request, "home.page.tmpl")
+}
+
+func (h *Handler) PostFile(c *gin.Context) {
+	request := &models.GetFileRequest{}
+	if err := c.ShouldBindJSON(request); err != nil {
+		jsonErr := models.NewBadRequestError("file name is required", "file_name")
+		c.JSON(jsonErr.StatusCode, jsonErr)
+		return
+	}
+
+	fileName := request.FileName
+
+	deadline := time.Now().Add(time.Millisecond * time.Duration(h.RPC.Deadline))
+	ctx, cancel := context.WithDeadline(context.Background(), deadline)
+	defer cancel()
+
+	stream, err := h.RPC.Client.GetFile(ctx, &storage_service.GetFileRequest{
+		FileName: fileName,
+	})
+
+	if err != nil {
+		// TODO: handle file not found, also in storage service
+		if jsonErr := lib.HandleRPCError(err); err != nil {
+			c.JSON(jsonErr.StatusCode, jsonErr)
+			return
+		}
+	}
+
+	fileData := &bytes.Buffer{}
+
+	for {
+		req, err := stream.Recv()
+		if err != nil {
+			// no more data
+			if err == io.EOF {
+				break
+			}
+			if jsonErr := lib.HandleRPCError(err); err != nil {
+				c.JSON(jsonErr.StatusCode, jsonErr)
+				return
+			}
+		}
+
+		chunk := req.GetChunkData()
+		_, err = fileData.Write(chunk)
+
+		if err != nil {
+			jsonErr := lib.HandleRPCError(err)
+			c.JSON(jsonErr.StatusCode, jsonErr)
+			return
+		}
+	}
+
+	c.Header("Content-Type", "image/jpeg")
+	c.Header("Access-Control-Expose-Headers", "Content-Disposition")
+	c.Header("Content-Disposition", "attachment; filename="+fileName)
+	c.Status(http.StatusOK)
+	c.Writer.Write(fileData.Bytes())
 }
 
 func (h *Handler) GetFiles(c *gin.Context) {
