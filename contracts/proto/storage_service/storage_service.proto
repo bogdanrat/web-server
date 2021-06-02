@@ -5,9 +5,15 @@ option go_package = "/;storage_service";
 
 
 service Storage {
+  // Uploads a file in chunks
   rpc UploadFile(stream UploadFileRequest) returns (UploadFileResponse);
+  // Downloads a file in chunks
+  rpc GetFile(GetFileRequest) returns (stream GetFileResponse);
+  // Returns a list of all files
   rpc GetFiles(GetFilesRequest) returns (stream GetFilesResponse);
+  // Deletes a file
   rpc DeleteFile(DeleteFileRequest) returns (DeleteFileResponse);
+  // Deletes all files
   rpc DeleteFiles(DeleteFilesRequest) returns (DeleteFilesResponse);
 }
 
@@ -28,13 +34,15 @@ message FileInfo {
 message UploadFileResponse {
 }
 
-message GetFilesRequest {
+message GetFileRequest {}
+message GetFileResponse {
+  bytes chunk_data = 2;
 }
 
+message GetFilesRequest {}
 message GetFilesResponse {
   S3Object object = 1;
 }
-
 message S3Object {
   string key = 1;
   string last_modified = 2;

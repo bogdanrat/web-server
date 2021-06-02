@@ -199,6 +199,91 @@ func (*UploadFileResponse) Descriptor() ([]byte, []int) {
 	return file_storage_service_proto_rawDescGZIP(), []int{2}
 }
 
+type GetFileRequest struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+}
+
+func (x *GetFileRequest) Reset() {
+	*x = GetFileRequest{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_storage_service_proto_msgTypes[3]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *GetFileRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetFileRequest) ProtoMessage() {}
+
+func (x *GetFileRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_storage_service_proto_msgTypes[3]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetFileRequest.ProtoReflect.Descriptor instead.
+func (*GetFileRequest) Descriptor() ([]byte, []int) {
+	return file_storage_service_proto_rawDescGZIP(), []int{3}
+}
+
+type GetFileResponse struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	ChunkData []byte `protobuf:"bytes,2,opt,name=chunk_data,json=chunkData,proto3" json:"chunk_data,omitempty"`
+}
+
+func (x *GetFileResponse) Reset() {
+	*x = GetFileResponse{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_storage_service_proto_msgTypes[4]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *GetFileResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetFileResponse) ProtoMessage() {}
+
+func (x *GetFileResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_storage_service_proto_msgTypes[4]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetFileResponse.ProtoReflect.Descriptor instead.
+func (*GetFileResponse) Descriptor() ([]byte, []int) {
+	return file_storage_service_proto_rawDescGZIP(), []int{4}
+}
+
+func (x *GetFileResponse) GetChunkData() []byte {
+	if x != nil {
+		return x.ChunkData
+	}
+	return nil
+}
+
 type GetFilesRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -208,7 +293,7 @@ type GetFilesRequest struct {
 func (x *GetFilesRequest) Reset() {
 	*x = GetFilesRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_storage_service_proto_msgTypes[3]
+		mi := &file_storage_service_proto_msgTypes[5]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -221,7 +306,7 @@ func (x *GetFilesRequest) String() string {
 func (*GetFilesRequest) ProtoMessage() {}
 
 func (x *GetFilesRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_storage_service_proto_msgTypes[3]
+	mi := &file_storage_service_proto_msgTypes[5]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -234,7 +319,7 @@ func (x *GetFilesRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetFilesRequest.ProtoReflect.Descriptor instead.
 func (*GetFilesRequest) Descriptor() ([]byte, []int) {
-	return file_storage_service_proto_rawDescGZIP(), []int{3}
+	return file_storage_service_proto_rawDescGZIP(), []int{5}
 }
 
 type GetFilesResponse struct {
@@ -248,7 +333,7 @@ type GetFilesResponse struct {
 func (x *GetFilesResponse) Reset() {
 	*x = GetFilesResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_storage_service_proto_msgTypes[4]
+		mi := &file_storage_service_proto_msgTypes[6]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -261,7 +346,7 @@ func (x *GetFilesResponse) String() string {
 func (*GetFilesResponse) ProtoMessage() {}
 
 func (x *GetFilesResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_storage_service_proto_msgTypes[4]
+	mi := &file_storage_service_proto_msgTypes[6]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -274,7 +359,7 @@ func (x *GetFilesResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetFilesResponse.ProtoReflect.Descriptor instead.
 func (*GetFilesResponse) Descriptor() ([]byte, []int) {
-	return file_storage_service_proto_rawDescGZIP(), []int{4}
+	return file_storage_service_proto_rawDescGZIP(), []int{6}
 }
 
 func (x *GetFilesResponse) GetObject() *S3Object {
@@ -298,7 +383,7 @@ type S3Object struct {
 func (x *S3Object) Reset() {
 	*x = S3Object{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_storage_service_proto_msgTypes[5]
+		mi := &file_storage_service_proto_msgTypes[7]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -311,7 +396,7 @@ func (x *S3Object) String() string {
 func (*S3Object) ProtoMessage() {}
 
 func (x *S3Object) ProtoReflect() protoreflect.Message {
-	mi := &file_storage_service_proto_msgTypes[5]
+	mi := &file_storage_service_proto_msgTypes[7]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -324,7 +409,7 @@ func (x *S3Object) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use S3Object.ProtoReflect.Descriptor instead.
 func (*S3Object) Descriptor() ([]byte, []int) {
-	return file_storage_service_proto_rawDescGZIP(), []int{5}
+	return file_storage_service_proto_rawDescGZIP(), []int{7}
 }
 
 func (x *S3Object) GetKey() string {
@@ -366,7 +451,7 @@ type DeleteFileRequest struct {
 func (x *DeleteFileRequest) Reset() {
 	*x = DeleteFileRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_storage_service_proto_msgTypes[6]
+		mi := &file_storage_service_proto_msgTypes[8]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -379,7 +464,7 @@ func (x *DeleteFileRequest) String() string {
 func (*DeleteFileRequest) ProtoMessage() {}
 
 func (x *DeleteFileRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_storage_service_proto_msgTypes[6]
+	mi := &file_storage_service_proto_msgTypes[8]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -392,7 +477,7 @@ func (x *DeleteFileRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteFileRequest.ProtoReflect.Descriptor instead.
 func (*DeleteFileRequest) Descriptor() ([]byte, []int) {
-	return file_storage_service_proto_rawDescGZIP(), []int{6}
+	return file_storage_service_proto_rawDescGZIP(), []int{8}
 }
 
 func (x *DeleteFileRequest) GetKey() string {
@@ -411,7 +496,7 @@ type DeleteFileResponse struct {
 func (x *DeleteFileResponse) Reset() {
 	*x = DeleteFileResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_storage_service_proto_msgTypes[7]
+		mi := &file_storage_service_proto_msgTypes[9]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -424,7 +509,7 @@ func (x *DeleteFileResponse) String() string {
 func (*DeleteFileResponse) ProtoMessage() {}
 
 func (x *DeleteFileResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_storage_service_proto_msgTypes[7]
+	mi := &file_storage_service_proto_msgTypes[9]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -437,7 +522,7 @@ func (x *DeleteFileResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteFileResponse.ProtoReflect.Descriptor instead.
 func (*DeleteFileResponse) Descriptor() ([]byte, []int) {
-	return file_storage_service_proto_rawDescGZIP(), []int{7}
+	return file_storage_service_proto_rawDescGZIP(), []int{9}
 }
 
 type DeleteFilesRequest struct {
@@ -449,7 +534,7 @@ type DeleteFilesRequest struct {
 func (x *DeleteFilesRequest) Reset() {
 	*x = DeleteFilesRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_storage_service_proto_msgTypes[8]
+		mi := &file_storage_service_proto_msgTypes[10]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -462,7 +547,7 @@ func (x *DeleteFilesRequest) String() string {
 func (*DeleteFilesRequest) ProtoMessage() {}
 
 func (x *DeleteFilesRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_storage_service_proto_msgTypes[8]
+	mi := &file_storage_service_proto_msgTypes[10]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -475,7 +560,7 @@ func (x *DeleteFilesRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteFilesRequest.ProtoReflect.Descriptor instead.
 func (*DeleteFilesRequest) Descriptor() ([]byte, []int) {
-	return file_storage_service_proto_rawDescGZIP(), []int{8}
+	return file_storage_service_proto_rawDescGZIP(), []int{10}
 }
 
 type DeleteFilesResponse struct {
@@ -487,7 +572,7 @@ type DeleteFilesResponse struct {
 func (x *DeleteFilesResponse) Reset() {
 	*x = DeleteFilesResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_storage_service_proto_msgTypes[9]
+		mi := &file_storage_service_proto_msgTypes[11]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -500,7 +585,7 @@ func (x *DeleteFilesResponse) String() string {
 func (*DeleteFilesResponse) ProtoMessage() {}
 
 func (x *DeleteFilesResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_storage_service_proto_msgTypes[9]
+	mi := &file_storage_service_proto_msgTypes[11]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -513,7 +598,7 @@ func (x *DeleteFilesResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteFilesResponse.ProtoReflect.Descriptor instead.
 func (*DeleteFilesResponse) Descriptor() ([]byte, []int) {
-	return file_storage_service_proto_rawDescGZIP(), []int{9}
+	return file_storage_service_proto_rawDescGZIP(), []int{11}
 }
 
 var File_storage_service_proto protoreflect.FileDescriptor
@@ -533,51 +618,61 @@ var file_storage_service_proto_rawDesc = []byte{
 	0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x08, 0x66, 0x69, 0x6c, 0x65, 0x4e, 0x61, 0x6d, 0x65,
 	0x12, 0x12, 0x0a, 0x04, 0x73, 0x69, 0x7a, 0x65, 0x18, 0x02, 0x20, 0x01, 0x28, 0x0d, 0x52, 0x04,
 	0x73, 0x69, 0x7a, 0x65, 0x22, 0x14, 0x0a, 0x12, 0x55, 0x70, 0x6c, 0x6f, 0x61, 0x64, 0x46, 0x69,
-	0x6c, 0x65, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x11, 0x0a, 0x0f, 0x47, 0x65,
-	0x74, 0x46, 0x69, 0x6c, 0x65, 0x73, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x22, 0x45, 0x0a,
-	0x10, 0x47, 0x65, 0x74, 0x46, 0x69, 0x6c, 0x65, 0x73, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73,
-	0x65, 0x12, 0x31, 0x0a, 0x06, 0x6f, 0x62, 0x6a, 0x65, 0x63, 0x74, 0x18, 0x01, 0x20, 0x01, 0x28,
-	0x0b, 0x32, 0x19, 0x2e, 0x73, 0x74, 0x6f, 0x72, 0x61, 0x67, 0x65, 0x5f, 0x73, 0x65, 0x72, 0x76,
-	0x69, 0x63, 0x65, 0x2e, 0x53, 0x33, 0x4f, 0x62, 0x6a, 0x65, 0x63, 0x74, 0x52, 0x06, 0x6f, 0x62,
-	0x6a, 0x65, 0x63, 0x74, 0x22, 0x7a, 0x0a, 0x08, 0x53, 0x33, 0x4f, 0x62, 0x6a, 0x65, 0x63, 0x74,
-	0x12, 0x10, 0x0a, 0x03, 0x6b, 0x65, 0x79, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x03, 0x6b,
-	0x65, 0x79, 0x12, 0x23, 0x0a, 0x0d, 0x6c, 0x61, 0x73, 0x74, 0x5f, 0x6d, 0x6f, 0x64, 0x69, 0x66,
-	0x69, 0x65, 0x64, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0c, 0x6c, 0x61, 0x73, 0x74, 0x4d,
-	0x6f, 0x64, 0x69, 0x66, 0x69, 0x65, 0x64, 0x12, 0x12, 0x0a, 0x04, 0x73, 0x69, 0x7a, 0x65, 0x18,
-	0x03, 0x20, 0x01, 0x28, 0x04, 0x52, 0x04, 0x73, 0x69, 0x7a, 0x65, 0x12, 0x23, 0x0a, 0x0d, 0x73,
-	0x74, 0x6f, 0x72, 0x61, 0x67, 0x65, 0x5f, 0x63, 0x6c, 0x61, 0x73, 0x73, 0x18, 0x04, 0x20, 0x01,
-	0x28, 0x09, 0x52, 0x0c, 0x73, 0x74, 0x6f, 0x72, 0x61, 0x67, 0x65, 0x43, 0x6c, 0x61, 0x73, 0x73,
-	0x22, 0x25, 0x0a, 0x11, 0x44, 0x65, 0x6c, 0x65, 0x74, 0x65, 0x46, 0x69, 0x6c, 0x65, 0x52, 0x65,
-	0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x10, 0x0a, 0x03, 0x6b, 0x65, 0x79, 0x18, 0x01, 0x20, 0x01,
-	0x28, 0x09, 0x52, 0x03, 0x6b, 0x65, 0x79, 0x22, 0x14, 0x0a, 0x12, 0x44, 0x65, 0x6c, 0x65, 0x74,
-	0x65, 0x46, 0x69, 0x6c, 0x65, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x14, 0x0a,
-	0x12, 0x44, 0x65, 0x6c, 0x65, 0x74, 0x65, 0x46, 0x69, 0x6c, 0x65, 0x73, 0x52, 0x65, 0x71, 0x75,
-	0x65, 0x73, 0x74, 0x22, 0x15, 0x0a, 0x13, 0x44, 0x65, 0x6c, 0x65, 0x74, 0x65, 0x46, 0x69, 0x6c,
-	0x65, 0x73, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x32, 0xe6, 0x02, 0x0a, 0x07, 0x53,
-	0x74, 0x6f, 0x72, 0x61, 0x67, 0x65, 0x12, 0x57, 0x0a, 0x0a, 0x55, 0x70, 0x6c, 0x6f, 0x61, 0x64,
-	0x46, 0x69, 0x6c, 0x65, 0x12, 0x22, 0x2e, 0x73, 0x74, 0x6f, 0x72, 0x61, 0x67, 0x65, 0x5f, 0x73,
-	0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x2e, 0x55, 0x70, 0x6c, 0x6f, 0x61, 0x64, 0x46, 0x69, 0x6c,
-	0x65, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x23, 0x2e, 0x73, 0x74, 0x6f, 0x72, 0x61,
+	0x6c, 0x65, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x10, 0x0a, 0x0e, 0x47, 0x65,
+	0x74, 0x46, 0x69, 0x6c, 0x65, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x22, 0x30, 0x0a, 0x0f,
+	0x47, 0x65, 0x74, 0x46, 0x69, 0x6c, 0x65, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12,
+	0x1d, 0x0a, 0x0a, 0x63, 0x68, 0x75, 0x6e, 0x6b, 0x5f, 0x64, 0x61, 0x74, 0x61, 0x18, 0x02, 0x20,
+	0x01, 0x28, 0x0c, 0x52, 0x09, 0x63, 0x68, 0x75, 0x6e, 0x6b, 0x44, 0x61, 0x74, 0x61, 0x22, 0x11,
+	0x0a, 0x0f, 0x47, 0x65, 0x74, 0x46, 0x69, 0x6c, 0x65, 0x73, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73,
+	0x74, 0x22, 0x45, 0x0a, 0x10, 0x47, 0x65, 0x74, 0x46, 0x69, 0x6c, 0x65, 0x73, 0x52, 0x65, 0x73,
+	0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x31, 0x0a, 0x06, 0x6f, 0x62, 0x6a, 0x65, 0x63, 0x74, 0x18,
+	0x01, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x19, 0x2e, 0x73, 0x74, 0x6f, 0x72, 0x61, 0x67, 0x65, 0x5f,
+	0x73, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x2e, 0x53, 0x33, 0x4f, 0x62, 0x6a, 0x65, 0x63, 0x74,
+	0x52, 0x06, 0x6f, 0x62, 0x6a, 0x65, 0x63, 0x74, 0x22, 0x7a, 0x0a, 0x08, 0x53, 0x33, 0x4f, 0x62,
+	0x6a, 0x65, 0x63, 0x74, 0x12, 0x10, 0x0a, 0x03, 0x6b, 0x65, 0x79, 0x18, 0x01, 0x20, 0x01, 0x28,
+	0x09, 0x52, 0x03, 0x6b, 0x65, 0x79, 0x12, 0x23, 0x0a, 0x0d, 0x6c, 0x61, 0x73, 0x74, 0x5f, 0x6d,
+	0x6f, 0x64, 0x69, 0x66, 0x69, 0x65, 0x64, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0c, 0x6c,
+	0x61, 0x73, 0x74, 0x4d, 0x6f, 0x64, 0x69, 0x66, 0x69, 0x65, 0x64, 0x12, 0x12, 0x0a, 0x04, 0x73,
+	0x69, 0x7a, 0x65, 0x18, 0x03, 0x20, 0x01, 0x28, 0x04, 0x52, 0x04, 0x73, 0x69, 0x7a, 0x65, 0x12,
+	0x23, 0x0a, 0x0d, 0x73, 0x74, 0x6f, 0x72, 0x61, 0x67, 0x65, 0x5f, 0x63, 0x6c, 0x61, 0x73, 0x73,
+	0x18, 0x04, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0c, 0x73, 0x74, 0x6f, 0x72, 0x61, 0x67, 0x65, 0x43,
+	0x6c, 0x61, 0x73, 0x73, 0x22, 0x25, 0x0a, 0x11, 0x44, 0x65, 0x6c, 0x65, 0x74, 0x65, 0x46, 0x69,
+	0x6c, 0x65, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x10, 0x0a, 0x03, 0x6b, 0x65, 0x79,
+	0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x03, 0x6b, 0x65, 0x79, 0x22, 0x14, 0x0a, 0x12, 0x44,
+	0x65, 0x6c, 0x65, 0x74, 0x65, 0x46, 0x69, 0x6c, 0x65, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73,
+	0x65, 0x22, 0x14, 0x0a, 0x12, 0x44, 0x65, 0x6c, 0x65, 0x74, 0x65, 0x46, 0x69, 0x6c, 0x65, 0x73,
+	0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x22, 0x15, 0x0a, 0x13, 0x44, 0x65, 0x6c, 0x65, 0x74,
+	0x65, 0x46, 0x69, 0x6c, 0x65, 0x73, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x32, 0xb6,
+	0x03, 0x0a, 0x07, 0x53, 0x74, 0x6f, 0x72, 0x61, 0x67, 0x65, 0x12, 0x57, 0x0a, 0x0a, 0x55, 0x70,
+	0x6c, 0x6f, 0x61, 0x64, 0x46, 0x69, 0x6c, 0x65, 0x12, 0x22, 0x2e, 0x73, 0x74, 0x6f, 0x72, 0x61,
 	0x67, 0x65, 0x5f, 0x73, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x2e, 0x55, 0x70, 0x6c, 0x6f, 0x61,
-	0x64, 0x46, 0x69, 0x6c, 0x65, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x28, 0x01, 0x12,
-	0x51, 0x0a, 0x08, 0x47, 0x65, 0x74, 0x46, 0x69, 0x6c, 0x65, 0x73, 0x12, 0x20, 0x2e, 0x73, 0x74,
-	0x6f, 0x72, 0x61, 0x67, 0x65, 0x5f, 0x73, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x2e, 0x47, 0x65,
-	0x74, 0x46, 0x69, 0x6c, 0x65, 0x73, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x21, 0x2e,
-	0x73, 0x74, 0x6f, 0x72, 0x61, 0x67, 0x65, 0x5f, 0x73, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x2e,
-	0x47, 0x65, 0x74, 0x46, 0x69, 0x6c, 0x65, 0x73, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65,
-	0x30, 0x01, 0x12, 0x55, 0x0a, 0x0a, 0x44, 0x65, 0x6c, 0x65, 0x74, 0x65, 0x46, 0x69, 0x6c, 0x65,
-	0x12, 0x22, 0x2e, 0x73, 0x74, 0x6f, 0x72, 0x61, 0x67, 0x65, 0x5f, 0x73, 0x65, 0x72, 0x76, 0x69,
-	0x63, 0x65, 0x2e, 0x44, 0x65, 0x6c, 0x65, 0x74, 0x65, 0x46, 0x69, 0x6c, 0x65, 0x52, 0x65, 0x71,
-	0x75, 0x65, 0x73, 0x74, 0x1a, 0x23, 0x2e, 0x73, 0x74, 0x6f, 0x72, 0x61, 0x67, 0x65, 0x5f, 0x73,
+	0x64, 0x46, 0x69, 0x6c, 0x65, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x23, 0x2e, 0x73,
+	0x74, 0x6f, 0x72, 0x61, 0x67, 0x65, 0x5f, 0x73, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x2e, 0x55,
+	0x70, 0x6c, 0x6f, 0x61, 0x64, 0x46, 0x69, 0x6c, 0x65, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73,
+	0x65, 0x28, 0x01, 0x12, 0x4e, 0x0a, 0x07, 0x47, 0x65, 0x74, 0x46, 0x69, 0x6c, 0x65, 0x12, 0x1f,
+	0x2e, 0x73, 0x74, 0x6f, 0x72, 0x61, 0x67, 0x65, 0x5f, 0x73, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65,
+	0x2e, 0x47, 0x65, 0x74, 0x46, 0x69, 0x6c, 0x65, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a,
+	0x20, 0x2e, 0x73, 0x74, 0x6f, 0x72, 0x61, 0x67, 0x65, 0x5f, 0x73, 0x65, 0x72, 0x76, 0x69, 0x63,
+	0x65, 0x2e, 0x47, 0x65, 0x74, 0x46, 0x69, 0x6c, 0x65, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73,
+	0x65, 0x30, 0x01, 0x12, 0x51, 0x0a, 0x08, 0x47, 0x65, 0x74, 0x46, 0x69, 0x6c, 0x65, 0x73, 0x12,
+	0x20, 0x2e, 0x73, 0x74, 0x6f, 0x72, 0x61, 0x67, 0x65, 0x5f, 0x73, 0x65, 0x72, 0x76, 0x69, 0x63,
+	0x65, 0x2e, 0x47, 0x65, 0x74, 0x46, 0x69, 0x6c, 0x65, 0x73, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73,
+	0x74, 0x1a, 0x21, 0x2e, 0x73, 0x74, 0x6f, 0x72, 0x61, 0x67, 0x65, 0x5f, 0x73, 0x65, 0x72, 0x76,
+	0x69, 0x63, 0x65, 0x2e, 0x47, 0x65, 0x74, 0x46, 0x69, 0x6c, 0x65, 0x73, 0x52, 0x65, 0x73, 0x70,
+	0x6f, 0x6e, 0x73, 0x65, 0x30, 0x01, 0x12, 0x55, 0x0a, 0x0a, 0x44, 0x65, 0x6c, 0x65, 0x74, 0x65,
+	0x46, 0x69, 0x6c, 0x65, 0x12, 0x22, 0x2e, 0x73, 0x74, 0x6f, 0x72, 0x61, 0x67, 0x65, 0x5f, 0x73,
 	0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x2e, 0x44, 0x65, 0x6c, 0x65, 0x74, 0x65, 0x46, 0x69, 0x6c,
-	0x65, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x58, 0x0a, 0x0b, 0x44, 0x65, 0x6c,
-	0x65, 0x74, 0x65, 0x46, 0x69, 0x6c, 0x65, 0x73, 0x12, 0x23, 0x2e, 0x73, 0x74, 0x6f, 0x72, 0x61,
+	0x65, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x23, 0x2e, 0x73, 0x74, 0x6f, 0x72, 0x61,
 	0x67, 0x65, 0x5f, 0x73, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x2e, 0x44, 0x65, 0x6c, 0x65, 0x74,
-	0x65, 0x46, 0x69, 0x6c, 0x65, 0x73, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x24, 0x2e,
-	0x73, 0x74, 0x6f, 0x72, 0x61, 0x67, 0x65, 0x5f, 0x73, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x2e,
-	0x44, 0x65, 0x6c, 0x65, 0x74, 0x65, 0x46, 0x69, 0x6c, 0x65, 0x73, 0x52, 0x65, 0x73, 0x70, 0x6f,
-	0x6e, 0x73, 0x65, 0x42, 0x13, 0x5a, 0x11, 0x2f, 0x3b, 0x73, 0x74, 0x6f, 0x72, 0x61, 0x67, 0x65,
-	0x5f, 0x73, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
+	0x65, 0x46, 0x69, 0x6c, 0x65, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x58, 0x0a,
+	0x0b, 0x44, 0x65, 0x6c, 0x65, 0x74, 0x65, 0x46, 0x69, 0x6c, 0x65, 0x73, 0x12, 0x23, 0x2e, 0x73,
+	0x74, 0x6f, 0x72, 0x61, 0x67, 0x65, 0x5f, 0x73, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x2e, 0x44,
+	0x65, 0x6c, 0x65, 0x74, 0x65, 0x46, 0x69, 0x6c, 0x65, 0x73, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73,
+	0x74, 0x1a, 0x24, 0x2e, 0x73, 0x74, 0x6f, 0x72, 0x61, 0x67, 0x65, 0x5f, 0x73, 0x65, 0x72, 0x76,
+	0x69, 0x63, 0x65, 0x2e, 0x44, 0x65, 0x6c, 0x65, 0x74, 0x65, 0x46, 0x69, 0x6c, 0x65, 0x73, 0x52,
+	0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x42, 0x13, 0x5a, 0x11, 0x2f, 0x3b, 0x73, 0x74, 0x6f,
+	0x72, 0x61, 0x67, 0x65, 0x5f, 0x73, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x62, 0x06, 0x70, 0x72,
+	0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
@@ -592,35 +687,39 @@ func file_storage_service_proto_rawDescGZIP() []byte {
 	return file_storage_service_proto_rawDescData
 }
 
-var file_storage_service_proto_msgTypes = make([]protoimpl.MessageInfo, 10)
+var file_storage_service_proto_msgTypes = make([]protoimpl.MessageInfo, 12)
 var file_storage_service_proto_goTypes = []interface{}{
 	(*UploadFileRequest)(nil),   // 0: storage_service.UploadFileRequest
 	(*FileInfo)(nil),            // 1: storage_service.FileInfo
 	(*UploadFileResponse)(nil),  // 2: storage_service.UploadFileResponse
-	(*GetFilesRequest)(nil),     // 3: storage_service.GetFilesRequest
-	(*GetFilesResponse)(nil),    // 4: storage_service.GetFilesResponse
-	(*S3Object)(nil),            // 5: storage_service.S3Object
-	(*DeleteFileRequest)(nil),   // 6: storage_service.DeleteFileRequest
-	(*DeleteFileResponse)(nil),  // 7: storage_service.DeleteFileResponse
-	(*DeleteFilesRequest)(nil),  // 8: storage_service.DeleteFilesRequest
-	(*DeleteFilesResponse)(nil), // 9: storage_service.DeleteFilesResponse
+	(*GetFileRequest)(nil),      // 3: storage_service.GetFileRequest
+	(*GetFileResponse)(nil),     // 4: storage_service.GetFileResponse
+	(*GetFilesRequest)(nil),     // 5: storage_service.GetFilesRequest
+	(*GetFilesResponse)(nil),    // 6: storage_service.GetFilesResponse
+	(*S3Object)(nil),            // 7: storage_service.S3Object
+	(*DeleteFileRequest)(nil),   // 8: storage_service.DeleteFileRequest
+	(*DeleteFileResponse)(nil),  // 9: storage_service.DeleteFileResponse
+	(*DeleteFilesRequest)(nil),  // 10: storage_service.DeleteFilesRequest
+	(*DeleteFilesResponse)(nil), // 11: storage_service.DeleteFilesResponse
 }
 var file_storage_service_proto_depIdxs = []int32{
-	1, // 0: storage_service.UploadFileRequest.info:type_name -> storage_service.FileInfo
-	5, // 1: storage_service.GetFilesResponse.object:type_name -> storage_service.S3Object
-	0, // 2: storage_service.Storage.UploadFile:input_type -> storage_service.UploadFileRequest
-	3, // 3: storage_service.Storage.GetFiles:input_type -> storage_service.GetFilesRequest
-	6, // 4: storage_service.Storage.DeleteFile:input_type -> storage_service.DeleteFileRequest
-	8, // 5: storage_service.Storage.DeleteFiles:input_type -> storage_service.DeleteFilesRequest
-	2, // 6: storage_service.Storage.UploadFile:output_type -> storage_service.UploadFileResponse
-	4, // 7: storage_service.Storage.GetFiles:output_type -> storage_service.GetFilesResponse
-	7, // 8: storage_service.Storage.DeleteFile:output_type -> storage_service.DeleteFileResponse
-	9, // 9: storage_service.Storage.DeleteFiles:output_type -> storage_service.DeleteFilesResponse
-	6, // [6:10] is the sub-list for method output_type
-	2, // [2:6] is the sub-list for method input_type
-	2, // [2:2] is the sub-list for extension type_name
-	2, // [2:2] is the sub-list for extension extendee
-	0, // [0:2] is the sub-list for field type_name
+	1,  // 0: storage_service.UploadFileRequest.info:type_name -> storage_service.FileInfo
+	7,  // 1: storage_service.GetFilesResponse.object:type_name -> storage_service.S3Object
+	0,  // 2: storage_service.Storage.UploadFile:input_type -> storage_service.UploadFileRequest
+	3,  // 3: storage_service.Storage.GetFile:input_type -> storage_service.GetFileRequest
+	5,  // 4: storage_service.Storage.GetFiles:input_type -> storage_service.GetFilesRequest
+	8,  // 5: storage_service.Storage.DeleteFile:input_type -> storage_service.DeleteFileRequest
+	10, // 6: storage_service.Storage.DeleteFiles:input_type -> storage_service.DeleteFilesRequest
+	2,  // 7: storage_service.Storage.UploadFile:output_type -> storage_service.UploadFileResponse
+	4,  // 8: storage_service.Storage.GetFile:output_type -> storage_service.GetFileResponse
+	6,  // 9: storage_service.Storage.GetFiles:output_type -> storage_service.GetFilesResponse
+	9,  // 10: storage_service.Storage.DeleteFile:output_type -> storage_service.DeleteFileResponse
+	11, // 11: storage_service.Storage.DeleteFiles:output_type -> storage_service.DeleteFilesResponse
+	7,  // [7:12] is the sub-list for method output_type
+	2,  // [2:7] is the sub-list for method input_type
+	2,  // [2:2] is the sub-list for extension type_name
+	2,  // [2:2] is the sub-list for extension extendee
+	0,  // [0:2] is the sub-list for field type_name
 }
 
 func init() { file_storage_service_proto_init() }
@@ -666,7 +765,7 @@ func file_storage_service_proto_init() {
 			}
 		}
 		file_storage_service_proto_msgTypes[3].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*GetFilesRequest); i {
+			switch v := v.(*GetFileRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -678,7 +777,7 @@ func file_storage_service_proto_init() {
 			}
 		}
 		file_storage_service_proto_msgTypes[4].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*GetFilesResponse); i {
+			switch v := v.(*GetFileResponse); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -690,7 +789,7 @@ func file_storage_service_proto_init() {
 			}
 		}
 		file_storage_service_proto_msgTypes[5].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*S3Object); i {
+			switch v := v.(*GetFilesRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -702,7 +801,7 @@ func file_storage_service_proto_init() {
 			}
 		}
 		file_storage_service_proto_msgTypes[6].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*DeleteFileRequest); i {
+			switch v := v.(*GetFilesResponse); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -714,7 +813,7 @@ func file_storage_service_proto_init() {
 			}
 		}
 		file_storage_service_proto_msgTypes[7].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*DeleteFileResponse); i {
+			switch v := v.(*S3Object); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -726,7 +825,7 @@ func file_storage_service_proto_init() {
 			}
 		}
 		file_storage_service_proto_msgTypes[8].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*DeleteFilesRequest); i {
+			switch v := v.(*DeleteFileRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -738,6 +837,30 @@ func file_storage_service_proto_init() {
 			}
 		}
 		file_storage_service_proto_msgTypes[9].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*DeleteFileResponse); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_storage_service_proto_msgTypes[10].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*DeleteFilesRequest); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_storage_service_proto_msgTypes[11].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*DeleteFilesResponse); i {
 			case 0:
 				return &v.state
@@ -760,7 +883,7 @@ func file_storage_service_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_storage_service_proto_rawDesc,
 			NumEnums:      0,
-			NumMessages:   10,
+			NumMessages:   12,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
@@ -786,9 +909,15 @@ const _ = grpc.SupportPackageIsVersion6
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
 type StorageClient interface {
+	// Uploads a file in chunks
 	UploadFile(ctx context.Context, opts ...grpc.CallOption) (Storage_UploadFileClient, error)
+	// Downloads a file in chunks
+	GetFile(ctx context.Context, in *GetFileRequest, opts ...grpc.CallOption) (Storage_GetFileClient, error)
+	// Returns a list of all files
 	GetFiles(ctx context.Context, in *GetFilesRequest, opts ...grpc.CallOption) (Storage_GetFilesClient, error)
+	// Deletes a file
 	DeleteFile(ctx context.Context, in *DeleteFileRequest, opts ...grpc.CallOption) (*DeleteFileResponse, error)
+	// Deletes all files
 	DeleteFiles(ctx context.Context, in *DeleteFilesRequest, opts ...grpc.CallOption) (*DeleteFilesResponse, error)
 }
 
@@ -834,8 +963,40 @@ func (x *storageUploadFileClient) CloseAndRecv() (*UploadFileResponse, error) {
 	return m, nil
 }
 
+func (c *storageClient) GetFile(ctx context.Context, in *GetFileRequest, opts ...grpc.CallOption) (Storage_GetFileClient, error) {
+	stream, err := c.cc.NewStream(ctx, &_Storage_serviceDesc.Streams[1], "/storage_service.Storage/GetFile", opts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &storageGetFileClient{stream}
+	if err := x.ClientStream.SendMsg(in); err != nil {
+		return nil, err
+	}
+	if err := x.ClientStream.CloseSend(); err != nil {
+		return nil, err
+	}
+	return x, nil
+}
+
+type Storage_GetFileClient interface {
+	Recv() (*GetFileResponse, error)
+	grpc.ClientStream
+}
+
+type storageGetFileClient struct {
+	grpc.ClientStream
+}
+
+func (x *storageGetFileClient) Recv() (*GetFileResponse, error) {
+	m := new(GetFileResponse)
+	if err := x.ClientStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
 func (c *storageClient) GetFiles(ctx context.Context, in *GetFilesRequest, opts ...grpc.CallOption) (Storage_GetFilesClient, error) {
-	stream, err := c.cc.NewStream(ctx, &_Storage_serviceDesc.Streams[1], "/storage_service.Storage/GetFiles", opts...)
+	stream, err := c.cc.NewStream(ctx, &_Storage_serviceDesc.Streams[2], "/storage_service.Storage/GetFiles", opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -886,9 +1047,15 @@ func (c *storageClient) DeleteFiles(ctx context.Context, in *DeleteFilesRequest,
 
 // StorageServer is the server API for Storage service.
 type StorageServer interface {
+	// Uploads a file in chunks
 	UploadFile(Storage_UploadFileServer) error
+	// Downloads a file in chunks
+	GetFile(*GetFileRequest, Storage_GetFileServer) error
+	// Returns a list of all files
 	GetFiles(*GetFilesRequest, Storage_GetFilesServer) error
+	// Deletes a file
 	DeleteFile(context.Context, *DeleteFileRequest) (*DeleteFileResponse, error)
+	// Deletes all files
 	DeleteFiles(context.Context, *DeleteFilesRequest) (*DeleteFilesResponse, error)
 }
 
@@ -898,6 +1065,9 @@ type UnimplementedStorageServer struct {
 
 func (*UnimplementedStorageServer) UploadFile(Storage_UploadFileServer) error {
 	return status.Errorf(codes.Unimplemented, "method UploadFile not implemented")
+}
+func (*UnimplementedStorageServer) GetFile(*GetFileRequest, Storage_GetFileServer) error {
+	return status.Errorf(codes.Unimplemented, "method GetFile not implemented")
 }
 func (*UnimplementedStorageServer) GetFiles(*GetFilesRequest, Storage_GetFilesServer) error {
 	return status.Errorf(codes.Unimplemented, "method GetFiles not implemented")
@@ -937,6 +1107,27 @@ func (x *storageUploadFileServer) Recv() (*UploadFileRequest, error) {
 		return nil, err
 	}
 	return m, nil
+}
+
+func _Storage_GetFile_Handler(srv interface{}, stream grpc.ServerStream) error {
+	m := new(GetFileRequest)
+	if err := stream.RecvMsg(m); err != nil {
+		return err
+	}
+	return srv.(StorageServer).GetFile(m, &storageGetFileServer{stream})
+}
+
+type Storage_GetFileServer interface {
+	Send(*GetFileResponse) error
+	grpc.ServerStream
+}
+
+type storageGetFileServer struct {
+	grpc.ServerStream
+}
+
+func (x *storageGetFileServer) Send(m *GetFileResponse) error {
+	return x.ServerStream.SendMsg(m)
 }
 
 func _Storage_GetFiles_Handler(srv interface{}, stream grpc.ServerStream) error {
@@ -1014,6 +1205,11 @@ var _Storage_serviceDesc = grpc.ServiceDesc{
 			StreamName:    "UploadFile",
 			Handler:       _Storage_UploadFile_Handler,
 			ClientStreams: true,
+		},
+		{
+			StreamName:    "GetFile",
+			Handler:       _Storage_GetFile_Handler,
+			ServerStreams: true,
 		},
 		{
 			StreamName:    "GetFiles",
