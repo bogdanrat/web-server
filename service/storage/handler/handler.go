@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"bufio"
 	"bytes"
 	"context"
 	"fmt"
@@ -87,6 +88,40 @@ func (s *StorageServer) UploadFile(stream pb.Storage_UploadFileServer) error {
 	}
 
 	log.Printf("Uploaded image %s, size: %d", fileName, fileSize)
+	return nil
+}
+
+func (s *StorageServer) GetFile(req *pb.GetFileRequest, stream pb.Storage_GetFileServer) error {
+	writer := &bytes.Buffer{}
+	if err := s.Storage.GetFile(req.GetFileName(), writer); err != nil {
+		return logError(status.Errorf(codes.Internal, "cannot get file: %v", err))
+	}
+
+	reader := bufio.NewReader(writer)
+	// send file in chunks of 1 KB
+	buffer := make([]byte, 1024)
+
+	for {
+		n, err := reader.Read(buffer)
+		if err != nil {
+			if err == io.EOF {
+				break
+			}
+			return logError(status.Errorf(codes.Internal, "cannot read file chunk for sending: %v", err))
+		}
+
+		if err := contextError(stream.Context()); err != nil {
+			return logError(err)
+		}
+
+		response := &pb.GetFileResponse{
+			ChunkData: buffer[:n],
+		}
+		if err = stream.Send(response); err != nil {
+			return logError(status.Errorf(codes.Internal, "error sending file chunk: %v", err))
+		}
+	}
+
 	return nil
 }
 

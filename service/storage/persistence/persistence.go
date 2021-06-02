@@ -9,6 +9,7 @@ import (
 	"github.com/aws/aws-sdk-go/service/s3/s3manager"
 	pb "github.com/bogdanrat/web-server/contracts/proto/storage_service"
 	"github.com/bogdanrat/web-server/service/storage/config"
+	"github.com/rlmcpherson/s3gof3r"
 	"io"
 	"log"
 	"sync"
@@ -17,29 +18,48 @@ import (
 
 type Storage struct {
 	S3           *s3.S3
-	Config       config.S3Config
+	S3Gofer      *s3gof3r.S3 // provides fast, parallelized, streaming access to Amazon S3
+	Bucket       *s3gof3r.Bucket
+	Config       *s3gof3r.Config
 	UploaderPool sync.Pool
 }
 
 func New(sess *session.Session, s3Config config.S3Config) *Storage {
-	return &Storage{
-		S3:     s3.New(sess),
-		Config: s3Config,
-		UploaderPool: sync.Pool{
-			New: func() interface{} {
-				uploader := s3manager.NewUploader(sess)
-				// The number of goroutines to spin up in parallel per call to Upload when sending parts
-				uploader.Concurrency = s3Config.UploaderConcurrency
-				return uploader
-			},
+	creds, _ := sess.Config.Credentials.Get()
+
+	storage := &Storage{}
+
+	storage.S3 = s3.New(sess)
+
+	storage.S3Gofer = s3gof3r.New(s3Config.Domain, s3gof3r.Keys{
+		AccessKey: creds.AccessKeyID,
+		SecretKey: creds.SecretAccessKey,
+	})
+
+	storage.Bucket = storage.S3Gofer.Bucket(s3Config.Bucket)
+
+	storage.Config = s3gof3r.DefaultConfig
+	storage.Config.Concurrency = s3Config.Concurrency                             // number of parts to get or put concurrently
+	storage.Config.PartSize = int64(s3Config.PartSize)                            // initial part size in bytes to use for multipart gets or put
+	storage.Config.NTry = s3Config.MaxAttempts                                    // maximum attempts for each part
+	storage.Config.Client.Timeout = time.Second * time.Duration(s3Config.Timeout) // includes connection time, any redirects, and reading the response body
+
+	storage.UploaderPool = sync.Pool{
+		New: func() interface{} {
+			uploader := s3manager.NewUploader(sess)
+			// The number of goroutines to spin up in parallel per call to Upload when sending parts
+			uploader.Concurrency = s3Config.Concurrency
+			return uploader
 		},
 	}
+
+	return storage
 }
 
 func (s *Storage) InitializeS3Bucket() error {
 	_, err := s.S3.HeadBucket(
 		&s3.HeadBucketInput{
-			Bucket: aws.String(s.Config.Bucket),
+			Bucket: aws.String(s.Bucket.Name),
 		},
 	)
 
@@ -71,7 +91,7 @@ func (s *Storage) UploadFile(key string, body io.Reader) (*s3manager.UploadOutpu
 	defer s.UploaderPool.Put(uploader)
 
 	output, err := uploader.Upload(&s3manager.UploadInput{
-		Bucket: aws.String(s.Config.Bucket),
+		Bucket: aws.String(s.Bucket.Name),
 		Key:    aws.String(key),
 		Body:   body,
 	})
@@ -83,14 +103,14 @@ func (s *Storage) UploadFile(key string, body io.Reader) (*s3manager.UploadOutpu
 
 func (s *Storage) createBucket() (*s3.CreateBucketOutput, error) {
 	output, err := s.S3.CreateBucket(&s3.CreateBucketInput{
-		Bucket: aws.String(s.Config.Bucket),
+		Bucket: aws.String(s.Bucket.Name),
 	})
 	if err != nil {
 		return nil, err
 	}
 
 	err = s.S3.WaitUntilBucketExists(&s3.HeadBucketInput{
-		Bucket: aws.String(s.Config.Bucket),
+		Bucket: aws.String(s.Bucket.Name),
 	})
 	if err != nil {
 		return nil, err
@@ -98,7 +118,7 @@ func (s *Storage) createBucket() (*s3.CreateBucketOutput, error) {
 
 	if config.AppConfig.AWS.S3.BucketVersioning {
 		_, err = s.S3.PutBucketVersioning(&s3.PutBucketVersioningInput{
-			Bucket: aws.String(s.Config.Bucket),
+			Bucket: aws.String(s.Bucket.Name),
 			VersioningConfiguration: &s3.VersioningConfiguration{
 				Status: aws.String("Enabled"),
 			},
@@ -111,9 +131,24 @@ func (s *Storage) createBucket() (*s3.CreateBucketOutput, error) {
 	return output, nil
 }
 
+func (s *Storage) GetFile(key string, writer io.Writer) error {
+	// GetReader() provides a reader and downloads data using parallel ranged get requests.
+	// Data from the requests are ordered and written sequentially.
+	reader, _, err := s.Bucket.GetReader(key, s.Config)
+	if err != nil {
+		return err
+	}
+	defer reader.Close()
+
+	if _, err = io.Copy(writer, reader); err != nil {
+		return err
+	}
+	return nil
+}
+
 func (s *Storage) GetFiles() ([]*pb.S3Object, error) {
 	output, err := s.S3.ListObjectsV2(&s3.ListObjectsV2Input{
-		Bucket: aws.String(s.Config.Bucket),
+		Bucket: aws.String(s.Bucket.Name),
 	})
 	if err != nil {
 		return nil, err
@@ -134,24 +169,19 @@ func (s *Storage) GetFiles() ([]*pb.S3Object, error) {
 }
 
 func (s *Storage) DeleteFile(fileName string) error {
-	_, err := s.S3.DeleteObject(&s3.DeleteObjectInput{
-		Bucket: aws.String(s.Config.Bucket),
-		Key:    aws.String(fileName),
-	})
-	if err != nil {
+	if err := s.Bucket.Delete(fileName); err != nil {
 		return err
 	}
-
 	return nil
 }
 
 func (s *Storage) DeleteFiles() error {
 	iter := s3manager.NewDeleteListIterator(s.S3, &s3.ListObjectsInput{
-		Bucket: aws.String(s.Config.Bucket),
+		Bucket: aws.String(s.Bucket.Name),
 	})
 
 	if err := s3manager.NewBatchDeleteWithClient(s.S3).Delete(aws.BackgroundContext(), iter); err != nil {
-		return fmt.Errorf("unable to delete objects from bucket %s: %v", s.Config.Bucket, err)
+		return fmt.Errorf("unable to delete objects from bucket %s: %v", s.Bucket.Name, err)
 	}
 
 	return nil

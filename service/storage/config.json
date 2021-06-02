@@ -9,9 +9,13 @@
     "Region": "eu-central-1",
     "Profile": "bogdan",
     "S3": {
+      "Domain": "s3-eu-central-1.amazonaws.com",
       "Bucket": "web-server-storage-service-bucket",
       "BucketVersioning": false,
-      "UploaderConcurrency": 5
+      "Concurrency": 5,
+      "PartSize": 20000000,
+      "MaxAttempts": 10,
+      "Timeout": 5
     }
   }
 }

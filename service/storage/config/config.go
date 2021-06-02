@@ -19,9 +19,13 @@ type UploadConfig struct {
 }
 
 type S3Config struct {
-	Bucket              string
-	BucketVersioning    bool
-	UploaderConcurrency int
+	Domain           string
+	Bucket           string
+	BucketVersioning bool
+	Concurrency      int
+	PartSize         int
+	MaxAttempts      int
+	Timeout          int
 }
 
 type AWSConfig struct {
