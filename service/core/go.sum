@@ -31,6 +31,8 @@ github.com/bogdanrat/web-server/contracts v0.0.0-20210602172511-372564923544 h1:
 github.com/bogdanrat/web-server/contracts v0.0.0-20210602172511-372564923544/go.mod h1:fpY+JNP1ZFi2bIZEWFncTsIWjDCKsHAfQOIcBuWBj0M=
 github.com/bogdanrat/web-server/contracts v0.0.0-20210602195858-8628d57bc580 h1:1dsiCs4lRUUDsWzqSaysBuery/DzW+0P0PETkiclaBY=
 github.com/bogdanrat/web-server/contracts v0.0.0-20210602195858-8628d57bc580/go.mod h1:fpY+JNP1ZFi2bIZEWFncTsIWjDCKsHAfQOIcBuWBj0M=
+github.com/bogdanrat/web-server/contracts v0.0.0-20210602205537-2368992bd500 h1:i6Ie95MRNrUZk5sN7KtU6EfDQh5QoLE9jvPeYvTRRho=
+github.com/bogdanrat/web-server/contracts v0.0.0-20210602205537-2368992bd500/go.mod h1:fpY+JNP1ZFi2bIZEWFncTsIWjDCKsHAfQOIcBuWBj0M=
 github.com/census-instrumentation/opencensus-proto v0.2.1/go.mod h1:f6KPmirojxKA12rnyqOA5BBL4O983OfeGPqjHWSTneU=
 github.com/cespare/xxhash v1.1.0/go.mod h1:XrSqR1VqqWfGrhpAt58auRo0WTKS1nRRg3ghfAqPWnc=
 github.com/client9/misspell v0.3.4/go.mod h1:qj6jICC3Q7zFZvVWo7KLAzC3yx5G7kyvSDkc90ppPyw=

@@ -60,7 +60,7 @@ func (h *Handler) PostFiles(c *gin.Context) {
 
 	wg.Wait()
 
-	c.Status(http.StatusCreated)
+	http.Redirect(c.Writer, c.Request, "/api/file-page", http.StatusSeeOther)
 }
 
 func (h *Handler) uploadFile(file *multipart.FileHeader) *models.JSONError {
@@ -133,7 +133,7 @@ func (h *Handler) uploadFile(file *multipart.FileHeader) *models.JSONError {
 	return nil
 }
 
-func (h *Handler) GetFile(c *gin.Context) {
+func (h *Handler) GetFilePage(c *gin.Context) {
 	deadline := time.Now().Add(time.Millisecond * time.Duration(h.RPC.Deadline))
 	ctx, cancel := context.WithDeadline(context.Background(), deadline)
 	defer cancel()
@@ -160,22 +160,20 @@ func (h *Handler) GetFile(c *gin.Context) {
 	})
 }
 
-func (h *Handler) PostFile(c *gin.Context) {
+func (h *Handler) GetFile(c *gin.Context) {
 	request := &models.GetFileRequest{}
-	if err := c.ShouldBindJSON(request); err != nil {
+	if err := c.ShouldBind(request); err != nil {
 		jsonErr := models.NewBadRequestError("file name is required", "file_name")
 		c.JSON(jsonErr.StatusCode, jsonErr)
 		return
 	}
-
-	fileName := request.FileName
 
 	deadline := time.Now().Add(time.Millisecond * time.Duration(h.RPC.Deadline))
 	ctx, cancel := context.WithDeadline(context.Background(), deadline)
 	defer cancel()
 
 	stream, err := h.RPC.Client.GetFile(ctx, &storage_service.GetFileRequest{
-		FileName: fileName,
+		FileName: request.FileName,
 	})
 
 	if err != nil {
@@ -213,7 +211,7 @@ func (h *Handler) PostFile(c *gin.Context) {
 
 	c.Header("Content-Type", "image/jpeg")
 	c.Header("Access-Control-Expose-Headers", "Content-Disposition")
-	c.Header("Content-Disposition", "attachment; filename="+fileName)
+	c.Header("Content-Disposition", "attachment; filename="+request.FileName)
 	c.Status(http.StatusOK)
 	c.Writer.Write(fileData.Bytes())
 }

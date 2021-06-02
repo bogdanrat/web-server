@@ -15,38 +15,36 @@
     <input type="submit" name="submit" value="Upload">
 </form>
 <hr>
-<label for="file_name">Enter file name:</label>
-<input type="text" id="file_name" placeholder="file name">
-<button id="download">Download</button>
-<hr>
+<label hidden for="file_name">Enter file name:</label>
+<input hidden type="text" id="file_name" placeholder="file name">
+<button hidden id="download">Download</button>
+
 <h3>All files</h3>
 {{$files := index .Data "files"}}
 <ul>
     {{range $files}}
     <li>
-        {{.Key}} - {{.LastModified}} - {{.Size}}
+        <a href="http://localhost:3000/api/file?file_name={{.Key}}">{{.Key}}</a>
     </li>
     {{end}}
 </ul>
 
 <script>
     document.getElementById("download").addEventListener("click", ev => {
+        ev.preventDefault()
+
         const fileNameInput = document.getElementById("file_name")
         if (fileNameInput.value === "") {
             alert("file name is required");
             return;
         }
-        console.log("filename:", fileNameInput.value);
 
-        const data = JSON.stringify({
-            "file_name": fileNameInput.value
-        })
-        fetch("http://localhost:3000/file", {
+        const url = "http://localhost:3000/api/file?file_name=" + fileNameInput.value;
+        fetch(url, {
             credentials: "same-origin",
             mode: "same-origin",
-            method: "POST",
+            method: "GET",
             headers: {"Content-Type": "application/json"},
-            body: data,
         }).then(response => {
             if (response.status !== 200) {
                 return;

@@ -59,8 +59,8 @@ func New(repo repository.DatabaseRepository, cacheClient cache.Client, authClien
 	apiGroup := router.Group("/api").Use(middleware.Authorization(config.AppConfig.Server.DevelopmentMode, authenticationHandler.Cache, authenticationHandler.RPC.Client))
 	apiGroup.GET("/users", usersHandler.GetUsers)
 
+	apiGroup.GET("/file-page", fileHandler.GetFilePage)
 	apiGroup.GET("/file", fileHandler.GetFile)
-	apiGroup.POST("/file", fileHandler.PostFile)
 	apiGroup.GET("/files", fileHandler.GetFiles)
 	apiGroup.POST("/files", fileHandler.PostFiles)
 	apiGroup.DELETE("/file", fileHandler.DeleteFile)
