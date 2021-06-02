@@ -22,7 +22,6 @@ type S3Config struct {
 	Bucket              string
 	BucketVersioning    bool
 	UploaderConcurrency int
-	ImagesPrefix        string
 }
 
 type AWSConfig struct {

@@ -50,7 +50,8 @@ type AuthConfig struct {
 	GRPC GRPCConfig
 }
 type StorageConfig struct {
-	GRPC GRPCConfig
+	GRPC         GRPCConfig
+	ImagesPrefix string
 }
 
 type Config struct {

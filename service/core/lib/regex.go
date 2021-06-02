@@ -3,7 +3,7 @@ package lib
 import "regexp"
 
 const (
-	ImageExtensionPattern string = "([.|\\w|\\s|-])*\\.(?:jpg|gif|png)"
+	ImageExtensionPattern string = "([.|\\w|\\s|-])*\\.(?:jpg|gif|png|JPG|GIF|PNG)"
 )
 
 var (

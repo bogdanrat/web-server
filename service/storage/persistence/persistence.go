@@ -9,7 +9,6 @@ import (
 	"github.com/aws/aws-sdk-go/service/s3/s3manager"
 	pb "github.com/bogdanrat/web-server/contracts/proto/storage_service"
 	"github.com/bogdanrat/web-server/service/storage/config"
-	"github.com/bogdanrat/web-server/service/storage/lib"
 	"io"
 	"log"
 	"sync"
@@ -71,14 +70,9 @@ func (s *Storage) UploadFile(key string, body io.Reader) (*s3manager.UploadOutpu
 	// Put(): place the instance back in the pool for use by other processes.
 	defer s.UploaderPool.Put(uploader)
 
-	fileKey := ""
-	if lib.IsImage(key) {
-		fileKey = fmt.Sprintf("%s/%s", s.Config.ImagesPrefix, key)
-	}
-
 	output, err := uploader.Upload(&s3manager.UploadInput{
 		Bucket: aws.String(s.Config.Bucket),
-		Key:    aws.String(fileKey),
+		Key:    aws.String(key),
 		Body:   body,
 	})
 	if err != nil {

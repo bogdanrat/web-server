@@ -11,8 +11,7 @@
     "S3": {
       "Bucket": "web-server-storage-service-bucket",
       "BucketVersioning": false,
-      "UploaderConcurrency": 5,
-      "ImagesPrefix": "images"
+      "UploaderConcurrency": 5
     }
   }
 }

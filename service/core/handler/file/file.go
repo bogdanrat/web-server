@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"github.com/bogdanrat/web-server/contracts/models"
 	"github.com/bogdanrat/web-server/contracts/proto/storage_service"
+	"github.com/bogdanrat/web-server/service/core/config"
 	"github.com/bogdanrat/web-server/service/core/lib"
 	"github.com/gin-gonic/gin"
 	"google.golang.org/grpc"
@@ -75,11 +76,17 @@ func (h *Handler) uploadFile(file *multipart.FileHeader) *models.JSONError {
 		return models.NewInternalServerError("cannot open upload stream")
 	}
 
+	fileName := file.Filename
+	imagesPrefix := config.AppConfig.Services.Storage.ImagesPrefix
+	if lib.IsImage(fileName) && imagesPrefix != "" {
+		fileName = fmt.Sprintf("%s/%s", imagesPrefix, fileName)
+	}
+
 	request := &storage_service.UploadFileRequest{
 		Data: &storage_service.UploadFileRequest_Info{
 			Info: &storage_service.FileInfo{
 				Size:     uint32(file.Size),
-				FileName: file.Filename,
+				FileName: fileName,
 			},
 		},
 	}
