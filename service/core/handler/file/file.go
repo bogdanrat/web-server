@@ -134,7 +134,30 @@ func (h *Handler) uploadFile(file *multipart.FileHeader) *models.JSONError {
 }
 
 func (h *Handler) GetFile(c *gin.Context) {
-	_ = render.Template(c.Writer, c.Request, "file.page.tmpl")
+	deadline := time.Now().Add(time.Millisecond * time.Duration(h.RPC.Deadline))
+	ctx, cancel := context.WithDeadline(context.Background(), deadline)
+	defer cancel()
+
+	stream, err := h.RPC.Client.GetFiles(ctx, &storage_service.GetFilesRequest{})
+	if err != nil {
+		if jsonErr := lib.HandleRPCError(err); err != nil {
+			c.JSON(jsonErr.StatusCode, jsonErr)
+			return
+		}
+	}
+
+	files, jsonErr := h.getAllFiles(stream)
+	if jsonErr != nil {
+		c.JSON(jsonErr.StatusCode, jsonErr)
+		return
+	}
+
+	data := make(map[string]interface{})
+	data["files"] = files
+
+	_ = render.Template(c.Writer, c.Request, "file.page.tmpl", &models.TemplateData{
+		Data: data,
+	})
 }
 
 func (h *Handler) PostFile(c *gin.Context) {
@@ -208,6 +231,16 @@ func (h *Handler) GetFiles(c *gin.Context) {
 		}
 	}
 
+	files, jsonErr := h.getAllFiles(stream)
+	if jsonErr != nil {
+		c.JSON(jsonErr.StatusCode, jsonErr)
+		return
+	}
+
+	c.JSON(http.StatusOK, files)
+}
+
+func (h *Handler) getAllFiles(stream storage_service.Storage_GetFilesClient) ([]*models.GetFilesResponse, *models.JSONError) {
 	files := make([]*models.GetFilesResponse, 0)
 
 	for {
@@ -216,9 +249,8 @@ func (h *Handler) GetFiles(c *gin.Context) {
 			if err == io.EOF {
 				break
 			}
-			if jsonErr := lib.HandleRPCError(err); err != nil {
-				c.JSON(jsonErr.StatusCode, jsonErr.Description)
-				return
+			if jsonErr := lib.HandleRPCError(err); jsonErr != nil {
+				return nil, jsonErr
 			}
 		}
 
@@ -235,7 +267,7 @@ func (h *Handler) GetFiles(c *gin.Context) {
 		files = append(files, file)
 	}
 
-	c.JSON(http.StatusOK, files)
+	return files, nil
 }
 
 func (h *Handler) DeleteFile(c *gin.Context) {

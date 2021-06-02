@@ -4,6 +4,9 @@ import (
 	"bytes"
 	"errors"
 	"fmt"
+	"github.com/bogdanrat/web-server/contracts/models"
+	"github.com/bogdanrat/web-server/service/core/config"
+	"github.com/bogdanrat/web-server/service/core/lib"
 	"html/template"
 	"log"
 	"net/http"
@@ -14,14 +17,24 @@ const (
 	pathToTemplates = "./templates"
 )
 
-func Template(w http.ResponseWriter, r *http.Request, tmpl string) error {
+var (
+	functions = template.FuncMap{
+		"formatSize": lib.FormatSize,
+	}
+)
+
+func Template(w http.ResponseWriter, r *http.Request, tmpl string, templateData *models.TemplateData) error {
 	var templateCache map[string]*template.Template
 	var err error
 
-	templateCache, err = CreateTemplateCache()
-	if err != nil {
-		log.Println("cannot create template cache:", err.Error())
-		return errors.New(fmt.Sprintf("cannot create template cache: %s", err.Error()))
+	if !config.AppConfig.Server.DevelopmentMode {
+		templateCache = config.AppConfig.TemplateCache
+	} else {
+		templateCache, err = CreateTemplateCache()
+		if err != nil {
+			log.Println("cannot create template cache:", err.Error())
+			return errors.New(fmt.Sprintf("cannot create template cache: %s", err.Error()))
+		}
 	}
 
 	t, ok := templateCache[tmpl]
@@ -31,7 +44,7 @@ func Template(w http.ResponseWriter, r *http.Request, tmpl string) error {
 	}
 
 	buf := new(bytes.Buffer)
-	_ = t.Execute(buf, nil)
+	_ = t.Execute(buf, templateData)
 	_, err = buf.WriteTo(w)
 
 	if err != nil {
@@ -54,7 +67,7 @@ func CreateTemplateCache() (map[string]*template.Template, error) {
 
 	for _, page := range pages {
 		name := filepath.Base(page)
-		ts, err := template.New(name).ParseFiles(page)
+		ts, err := template.New(name).Funcs(functions).ParseFiles(page)
 		if err != nil {
 			return nil, err
 		}

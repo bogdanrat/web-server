@@ -56,15 +56,15 @@ func New(repo repository.DatabaseRepository, cacheClient cache.Client, authClien
 	router.POST("/token/refresh", authenticationHandler.RefreshToken)
 
 	// private endpoints, requires jwt
-	protectedGroup := router.Group("/api").Use(middleware.Authorization(authenticationHandler.Cache, authenticationHandler.RPC.Client))
-	protectedGroup.GET("/users", usersHandler.GetUsers)
+	apiGroup := router.Group("/api").Use(middleware.Authorization(config.AppConfig.Server.DevelopmentMode, authenticationHandler.Cache, authenticationHandler.RPC.Client))
+	apiGroup.GET("/users", usersHandler.GetUsers)
 
-	router.POST("/files", fileHandler.PostFiles)
-	router.GET("/file", fileHandler.GetFile)
-	router.POST("/file", fileHandler.PostFile)
-	protectedGroup.GET("/files", fileHandler.GetFiles)
-	protectedGroup.DELETE("/file", fileHandler.DeleteFile)
-	protectedGroup.DELETE("/files", fileHandler.DeleteFiles)
+	apiGroup.GET("/file", fileHandler.GetFile)
+	apiGroup.POST("/file", fileHandler.PostFile)
+	apiGroup.GET("/files", fileHandler.GetFiles)
+	apiGroup.POST("/files", fileHandler.PostFiles)
+	apiGroup.DELETE("/file", fileHandler.DeleteFile)
+	apiGroup.DELETE("/files", fileHandler.DeleteFiles)
 
 	return router
 }

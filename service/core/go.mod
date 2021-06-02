@@ -3,8 +3,8 @@ module github.com/bogdanrat/web-server/service/core
 go 1.16
 
 require (
-	github.com/aws/aws-sdk-go v1.38.52
-	github.com/bogdanrat/web-server/contracts v0.0.0-20210602172511-372564923544
+	github.com/aws/aws-sdk-go v1.38.53
+	github.com/bogdanrat/web-server/contracts v0.0.0-20210602195858-8628d57bc580
 	github.com/fsnotify/fsnotify v1.4.9 // indirect
 	github.com/gin-contrib/cors v1.3.1
 	github.com/gin-gonic/gin v1.7.2

@@ -4,14 +4,16 @@ import (
 	"flag"
 	"fmt"
 	"github.com/spf13/viper"
+	"html/template"
 	"path"
 	"path/filepath"
 	"strings"
 )
 
 type ServerConfig struct {
-	ListenAddress string
-	GinMode       string
+	ListenAddress   string
+	GinMode         string
+	DevelopmentMode bool
 }
 
 type DbConfig struct {
@@ -60,6 +62,7 @@ type Config struct {
 	Redis          RedisConfig
 	Authentication AuthenticationConfig
 	Services       ServicesConfig
+	TemplateCache  map[string]*template.Template
 }
 
 var (

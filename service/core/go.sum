@@ -21,12 +21,16 @@ github.com/armon/go-metrics v0.0.0-20180917152333-f0300d1749da/go.mod h1:Q73ZrmV
 github.com/armon/go-radix v0.0.0-20180808171621-7fddfc383310/go.mod h1:ufUuZ+zHj4x4TnLV4JWEpy2hxWSpsRywHrMgIH9cCH8=
 github.com/aws/aws-sdk-go v1.38.52 h1:7NKcUyTG/CyDX835kq04DDNe8vXaJhbGW8ThemHb18A=
 github.com/aws/aws-sdk-go v1.38.52/go.mod h1:hcU610XS61/+aQV88ixoOzUoG7v3b31pl2zKMmprdro=
+github.com/aws/aws-sdk-go v1.38.53 h1:Qj5OvKPrDGTiCnWj+kwQXAlBO6OaFBH/WaRzJPZPg3w=
+github.com/aws/aws-sdk-go v1.38.53/go.mod h1:hcU610XS61/+aQV88ixoOzUoG7v3b31pl2zKMmprdro=
 github.com/beorn7/perks v0.0.0-20180321164747-3a771d992973/go.mod h1:Dwedo/Wpr24TaqPxmxbtue+5NUziq4I4S80YR8gNf3Q=
 github.com/beorn7/perks v1.0.0/go.mod h1:KWe93zE9D1o94FZ5RNwFwVgaQK1VOXiVxmqh+CedLV8=
 github.com/bgentry/speakeasy v0.1.0/go.mod h1:+zsyZBPWlz7T6j88CTgSN5bM796AkVf0kBD4zp0CCIs=
 github.com/bketelsen/crypt v0.0.3-0.20200106085610-5cbc8cc4026c/go.mod h1:MKsuJmJgSg28kpZDP6UIiPt0e0Oz0kqKNGyRaWEPv84=
 github.com/bogdanrat/web-server/contracts v0.0.0-20210602172511-372564923544 h1:qJeubOykxHlld9bIfMOkiFPltvcyGpMvF5h7XDQZ1PA=
 github.com/bogdanrat/web-server/contracts v0.0.0-20210602172511-372564923544/go.mod h1:fpY+JNP1ZFi2bIZEWFncTsIWjDCKsHAfQOIcBuWBj0M=
+github.com/bogdanrat/web-server/contracts v0.0.0-20210602195858-8628d57bc580 h1:1dsiCs4lRUUDsWzqSaysBuery/DzW+0P0PETkiclaBY=
+github.com/bogdanrat/web-server/contracts v0.0.0-20210602195858-8628d57bc580/go.mod h1:fpY+JNP1ZFi2bIZEWFncTsIWjDCKsHAfQOIcBuWBj0M=
 github.com/census-instrumentation/opencensus-proto v0.2.1/go.mod h1:f6KPmirojxKA12rnyqOA5BBL4O983OfeGPqjHWSTneU=
 github.com/cespare/xxhash v1.1.0/go.mod h1:XrSqR1VqqWfGrhpAt58auRo0WTKS1nRRg3ghfAqPWnc=
 github.com/client9/misspell v0.3.4/go.mod h1:qj6jICC3Q7zFZvVWo7KLAzC3yx5G7kyvSDkc90ppPyw=

@@ -6,6 +6,7 @@ import (
 	"github.com/bogdanrat/web-server/contracts/proto/storage_service"
 	"github.com/bogdanrat/web-server/service/core/cache"
 	"github.com/bogdanrat/web-server/service/core/config"
+	"github.com/bogdanrat/web-server/service/core/render"
 	"github.com/bogdanrat/web-server/service/core/repository/postgres"
 	"github.com/bogdanrat/web-server/service/core/router"
 	"google.golang.org/grpc"
@@ -27,6 +28,12 @@ func Init() error {
 	if err := config.ReadConfiguration(); err != nil {
 		return err
 	}
+
+	templateCache, err := render.CreateTemplateCache()
+	if err != nil {
+		return err
+	}
+	config.AppConfig.TemplateCache = templateCache
 
 	postgresDB, err := postgres.NewRepository(config.AppConfig.DB)
 	if err != nil {
