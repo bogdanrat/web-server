@@ -14,5 +14,5 @@ type DeleteFileRequest struct {
 }
 
 type GetFileRequest struct {
-	FileName string `json:"file_name"`
+	FileName string `json:"file_name" form:"file_name"`
 }
