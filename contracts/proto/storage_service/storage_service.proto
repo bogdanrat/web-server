@@ -34,7 +34,9 @@ message FileInfo {
 message UploadFileResponse {
 }
 
-message GetFileRequest {}
+message GetFileRequest {
+  string file_name = 1;
+}
 message GetFileResponse {
   bytes chunk_data = 2;
 }
