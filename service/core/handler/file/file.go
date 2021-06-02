@@ -12,6 +12,7 @@ import (
 	"io"
 	"mime/multipart"
 	"net/http"
+	"sync"
 	"time"
 )
 
@@ -31,19 +32,30 @@ func NewHandler(rpcConfig *RPCConfig) *Handler {
 	}
 }
 
-func (h *Handler) PostFile(c *gin.Context) {
-	file, err := c.FormFile("file")
-	if err != nil {
-		jsonErr := models.NewBadRequestError("missing file", "file")
+func (h *Handler) PostFiles(c *gin.Context) {
+	if err := c.Request.ParseMultipartForm(100000); err != nil {
+		jsonErr := models.NewInternalServerError("cannot parse multipart form")
 		c.JSON(jsonErr.StatusCode, jsonErr)
 		return
 	}
 
-	jsonErr := h.uploadFile(file)
-	if jsonErr != nil {
-		c.JSON(jsonErr.StatusCode, jsonErr)
-		return
+	wg := sync.WaitGroup{}
+
+	files := c.Request.MultipartForm.File["files"]
+	for _, file := range files {
+		wg.Add(1)
+		go func(fileHeader *multipart.FileHeader) {
+			defer wg.Done()
+
+			jsonErr := h.uploadFile(fileHeader)
+			if jsonErr != nil {
+				c.JSON(jsonErr.StatusCode, jsonErr)
+				return
+			}
+		}(file)
 	}
+
+	wg.Wait()
 
 	c.Status(http.StatusCreated)
 }

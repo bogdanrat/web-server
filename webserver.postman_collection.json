@@ -137,7 +137,7 @@
 			"response": []
 		},
 		{
-			"name": "upload file",
+			"name": "upload files",
 			"request": {
 				"method": "POST",
 				"header": [
@@ -151,21 +151,26 @@
 					"mode": "formdata",
 					"formdata": [
 						{
-							"key": "file",
+							"key": "files",
 							"type": "file",
-							"src": "/Users/bogdan.rat/Downloads/test2.pdf"
+							"src": [
+								"/Users/bogdan.rat/Documents/Projects/iceberg/images/Back (1).JPG",
+								"/Users/bogdan.rat/Documents/Projects/iceberg/images/Back.JPG",
+								"/Users/bogdan.rat/Documents/Projects/iceberg/images/Bottom (1).JPG",
+								"/Users/bogdan.rat/Documents/Projects/iceberg/images/Bottom.JPG"
+							]
 						}
 					]
 				},
 				"url": {
-					"raw": "localhost:3000/api/file",
+					"raw": "localhost:3000/api/files",
 					"host": [
 						"localhost"
 					],
 					"port": "3000",
 					"path": [
 						"api",
-						"file"
+						"files"
 					]
 				}
 			},
