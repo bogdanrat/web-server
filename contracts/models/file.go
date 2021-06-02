@@ -12,3 +12,7 @@ type GetFilesResponse struct {
 type DeleteFileRequest struct {
 	Key string `json:"key"`
 }
+
+type GetFileRequest struct {
+	FileName string `json:"file_name"`
+}
