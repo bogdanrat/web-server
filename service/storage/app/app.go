@@ -31,7 +31,7 @@ func Init() error {
 		return err
 	}
 
-	storage := persistence.New(config.AWSSession, config.AppConfig.AWS.S3.Bucket)
+	storage := persistence.New(config.AWSSession, config.AppConfig.AWS.S3)
 
 	if err = storage.InitializeS3Bucket(); err != nil {
 		return err

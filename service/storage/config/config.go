@@ -19,8 +19,10 @@ type UploadConfig struct {
 }
 
 type S3Config struct {
-	Bucket           string
-	BucketVersioning bool
+	Bucket              string
+	BucketVersioning    bool
+	UploaderConcurrency int
+	ImagesPrefix        string
 }
 
 type AWSConfig struct {

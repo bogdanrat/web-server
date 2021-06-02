@@ -10,7 +10,9 @@
     "Profile": "bogdan",
     "S3": {
       "Bucket": "web-server-storage-service-bucket",
-      "BucketVersioning": false
+      "BucketVersioning": false,
+      "UploaderConcurrency": 5,
+      "ImagesPrefix": "images"
     }
   }
 }
