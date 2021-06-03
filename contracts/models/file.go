@@ -14,7 +14,7 @@ type DeleteFileRequest struct {
 }
 
 type DeleteFilesRequest struct {
-	Prefix string `json:"prefix,omitempty"`
+	Prefix *string `json:"prefix,omitempty"`
 }
 
 type GetFileRequest struct {
