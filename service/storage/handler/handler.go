@@ -173,7 +173,7 @@ func (s *StorageServer) DeleteFile(ctx context.Context, req *pb.DeleteFileReques
 }
 
 func (s *StorageServer) DeleteFiles(ctx context.Context, req *pb.DeleteFilesRequest) (*pb.DeleteFilesResponse, error) {
-	if err := s.Storage.DeleteFiles(); err != nil {
+	if err := s.Storage.DeleteFiles(req.GetPrefix()); err != nil {
 		return nil, logError(status.Errorf(codes.Internal, "cannot delete: %v", err))
 	}
 

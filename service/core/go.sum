@@ -33,6 +33,14 @@ github.com/bogdanrat/web-server/contracts v0.0.0-20210602195858-8628d57bc580 h1:
 github.com/bogdanrat/web-server/contracts v0.0.0-20210602195858-8628d57bc580/go.mod h1:fpY+JNP1ZFi2bIZEWFncTsIWjDCKsHAfQOIcBuWBj0M=
 github.com/bogdanrat/web-server/contracts v0.0.0-20210602205537-2368992bd500 h1:i6Ie95MRNrUZk5sN7KtU6EfDQh5QoLE9jvPeYvTRRho=
 github.com/bogdanrat/web-server/contracts v0.0.0-20210602205537-2368992bd500/go.mod h1:fpY+JNP1ZFi2bIZEWFncTsIWjDCKsHAfQOIcBuWBj0M=
+github.com/bogdanrat/web-server/contracts v0.0.0-20210603080038-8bab92007d8d h1:BkjGuHJmXikGV7udAQZYgbpJDZXEoRsX2LAcCJxAYJY=
+github.com/bogdanrat/web-server/contracts v0.0.0-20210603080038-8bab92007d8d/go.mod h1:fpY+JNP1ZFi2bIZEWFncTsIWjDCKsHAfQOIcBuWBj0M=
+github.com/bogdanrat/web-server/contracts v0.0.0-20210603080254-3e0b352a83ba h1:GQ0LUDS0FcPXnN3YRe6sLF8sh4+6bC5MMIexpWxxbuY=
+github.com/bogdanrat/web-server/contracts v0.0.0-20210603080254-3e0b352a83ba/go.mod h1:fpY+JNP1ZFi2bIZEWFncTsIWjDCKsHAfQOIcBuWBj0M=
+github.com/bogdanrat/web-server/contracts v0.0.0-20210603080350-50b198b11959 h1:3ClguvMl4IyBDx2brfWiNLtvUUjOMeFElkoXg0m6NbA=
+github.com/bogdanrat/web-server/contracts v0.0.0-20210603080350-50b198b11959/go.mod h1:fpY+JNP1ZFi2bIZEWFncTsIWjDCKsHAfQOIcBuWBj0M=
+github.com/bogdanrat/web-server/contracts v0.0.0-20210603081111-68048dc37086 h1:ch2roKt4ZbsyRcfMaPG+OLze6FNMOUA3JaQMl+OtY9k=
+github.com/bogdanrat/web-server/contracts v0.0.0-20210603081111-68048dc37086/go.mod h1:fpY+JNP1ZFi2bIZEWFncTsIWjDCKsHAfQOIcBuWBj0M=
 github.com/census-instrumentation/opencensus-proto v0.2.1/go.mod h1:f6KPmirojxKA12rnyqOA5BBL4O983OfeGPqjHWSTneU=
 github.com/cespare/xxhash v1.1.0/go.mod h1:XrSqR1VqqWfGrhpAt58auRo0WTKS1nRRg3ghfAqPWnc=
 github.com/client9/misspell v0.3.4/go.mod h1:qj6jICC3Q7zFZvVWo7KLAzC3yx5G7kyvSDkc90ppPyw=

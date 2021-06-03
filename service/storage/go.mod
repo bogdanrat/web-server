@@ -3,8 +3,8 @@ module github.com/bogdanrat/web-server/service/storage
 go 1.16
 
 require (
-	github.com/aws/aws-sdk-go v1.38.52
-	github.com/bogdanrat/web-server/contracts v0.0.0-20210602170728-8977aa08c70a
+	github.com/aws/aws-sdk-go v1.38.53
+	github.com/bogdanrat/web-server/contracts v0.0.0-20210603080350-50b198b11959
 	github.com/fsnotify/fsnotify v1.4.9 // indirect
 	github.com/inhies/go-bytesize v0.0.0-20201103132853-d0aed0d254f8 // indirect
 	github.com/magiconair/properties v1.8.5 // indirect

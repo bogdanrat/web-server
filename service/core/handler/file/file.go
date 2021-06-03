@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"bytes"
 	"context"
+	"encoding/json"
 	"fmt"
 	"github.com/bogdanrat/web-server/contracts/models"
 	"github.com/bogdanrat/web-server/contracts/proto/storage_service"
@@ -295,11 +296,24 @@ func (h *Handler) DeleteFile(c *gin.Context) {
 }
 
 func (h *Handler) DeleteFiles(c *gin.Context) {
+	request := &models.DeleteFilesRequest{}
+	err := json.NewDecoder(c.Request.Body).Decode(request)
+	if err != nil && err != io.EOF {
+		jsonErr := models.NewBadRequestError("invalid json body", "prefix")
+		c.JSON(jsonErr.StatusCode, jsonErr)
+		return
+	}
+
+	objectPrefix := ""
+	if request.Prefix != nil {
+		objectPrefix = *request.Prefix
+	}
+
 	deadline := time.Now().Add(time.Millisecond * time.Duration(h.RPC.Deadline))
 	ctx, cancel := context.WithDeadline(context.Background(), deadline)
 	defer cancel()
 
-	_, err := h.RPC.Client.DeleteFiles(ctx, &storage_service.DeleteFilesRequest{})
+	_, err = h.RPC.Client.DeleteFiles(ctx, &storage_service.DeleteFilesRequest{Prefix: objectPrefix})
 	if err != nil {
 		if jsonErr := lib.HandleRPCError(err); err != nil {
 			c.JSON(jsonErr.StatusCode, jsonErr)

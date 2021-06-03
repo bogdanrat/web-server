@@ -175,10 +175,15 @@ func (s *Storage) DeleteFile(fileName string) error {
 	return nil
 }
 
-func (s *Storage) DeleteFiles() error {
-	iter := s3manager.NewDeleteListIterator(s.S3, &s3.ListObjectsInput{
+func (s *Storage) DeleteFiles(prefix ...string) error {
+	input := &s3.ListObjectsInput{
 		Bucket: aws.String(s.Bucket.Name),
-	})
+	}
+	if len(prefix) == 1 {
+		input.Prefix = aws.String(prefix[0])
+	}
+
+	iter := s3manager.NewDeleteListIterator(s.S3, input)
 
 	if err := s3manager.NewBatchDeleteWithClient(s.S3).Delete(aws.BackgroundContext(), iter); err != nil {
 		return fmt.Errorf("unable to delete objects from bucket %s: %v", s.Bucket.Name, err)
