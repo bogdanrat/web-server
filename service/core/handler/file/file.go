@@ -292,7 +292,7 @@ func (h *Handler) DeleteFile(c *gin.Context) {
 		}
 	}
 
-	c.Status(http.StatusOK)
+	http.Redirect(c.Writer, c.Request, "/api/file-page", http.StatusSeeOther)
 }
 
 func (h *Handler) DeleteFiles(c *gin.Context) {

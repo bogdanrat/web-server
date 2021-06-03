@@ -25,11 +25,28 @@
     {{range $files}}
     <li>
         <a href="http://localhost:3000/api/file?file_name={{.Key}}">{{.Key}}</a>
+        <button onclick="deleteFile({{.Key}})">Delete</button>
     </li>
     {{end}}
 </ul>
 
 <script>
+    function deleteFile(fileKey) {
+        const url = "http://localhost:3000/api/file";
+        const data = JSON.stringify({key: fileKey})
+        fetch(url, {
+            credentials: "same-origin",
+            mode: "same-origin",
+            method: "DELETE",
+            headers: {"Content-Type": "application/json"},
+            body: data
+        }).then(result => {
+            if (result.status === 200) {
+                location.reload();
+            }
+        }).catch(error => console.log);
+    }
+
     document.getElementById("download").addEventListener("click", ev => {
         ev.preventDefault()
 
