@@ -13,6 +13,10 @@ type DeleteFileRequest struct {
 	Key string `json:"key"`
 }
 
+type DeleteFilesRequest struct {
+	Prefix string `json:"prefix,omitempty"`
+}
+
 type GetFileRequest struct {
 	FileName string `json:"file_name" form:"file_name"`
 }
