@@ -177,6 +177,37 @@
 			"response": []
 		},
 		{
+			"name": "download file",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{jwt}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "localhost:3000/api/file?file_name=images/Cassette player.jpg",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"file"
+					],
+					"query": [
+						{
+							"key": "file_name",
+							"value": "images/Cassette player.jpg"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "get all files",
 			"request": {
 				"method": "GET",
@@ -214,7 +245,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"key\": \"maxresdefault.jpg\"\n}",
+					"raw": "{\n    \"key\": \"Bottom.JPG\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -246,6 +277,15 @@
 						"type": "text"
 					}
 				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"prefix\": \"images/\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
 				"url": {
 					"raw": "localhost:3000/api/files",
 					"host": [
