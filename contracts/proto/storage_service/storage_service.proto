@@ -59,6 +59,6 @@ message DeleteFileResponse {
 }
 
 message DeleteFilesRequest {
+  string prefix = 1;
 }
-message DeleteFilesResponse {
-}
+message DeleteFilesResponse {}
