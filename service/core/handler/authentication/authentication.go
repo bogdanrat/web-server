@@ -7,6 +7,7 @@ import (
 	pb "github.com/bogdanrat/web-server/contracts/proto/auth_service"
 	"github.com/bogdanrat/web-server/service/core/cache"
 	"github.com/bogdanrat/web-server/service/core/config"
+	"github.com/bogdanrat/web-server/service/core/forms"
 	"github.com/bogdanrat/web-server/service/core/lib"
 	"github.com/bogdanrat/web-server/service/core/repository"
 	"github.com/bogdanrat/web-server/service/core/util"
@@ -104,14 +105,37 @@ func (h *Handler) SignUp(c *gin.Context) {
 }
 
 func (h *Handler) Login(c *gin.Context) {
-	request := &models.LoginRequest{}
-	if err := c.ShouldBindJSON(request); err != nil {
-		jsonErr := models.NewBadRequestError("invalid login request")
+	if err := c.Request.ParseForm(); err != nil {
+		jsonErr := models.NewInternalServerError("could not parse form")
 		c.JSON(jsonErr.StatusCode, jsonErr)
 		return
 	}
 
-	user, err := h.Repository.GetUserByEmail(request.Email)
+	email := c.Request.Form.Get("email")
+	password := c.Request.Form.Get("password")
+	qrCode := c.Request.Form.Get("qr_code")
+
+	form := forms.New(c.Request.PostForm)
+	requiredFields := []string{"email", "password"}
+	if config.AppConfig.Authentication.MFA {
+		requiredFields = append(requiredFields, "qr_code")
+	}
+	form.Required(requiredFields...)
+	form.ValidEmail("email")
+
+	if !form.Valid() {
+		var jsonErr *models.JSONError
+		formJson, err := form.Marshal()
+		if err == nil {
+			jsonErr = models.NewBadRequestError(string(formJson))
+		} else {
+			jsonErr = models.NewBadRequestError("invalid form submitted")
+		}
+		c.JSON(jsonErr.StatusCode, jsonErr)
+		return
+	}
+
+	user, err := h.Repository.GetUserByEmail(email)
 	if err != nil {
 		jsonErr := models.NewNotFoundError("user not found", "email")
 		c.JSON(jsonErr.StatusCode, jsonErr)
@@ -131,7 +155,7 @@ func (h *Handler) Login(c *gin.Context) {
 
 		response, err := h.RPC.Client.ValidateQRCode(
 			ctx,
-			&pb.ValidateQRCodeRequest{QrCode: request.QRCode, QrSecret: *user.QRSecret},
+			&pb.ValidateQRCodeRequest{QrCode: qrCode, QrSecret: *user.QRSecret},
 			h.RPC.CallOptions...,
 		)
 		if jsonErr := lib.HandleRPCError(err); jsonErr != nil {
@@ -146,7 +170,7 @@ func (h *Handler) Login(c *gin.Context) {
 		}
 	}
 
-	err = user.CheckPassword(request.Password)
+	err = user.CheckPassword(password)
 	if err != nil {
 		jsonErr := models.NewUnauthorizedError("invalid user credentials", "password")
 		c.JSON(jsonErr.StatusCode, jsonErr)
@@ -160,7 +184,7 @@ func (h *Handler) Login(c *gin.Context) {
 	response, err := h.RPC.Client.GenerateToken(
 		ctx,
 		&pb.GenerateTokenRequest{
-			Email:                request.Email,
+			Email:                email,
 			AccessTokenDuration:  config.AppConfig.Authentication.AccessTokenDuration,
 			RefreshTokenDuration: config.AppConfig.Authentication.RefreshTokenDuration,
 		},
