@@ -29,9 +29,10 @@ type S3Config struct {
 }
 
 type AWSConfig struct {
-	Region  string
-	Profile string
-	S3      S3Config
+	Region     string
+	AssumeRole string
+	ExternalID string
+	S3         S3Config
 }
 
 type Config struct {

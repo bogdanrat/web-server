@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/awserr"
+	"github.com/aws/aws-sdk-go/aws/credentials/stscreds"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/s3"
 	"github.com/aws/aws-sdk-go/service/s3/s3manager"
@@ -25,11 +26,17 @@ type Storage struct {
 }
 
 func New(sess *session.Session, s3Config config.S3Config) *Storage {
-	creds, _ := sess.Config.Credentials.Get()
+	stsCredentials := stscreds.NewCredentials(sess, config.AppConfig.AWS.AssumeRole, func(provider *stscreds.AssumeRoleProvider) {
+		provider.ExternalID = &config.AppConfig.AWS.ExternalID
+	})
+	sess.Config.Credentials = stsCredentials
 
 	storage := &Storage{}
 
-	storage.S3 = s3.New(sess)
+	storage.S3 = s3.New(sess, &aws.Config{
+		Credentials: stsCredentials,
+	})
+	creds, _ := stsCredentials.Get()
 
 	storage.S3Gofer = s3gof3r.New(s3Config.Domain, s3gof3r.Keys{
 		AccessKey: creds.AccessKeyID,
@@ -46,6 +53,7 @@ func New(sess *session.Session, s3Config config.S3Config) *Storage {
 
 	storage.UploaderPool = sync.Pool{
 		New: func() interface{} {
+			sess.Config.Credentials.Get()
 			uploader := s3manager.NewUploader(sess)
 			// The number of goroutines to spin up in parallel per call to Upload when sending parts
 			uploader.Concurrency = s3Config.Concurrency

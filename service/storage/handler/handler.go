@@ -88,7 +88,7 @@ func (s *StorageServer) UploadFile(stream pb.Storage_UploadFileServer) error {
 		return logError(status.Errorf(codes.Internal, "cannot send response: %v", err))
 	}
 
-	log.Printf("Uploaded image %s, size: %d", fileName, fileSize)
+	log.Printf("Uploaded %s, size: %d", fileName, fileSize)
 	return nil
 }
 

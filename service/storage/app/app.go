@@ -3,7 +3,6 @@ package app
 import (
 	"fmt"
 	"github.com/aws/aws-sdk-go/aws"
-	"github.com/aws/aws-sdk-go/aws/credentials"
 	"github.com/aws/aws-sdk-go/aws/session"
 	pb "github.com/bogdanrat/web-server/contracts/proto/storage_service"
 	"github.com/bogdanrat/web-server/service/storage/config"
@@ -53,13 +52,12 @@ func Init() error {
 
 func initAwsSession(awsConfig config.AWSConfig) error {
 	sess, err := session.NewSession(&aws.Config{
-		Region:      aws.String(awsConfig.Region),
-		Credentials: credentials.NewSharedCredentials("", awsConfig.Profile),
+		Region: aws.String(awsConfig.Region),
+		//Credentials: credentials.NewSharedCredentials("", awsConfig.Profile),
 	})
 	if err != nil {
 		return err
 	}
-
 	config.SetAWSSession(sess)
 	return nil
 }
