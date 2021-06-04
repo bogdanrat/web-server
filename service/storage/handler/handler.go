@@ -8,7 +8,7 @@ import (
 	pb "github.com/bogdanrat/web-server/contracts/proto/storage_service"
 	"github.com/bogdanrat/web-server/service/storage/config"
 	"github.com/bogdanrat/web-server/service/storage/lib"
-	"github.com/bogdanrat/web-server/service/storage/persistence"
+	"github.com/bogdanrat/web-server/service/storage/persistence/store"
 	epb "google.golang.org/genproto/googleapis/rpc/errdetails"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -18,10 +18,10 @@ import (
 )
 
 type StorageServer struct {
-	Storage *persistence.Storage
+	Storage store.Store
 }
 
-func New(storage *persistence.Storage) *StorageServer {
+func New(storage store.Store) *StorageServer {
 	return &StorageServer{
 		Storage: storage,
 	}
@@ -74,7 +74,7 @@ func (s *StorageServer) UploadFile(stream pb.Storage_UploadFileServer) error {
 	}
 
 	reader := bytes.NewReader(fileData.Bytes())
-	_, err = s.Storage.UploadFile(fileName, reader)
+	err = s.Storage.Put(fileName, reader)
 
 	if err != nil {
 		return logError(status.Errorf(codes.Internal, "cannot upload file: %v", err))
@@ -94,7 +94,7 @@ func (s *StorageServer) UploadFile(stream pb.Storage_UploadFileServer) error {
 
 func (s *StorageServer) GetFile(req *pb.GetFileRequest, stream pb.Storage_GetFileServer) error {
 	writer := &bytes.Buffer{}
-	if err := s.Storage.GetFile(req.GetFileName(), writer); err != nil {
+	if err := s.Storage.Get(req.GetFileName(), writer); err != nil {
 		if strings.Contains(err.Error(), "404") {
 			errorStatus := status.New(codes.NotFound, "object does not exist")
 			details, err := errorStatus.WithDetails(&epb.BadRequest_FieldViolation{
@@ -139,7 +139,7 @@ func (s *StorageServer) GetFile(req *pb.GetFileRequest, stream pb.Storage_GetFil
 }
 
 func (s *StorageServer) GetFiles(req *pb.GetFilesRequest, stream pb.Storage_GetFilesServer) error {
-	objects, err := s.Storage.GetFiles()
+	objects, err := s.Storage.GetAll()
 	if err != nil {
 		return logError(status.Errorf(codes.Internal, "cannot get files: %v", err))
 	}
@@ -161,7 +161,7 @@ func (s *StorageServer) GetFiles(req *pb.GetFilesRequest, stream pb.Storage_GetF
 }
 
 func (s *StorageServer) DeleteFile(ctx context.Context, req *pb.DeleteFileRequest) (*pb.DeleteFileResponse, error) {
-	if err := s.Storage.DeleteFile(req.Key); err != nil {
+	if err := s.Storage.Delete(req.Key); err != nil {
 		return nil, logError(status.Errorf(codes.Internal, "cannot delete: %v", err))
 	}
 
@@ -173,7 +173,7 @@ func (s *StorageServer) DeleteFile(ctx context.Context, req *pb.DeleteFileReques
 }
 
 func (s *StorageServer) DeleteFiles(ctx context.Context, req *pb.DeleteFilesRequest) (*pb.DeleteFilesResponse, error) {
-	if err := s.Storage.DeleteFiles(req.GetPrefix()); err != nil {
+	if err := s.Storage.DeleteAll(req.GetPrefix()); err != nil {
 		return nil, logError(status.Errorf(codes.Internal, "cannot delete: %v", err))
 	}
 

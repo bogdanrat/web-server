@@ -1,4 +1,4 @@
-package persistence
+package s3store
 
 import (
 	"fmt"
@@ -10,6 +10,7 @@ import (
 	"github.com/aws/aws-sdk-go/service/s3/s3manager"
 	pb "github.com/bogdanrat/web-server/contracts/proto/storage_service"
 	"github.com/bogdanrat/web-server/service/storage/config"
+	"github.com/bogdanrat/web-server/service/storage/persistence/store"
 	"github.com/rlmcpherson/s3gof3r"
 	"io"
 	"log"
@@ -17,21 +18,23 @@ import (
 	"time"
 )
 
-type Storage struct {
+type S3Store struct {
 	S3           *s3.S3
 	S3Gofer      *s3gof3r.S3 // provides fast, parallelized, streaming access to Amazon S3
 	Bucket       *s3gof3r.Bucket
 	Config       *s3gof3r.Config
 	UploaderPool sync.Pool
+	Session      *session.Session
 }
 
-func New(sess *session.Session, s3Config config.S3Config) *Storage {
+func New(sess *session.Session, s3Config config.S3Config) store.Store {
 	stsCredentials := stscreds.NewCredentials(sess, config.AppConfig.AWS.AssumeRole, func(provider *stscreds.AssumeRoleProvider) {
 		provider.ExternalID = &config.AppConfig.AWS.ExternalID
 	})
 	sess.Config.Credentials = stsCredentials
 
-	storage := &Storage{}
+	storage := &S3Store{}
+	storage.Session = sess
 
 	storage.S3 = s3.New(sess, &aws.Config{
 		Credentials: stsCredentials,
@@ -53,8 +56,7 @@ func New(sess *session.Session, s3Config config.S3Config) *Storage {
 
 	storage.UploaderPool = sync.Pool{
 		New: func() interface{} {
-			sess.Config.Credentials.Get()
-			uploader := s3manager.NewUploader(sess)
+			uploader := s3manager.NewUploader(storage.Session)
 			// The number of goroutines to spin up in parallel per call to Upload when sending parts
 			uploader.Concurrency = s3Config.Concurrency
 			return uploader
@@ -64,7 +66,7 @@ func New(sess *session.Session, s3Config config.S3Config) *Storage {
 	return storage
 }
 
-func (s *Storage) InitializeS3Bucket() error {
+func (s *S3Store) Init() error {
 	_, err := s.S3.HeadBucket(
 		&s3.HeadBucketInput{
 			Bucket: aws.String(s.Bucket.Name),
@@ -92,24 +94,7 @@ func (s *Storage) InitializeS3Bucket() error {
 	return nil
 }
 
-func (s *Storage) UploadFile(key string, body io.Reader) (*s3manager.UploadOutput, error) {
-	// Get() first checks if there are any available instances within the pool to return. If not, calls New() to create a new one.
-	uploader := s.UploaderPool.Get().(*s3manager.Uploader)
-	// Put(): place the instance back in the pool for use by other processes.
-	defer s.UploaderPool.Put(uploader)
-
-	output, err := uploader.Upload(&s3manager.UploadInput{
-		Bucket: aws.String(s.Bucket.Name),
-		Key:    aws.String(key),
-		Body:   body,
-	})
-	if err != nil {
-		return nil, err
-	}
-	return output, nil
-}
-
-func (s *Storage) createBucket() (*s3.CreateBucketOutput, error) {
+func (s *S3Store) createBucket() (*s3.CreateBucketOutput, error) {
 	output, err := s.S3.CreateBucket(&s3.CreateBucketInput{
 		Bucket: aws.String(s.Bucket.Name),
 	})
@@ -139,7 +124,24 @@ func (s *Storage) createBucket() (*s3.CreateBucketOutput, error) {
 	return output, nil
 }
 
-func (s *Storage) GetFile(key string, writer io.Writer) error {
+func (s *S3Store) Put(key string, body io.Reader) error {
+	// Get() first checks if there are any available instances within the pool to return. If not, calls New() to create a new one.
+	uploader := s.UploaderPool.Get().(*s3manager.Uploader)
+	// Put(): place the instance back in the pool for use by other processes.
+	defer s.UploaderPool.Put(uploader)
+
+	_, err := uploader.Upload(&s3manager.UploadInput{
+		Bucket: aws.String(s.Bucket.Name),
+		Key:    aws.String(key),
+		Body:   body,
+	})
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (s *S3Store) Get(key string, writer io.Writer) error {
 	// GetReader() provides a reader and downloads data using parallel ranged get requests.
 	// Data from the requests are ordered and written sequentially.
 	reader, _, err := s.Bucket.GetReader(key, s.Config)
@@ -154,18 +156,29 @@ func (s *Storage) GetFile(key string, writer io.Writer) error {
 	return nil
 }
 
-func (s *Storage) GetFiles() ([]*pb.S3Object, error) {
+func (s *S3Store) GetAll() ([]*pb.StorageObject, error) {
 	output, err := s.S3.ListObjectsV2(&s3.ListObjectsV2Input{
 		Bucket: aws.String(s.Bucket.Name),
 	})
 	if err != nil {
+		if aerr, ok := err.(awserr.Error); ok {
+			code := aerr.Code()
+			switch code {
+			case "AccessDenied":
+				s.retrieveNewCredentials()
+				return s.GetAll()
+			}
+		} else {
+			return nil, err
+		}
+
 		return nil, err
 	}
 
-	objects := make([]*pb.S3Object, 0)
+	objects := make([]*pb.StorageObject, 0)
 
 	for _, item := range output.Contents {
-		objects = append(objects, &pb.S3Object{
+		objects = append(objects, &pb.StorageObject{
 			Key:          *item.Key,
 			Size:         uint64(*item.Size),
 			LastModified: item.LastModified.Format(time.RFC3339),
@@ -176,14 +189,14 @@ func (s *Storage) GetFiles() ([]*pb.S3Object, error) {
 	return objects, nil
 }
 
-func (s *Storage) DeleteFile(fileName string) error {
+func (s *S3Store) Delete(fileName string) error {
 	if err := s.Bucket.Delete(fileName); err != nil {
 		return err
 	}
 	return nil
 }
 
-func (s *Storage) DeleteFiles(prefix ...string) error {
+func (s *S3Store) DeleteAll(prefix ...string) error {
 	input := &s3.ListObjectsInput{
 		Bucket: aws.String(s.Bucket.Name),
 	}
@@ -198,4 +211,14 @@ func (s *Storage) DeleteFiles(prefix ...string) error {
 	}
 
 	return nil
+}
+
+func (s *S3Store) retrieveNewCredentials() {
+	stsCredentials := stscreds.NewCredentials(s.Session, config.AppConfig.AWS.AssumeRole, func(provider *stscreds.AssumeRoleProvider) {
+		provider.ExternalID = &config.AppConfig.AWS.ExternalID
+	})
+	s.Session.Config.Credentials = stsCredentials
+	s.S3 = s3.New(s.Session, &aws.Config{
+		Credentials: stsCredentials,
+	})
 }

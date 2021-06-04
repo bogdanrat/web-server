@@ -7,7 +7,7 @@ import (
 	pb "github.com/bogdanrat/web-server/contracts/proto/storage_service"
 	"github.com/bogdanrat/web-server/service/storage/config"
 	"github.com/bogdanrat/web-server/service/storage/handler"
-	"github.com/bogdanrat/web-server/service/storage/persistence"
+	"github.com/bogdanrat/web-server/service/storage/persistence/store/s3store"
 	"google.golang.org/grpc"
 	"log"
 	"net"
@@ -30,9 +30,9 @@ func Init() error {
 		return err
 	}
 
-	storage := persistence.New(config.AWSSession, config.AppConfig.AWS.S3)
+	storage := s3store.New(config.AWSSession, config.AppConfig.AWS.S3)
 
-	if err = storage.InitializeS3Bucket(); err != nil {
+	if err = storage.Init(); err != nil {
 		return err
 	}
 
@@ -53,7 +53,6 @@ func Init() error {
 func initAwsSession(awsConfig config.AWSConfig) error {
 	sess, err := session.NewSession(&aws.Config{
 		Region: aws.String(awsConfig.Region),
-		//Credentials: credentials.NewSharedCredentials("", awsConfig.Profile),
 	})
 	if err != nil {
 		return err
