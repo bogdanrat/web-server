@@ -16,10 +16,6 @@ service Storage {
   rpc DeleteFiles(DeleteFilesRequest) returns (DeleteFilesResponse);
 }
 
-service Database {
-  rpc GetAllUsers(GetAllUsersRequest) returns (GetAllUsersResponse);
-}
-
 // The file is divided into multiple chunks which are sent on by one to the server in each request message.
 // oneof: specify that only one of a range of fields can be set in any message: the first request will only contain the metadata (file info)
 message UploadFileRequest {
@@ -65,16 +61,3 @@ message DeleteFilesRequest {
   string prefix = 1;
 }
 message DeleteFilesResponse {}
-
-message GetAllUsersRequest{}
-message GetAllUsersResponse {
-  repeated User users = 1;
-}
-
-message User {
-  uint64 id = 1;
-  string name = 2;
-  string email = 3;
-  string password = 4;
-  string qrSecret = 5;
-}
