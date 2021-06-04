@@ -43,9 +43,9 @@ message GetFileResponse {
 
 message GetFilesRequest {}
 message GetFilesResponse {
-  S3Object object = 1;
+  StorageObject object = 1;
 }
-message S3Object {
+message StorageObject {
   string key = 1;
   string last_modified = 2;
   uint64 size = 3;
