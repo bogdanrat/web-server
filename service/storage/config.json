@@ -5,6 +5,10 @@
   "Upload": {
     "MaxFileSize": 10000000
   },
+  "StorageEngine": "disk",
+  "DiskStorage": {
+    "Path": "./data"
+  },
   "AWS": {
     "Region": "eu-central-1",
     "AssumeRole": "arn:aws:iam::820136616739:role/webserver-storageservice-role",

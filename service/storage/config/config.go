@@ -18,6 +18,10 @@ type UploadConfig struct {
 	MaxFileSize uint32
 }
 
+type DiskStorageConfig struct {
+	Path string
+}
+
 type S3Config struct {
 	Domain           string
 	Bucket           string
@@ -36,9 +40,11 @@ type AWSConfig struct {
 }
 
 type Config struct {
-	Service ServiceConfig
-	Upload  UploadConfig
-	AWS     AWSConfig
+	Service       ServiceConfig
+	Upload        UploadConfig
+	DiskStorage   DiskStorageConfig
+	AWS           AWSConfig
+	StorageEngine string
 }
 
 var (

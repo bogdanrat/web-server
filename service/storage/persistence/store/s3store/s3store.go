@@ -82,7 +82,7 @@ func (s *S3Store) Init() error {
 				if err != nil {
 					return err
 				}
-				log.Printf("S3 Bucket Initialized at location: %s\n", *output.Location)
+				log.Printf("S3 Bucket created at location: %s\n", *output.Location)
 			}
 		} else {
 			return err
@@ -91,6 +91,7 @@ func (s *S3Store) Init() error {
 		log.Println("S3 Bucket already exists. Skipping bucket creation.")
 	}
 
+	log.Printf("Initialized S3 Storage Engine in %s\n", s.Bucket.Name)
 	return nil
 }
 

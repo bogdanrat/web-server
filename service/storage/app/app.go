@@ -7,6 +7,8 @@ import (
 	pb "github.com/bogdanrat/web-server/contracts/proto/storage_service"
 	"github.com/bogdanrat/web-server/service/storage/config"
 	"github.com/bogdanrat/web-server/service/storage/handler"
+	"github.com/bogdanrat/web-server/service/storage/persistence/store"
+	"github.com/bogdanrat/web-server/service/storage/persistence/store/diskstore"
 	"github.com/bogdanrat/web-server/service/storage/persistence/store/s3store"
 	"google.golang.org/grpc"
 	"log"
@@ -30,7 +32,15 @@ func Init() error {
 		return err
 	}
 
-	storage := s3store.New(config.AWSSession, config.AppConfig.AWS.S3)
+	var storage store.Store
+	switch config.AppConfig.StorageEngine {
+	case "disk":
+		storage = diskstore.New(config.AppConfig.DiskStorage.Path)
+	case "s3":
+		storage = s3store.New(config.AWSSession, config.AppConfig.AWS.S3)
+	default:
+		return fmt.Errorf("unknown storage engine %s", config.AppConfig.StorageEngine)
+	}
 
 	if err = storage.Init(); err != nil {
 		return err
