@@ -42,9 +42,9 @@ type AWSConfig struct {
 type Config struct {
 	Service       ServiceConfig
 	Upload        UploadConfig
+	StorageEngine string
 	DiskStorage   DiskStorageConfig
 	AWS           AWSConfig
-	StorageEngine string
 }
 
 var (

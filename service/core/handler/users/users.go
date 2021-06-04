@@ -1,85 +1,61 @@
 package users
 
 import (
-	"fmt"
-	"github.com/aws/aws-sdk-go/aws"
-	"github.com/aws/aws-sdk-go/aws/credentials"
+	"context"
+	"github.com/bogdanrat/web-server/contracts/models"
+	pb "github.com/bogdanrat/web-server/contracts/proto/database_service"
+	"github.com/bogdanrat/web-server/service/core/lib"
 	"github.com/bogdanrat/web-server/service/core/repository"
 	"github.com/gin-gonic/gin"
-	"log"
+	"google.golang.org/grpc"
 	"net/http"
-
-	"github.com/aws/aws-sdk-go/aws/awserr"
-	"github.com/aws/aws-sdk-go/aws/session"
-	"github.com/aws/aws-sdk-go/service/dynamodb"
+	"time"
 )
+
+type RPCConfig struct {
+	Client      pb.DatabaseClient
+	CallOptions []grpc.CallOption
+	Deadline    int64
+}
 
 type Handler struct {
 	Repository repository.DatabaseRepository
+	RPC        *RPCConfig
 }
 
-func init() {
-	sess, err := session.NewSession(&aws.Config{
-		Region:      aws.String("eu-central-1"),
-		Credentials: credentials.NewSharedCredentials("", "bogdan"),
-	})
-	if err != nil {
-		log.Print(err)
-	}
-	creds, err := sess.Config.Credentials.Get()
-	fmt.Println(creds)
-
-	svc := dynamodb.New(sess)
-
-	input := &dynamodb.ListTablesInput{}
-
-	fmt.Printf("Tables:\n")
-
-	for {
-		// Get the list of tables
-		result, err := svc.ListTables(input)
-		if err != nil {
-			if aerr, ok := err.(awserr.Error); ok {
-				switch aerr.Code() {
-				case dynamodb.ErrCodeInternalServerError:
-					fmt.Println(dynamodb.ErrCodeInternalServerError, aerr.Error())
-				default:
-					fmt.Println(aerr.Error())
-				}
-			} else {
-				// Print the error, cast err to awserr.Error to get the Code and
-				// Message from an error.
-				fmt.Println(err.Error())
-			}
-			return
-		}
-
-		for _, n := range result.TableNames {
-			fmt.Println(*n)
-		}
-
-		// assign the last read tablename as the start for our next call to the ListTables function
-		// the maximum number of table names returned in a call is 100 (default), which requires us to make
-		// multiple calls to the ListTables function to retrieve all table names
-		input.ExclusiveStartTableName = result.LastEvaluatedTableName
-
-		if result.LastEvaluatedTableName == nil {
-			break
-		}
-	}
-}
-
-func NewHandler(repo repository.DatabaseRepository) *Handler {
+func NewHandler(repo repository.DatabaseRepository, rpcConfig *RPCConfig) *Handler {
 	return &Handler{
 		Repository: repo,
+		RPC:        rpcConfig,
 	}
 }
 
 func (h *Handler) GetUsers(c *gin.Context) {
-	users, err := h.Repository.GetAllUsers()
+	deadline := time.Now().Add(time.Millisecond * time.Duration(h.RPC.Deadline))
+	ctx, cancel := context.WithDeadline(context.Background(), deadline)
+	defer cancel()
+
+	response, err := h.RPC.Client.GetAllUsers(ctx, &pb.GetAllUsersRequest{})
+
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, err)
-		return
+		if jsonErr := lib.HandleRPCError(err); err != nil {
+			c.JSON(jsonErr.StatusCode, jsonErr)
+			return
+		}
+	}
+
+	users := make([]*models.User, 0)
+
+	for _, resUser := range response.Users {
+		user := &models.User{
+			Name:     resUser.GetName(),
+			Email:    resUser.GetEmail(),
+			Password: resUser.GetPassword(),
+		}
+		qrSecret := resUser.GetQrSecret()
+		user.QRSecret = &qrSecret
+
+		users = append(users, user)
 	}
 
 	c.JSON(http.StatusOK, users)

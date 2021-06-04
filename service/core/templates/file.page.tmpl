@@ -6,13 +6,21 @@
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Home Page</title>
+    <style>
+        button {
+            cursor: pointer;
+        }
+        input[type=submit] {
+            cursor: pointer;
+        }
+    </style>
 </head>
 <body>
 <h1>File Handler</h1>
 <form method="post" action="/api/files" enctype="multipart/form-data" novalidate>
     <label for="files">Choose files:</label>
     <input type="file" name="files" id="files" multiple>
-    <input type="submit" name="submit" value="Upload">
+    <input type="submit" name="submit" value="Upload" style="background-color: greenyellow">
 </form>
 <hr>
 <label hidden for="file_name">Enter file name:</label>
@@ -25,10 +33,11 @@
     {{range $files}}
     <li>
         <a href="http://localhost:3000/api/file?file_name={{.Key}}">{{.Key}}</a>
-        <button onclick="deleteFile({{.Key}})">Delete</button>
+        <button onclick="deleteFile({{.Key}})" style="background-color: yellow">Delete</button>
     </li>
     {{end}}
 </ul>
+<button style="background-color: red">Delete All</button>
 
 <script>
     function deleteFile(fileKey) {

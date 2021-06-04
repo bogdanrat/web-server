@@ -23,6 +23,7 @@ var (
 func Init() error {
 	var err error
 
+	// init app config
 	config.ReadFlags()
 	if err = config.ReadConfiguration(); err != nil {
 		return err
@@ -32,6 +33,7 @@ func Init() error {
 		return err
 	}
 
+	// init storage
 	var storage store.Store
 	switch config.AppConfig.StorageEngine {
 	case "disk":
@@ -46,6 +48,7 @@ func Init() error {
 		return err
 	}
 
+	// init grpc
 	listener, err = net.Listen("tcp", config.AppConfig.Service.Address)
 	if err != nil {
 		return fmt.Errorf("failed to listen: %v", err)

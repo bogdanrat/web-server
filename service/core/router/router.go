@@ -2,6 +2,7 @@ package router
 
 import (
 	pb "github.com/bogdanrat/web-server/contracts/proto/auth_service"
+	"github.com/bogdanrat/web-server/contracts/proto/database_service"
 	"github.com/bogdanrat/web-server/contracts/proto/storage_service"
 	"github.com/bogdanrat/web-server/service/core/cache"
 	"github.com/bogdanrat/web-server/service/core/config"
@@ -17,7 +18,7 @@ import (
 	"net/http"
 )
 
-func New(repo repository.DatabaseRepository, cacheClient cache.Client, authClient pb.AuthClient, storageClient storage_service.StorageClient) http.Handler {
+func New(repo repository.DatabaseRepository, cacheClient cache.Client, authClient pb.AuthClient, storageClient storage_service.StorageClient, databaseClient database_service.DatabaseClient) http.Handler {
 	router := gin.Default()
 	gin.SetMode(config.AppConfig.Server.GinMode)
 	router.Use(cors.Default())
@@ -36,7 +37,11 @@ func New(repo repository.DatabaseRepository, cacheClient cache.Client, authClien
 		CallOptions: options,
 	})
 
-	usersHandler := users.NewHandler(repo)
+	usersHandler := users.NewHandler(repo, &users.RPCConfig{
+		Client:      databaseClient,
+		Deadline:    config.AppConfig.Services.Auth.GRPC.Deadline,
+		CallOptions: options,
+	})
 
 	options = []grpc.CallOption{}
 	if config.AppConfig.Services.Storage.GRPC.UseCompression {

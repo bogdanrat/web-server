@@ -39,8 +39,9 @@ type AuthenticationConfig struct {
 }
 
 type ServicesConfig struct {
-	Auth    AuthConfig
-	Storage StorageConfig
+	Auth     AuthConfig
+	Storage  StorageConfig
+	Database DatabaseConfig
 }
 
 type GRPCConfig struct {
@@ -55,6 +56,9 @@ type StorageConfig struct {
 	GRPC            GRPCConfig
 	ImagesPrefix    string
 	DocumentsPrefix string
+}
+type DatabaseConfig struct {
+	GRPC GRPCConfig
 }
 
 type Config struct {

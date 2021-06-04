@@ -3,6 +3,7 @@ package app
 import (
 	"fmt"
 	pb "github.com/bogdanrat/web-server/contracts/proto/auth_service"
+	"github.com/bogdanrat/web-server/contracts/proto/database_service"
 	"github.com/bogdanrat/web-server/contracts/proto/storage_service"
 	"github.com/bogdanrat/web-server/service/core/cache"
 	"github.com/bogdanrat/web-server/service/core/config"
@@ -12,11 +13,6 @@ import (
 	"google.golang.org/grpc"
 	"log"
 	"net/http"
-)
-
-const (
-	address  = "localhost:50051"
-	address2 = "localhost:50052"
 )
 
 var (
@@ -61,7 +57,14 @@ func Init() error {
 	log.Printf("GRPC Dial %s successful.", config.AppConfig.Services.Storage.GRPC.Address)
 	storageClient := storage_service.NewStorageClient(conn)
 
-	httpRouter = router.New(postgresDB, redisCache, authClient, storageClient)
+	conn, err = initGRPCConnection(config.AppConfig.Services.Database.GRPC.Address)
+	if err != nil {
+		return err
+	}
+	log.Printf("GRPC Dial %s successful.", config.AppConfig.Services.Database.GRPC.Address)
+	databaseClient := database_service.NewDatabaseClient(conn)
+
+	httpRouter = router.New(postgresDB, redisCache, authClient, storageClient, databaseClient)
 
 	redisCache.Subscribe("self", cache.HandleAuthServiceMessages, config.AppConfig.Authentication.Channel)
 
