@@ -81,8 +81,11 @@ func (h *Handler) uploadFile(file *multipart.FileHeader) *models.JSONError {
 
 	fileName := file.Filename
 	imagesPrefix := config.AppConfig.Services.Storage.ImagesPrefix
+	documentsPrefix := config.AppConfig.Services.Storage.DocumentsPrefix
 	if lib.IsImage(fileName) && imagesPrefix != "" {
 		fileName = fmt.Sprintf("%s/%s", imagesPrefix, fileName)
+	} else if lib.IsDocument(fileName) && documentsPrefix != "" {
+		fileName = fmt.Sprintf("%s/%s", documentsPrefix, fileName)
 	}
 
 	request := &storage_service.UploadFileRequest{
