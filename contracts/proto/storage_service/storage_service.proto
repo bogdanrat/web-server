@@ -3,7 +3,6 @@ syntax = "proto3";
 package storage_service;
 option go_package = "/;storage_service";
 
-
 service Storage {
   // Uploads a file in chunks
   rpc UploadFile(stream UploadFileRequest) returns (UploadFileResponse);
@@ -15,6 +14,10 @@ service Storage {
   rpc DeleteFile(DeleteFileRequest) returns (DeleteFileResponse);
   // Deletes all files
   rpc DeleteFiles(DeleteFilesRequest) returns (DeleteFilesResponse);
+}
+
+service Database {
+  rpc GetAllUsers(GetAllUsersRequest) returns (GetAllUsersResponse);
 }
 
 // The file is divided into multiple chunks which are sent on by one to the server in each request message.
@@ -62,3 +65,16 @@ message DeleteFilesRequest {
   string prefix = 1;
 }
 message DeleteFilesResponse {}
+
+message GetAllUsersRequest{}
+message GetAllUsersResponse {
+  repeated User users = 1;
+}
+
+message User {
+  uint64 id = 1;
+  string name = 2;
+  string email = 3;
+  string password = 4;
+  string qrSecret = 5;
+}
