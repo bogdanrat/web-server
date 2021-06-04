@@ -35,9 +35,9 @@ func (s *DiskStore) Init() error {
 
 func (s *DiskStore) Put(fileName string, body io.Reader) error {
 	name := filepath.Join(s.Path, fileName)
-	path := filepath.Dir(name)
+	dir := filepath.Dir(name)
 	// create path
-	if err := lib.CreateDirectory(path); err != nil {
+	if err := lib.CreateDirectory(dir); err != nil {
 		return err
 	}
 
