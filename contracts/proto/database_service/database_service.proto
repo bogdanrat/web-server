@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+package storage_service;
+option go_package = "/;database_service";
+
+service Database {
+  rpc GetAllUsers(GetAllUsersRequest) returns (GetAllUsersResponse);
+}
+
+message GetAllUsersRequest{}
+message GetAllUsersResponse {
+  repeated User users = 1;
+}
+
+message User {
+  uint64 id = 1;
+  string name = 2;
+  string email = 3;
+  string password = 4;
+  string qrSecret = 5;
+}
