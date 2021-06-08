@@ -24,8 +24,10 @@ require (
 	github.com/ugorji/go v1.2.6 // indirect
 	golang.org/x/crypto v0.0.0-20210513164829-c07d793c2f9a // indirect
 	golang.org/x/net v0.0.0-20210525063256-abc453219eb5 // indirect
-	golang.org/x/sys v0.0.0-20210601080250-7ecdf8ef093b // indirect
-	google.golang.org/genproto v0.0.0-20210602131652-f16073e35f0c
+	golang.org/x/oauth2 v0.0.0-20210514164344-f6687ab2804c
+	golang.org/x/sys v0.0.0-20210608053332-aa57babbf139 // indirect
+	google.golang.org/api v0.48.0
+	google.golang.org/genproto v0.0.0-20210607140030-00d4fb20b1ae
 	google.golang.org/grpc v1.38.0
 	gopkg.in/ini.v1 v1.62.0 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect

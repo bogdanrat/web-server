@@ -2,6 +2,7 @@ package authentication
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"github.com/bogdanrat/web-server/contracts/models"
 	pb "github.com/bogdanrat/web-server/contracts/proto/auth_service"
@@ -100,7 +101,13 @@ func (h *Handler) SignUp(c *gin.Context) {
 	}
 
 	if reflect.ValueOf(h.Cache).Elem().Type().AssignableTo(reflect.TypeOf(cache.Redis{})) {
-		h.Cache.(*cache.Redis).Publish(config.AppConfig.Authentication.Channel, user.Email)
+		userJson, err := json.Marshal(user)
+		if err != nil {
+			jsonErr := models.NewInternalServerError(fmt.Sprintf("unable to json marshal user struct: %s", err))
+			c.JSON(jsonErr.StatusCode, jsonErr)
+			return
+		}
+		h.Cache.(*cache.Redis).Publish(config.AppConfig.Authentication.Channel, userJson)
 	}
 }
 

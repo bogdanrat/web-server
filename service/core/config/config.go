@@ -38,6 +38,13 @@ type AuthenticationConfig struct {
 	Channel              string
 }
 
+type SMTPConfig struct {
+	ClientID     string
+	ClientSecret string
+	AccessToken  string
+	RefreshToken string
+}
+
 type ServicesConfig struct {
 	Auth     AuthConfig
 	Storage  StorageConfig
@@ -66,6 +73,7 @@ type Config struct {
 	DB             DbConfig
 	Redis          RedisConfig
 	Authentication AuthenticationConfig
+	SMTP           SMTPConfig
 	Services       ServicesConfig
 	TemplateCache  map[string]*template.Template
 }

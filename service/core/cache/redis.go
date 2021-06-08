@@ -8,10 +8,6 @@ import (
 	"time"
 )
 
-const (
-	address = "localhost:6379"
-)
-
 type Redis struct {
 	redis         *redis.Client
 	subscriptions map[string]*RedisSubscription

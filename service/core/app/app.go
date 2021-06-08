@@ -7,6 +7,7 @@ import (
 	"github.com/bogdanrat/web-server/contracts/proto/storage_service"
 	"github.com/bogdanrat/web-server/service/core/cache"
 	"github.com/bogdanrat/web-server/service/core/config"
+	"github.com/bogdanrat/web-server/service/core/mail"
 	"github.com/bogdanrat/web-server/service/core/render"
 	"github.com/bogdanrat/web-server/service/core/repository/postgres"
 	"github.com/bogdanrat/web-server/service/core/router"
@@ -30,6 +31,11 @@ func Init() error {
 		return err
 	}
 	config.AppConfig.TemplateCache = templateCache
+
+	if err = mail.NewService(config.AppConfig.SMTP); err != nil {
+		return err
+	}
+	log.Println("SMTP Service initialized.")
 
 	postgresDB, err := postgres.NewRepository(config.AppConfig.DB)
 	if err != nil {
