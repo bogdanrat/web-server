@@ -78,7 +78,7 @@ func (l *amqpEventListener) Listen(eventNames ...string) (<-chan queue.Event, <-
 
 			var event queue.Event
 			switch rawEventName {
-			case "event.created":
+			case "userSignUp":
 				event = new(models.UserSignUp)
 			default:
 				errors <- fmt.Errorf("event type %s is unknown", rawEventName)
