@@ -1,7 +1,7 @@
 package models
 
 type UserSignUpEvent struct {
-	User    User   `json:"user"`
+	User    *User  `json:"user"`
 	QrImage []byte `json:"qr_code,omitempty"`
 }
 
