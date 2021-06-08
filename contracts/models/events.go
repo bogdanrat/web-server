@@ -1,11 +1,11 @@
 package models
 
-type UserSignUp struct {
+type UserSignUpEvent struct {
 	User    User   `json:"user"`
 	QrImage []byte `json:"qr_code,omitempty"`
 }
 
 // Name returns the event's name
-func (e *UserSignUp) Name() string {
+func (e *UserSignUpEvent) Name() string {
 	return "userSignUp"
 }
