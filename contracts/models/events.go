@@ -5,7 +5,7 @@ type UserSignUp struct {
 	QrImage []byte `json:"qr_code,omitempty"`
 }
 
-// EventName returns the event's name
-func (e *UserSignUp) EventName() string {
+// Name returns the event's name
+func (e *UserSignUp) Name() string {
 	return "userSignUp"
 }
