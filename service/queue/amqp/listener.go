@@ -76,6 +76,8 @@ func (l *amqpEventListener) Listen(eventNames ...string) (<-chan queue.Event, <-
 				continue
 			}
 
+			// todo event mapper, see cloud native w. go book
+
 			var event queue.Event
 			switch rawEventName {
 			case "userSignUp":
@@ -92,6 +94,10 @@ func (l *amqpEventListener) Listen(eventNames ...string) (<-chan queue.Event, <-
 			}
 
 			events <- event
+			err = message.Ack(false)
+			if err != nil {
+				errors <- fmt.Errorf("could not acknowledge message: %s", err)
+			}
 		}
 	}()
 
