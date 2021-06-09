@@ -1,7 +1,7 @@
 package models
 
 const (
-	userSignUpEventName = "userSignUp"
+	UserSignUpEventName = "userSignUp"
 )
 
 type UserSignUpEvent struct {
@@ -11,5 +11,5 @@ type UserSignUpEvent struct {
 
 // Name returns the event's name
 func (e *UserSignUpEvent) Name() string {
-	return userSignUpEventName
+	return UserSignUpEventName
 }
