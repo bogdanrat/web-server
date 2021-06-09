@@ -1,5 +1,9 @@
 package models
 
+const (
+	userSignUpEventName = "userSignUp"
+)
+
 type UserSignUpEvent struct {
 	User    *User  `json:"user"`
 	QrImage []byte `json:"qr_code,omitempty"`
@@ -7,5 +11,5 @@ type UserSignUpEvent struct {
 
 // Name returns the event's name
 func (e *UserSignUpEvent) Name() string {
-	return "userSignUp"
+	return userSignUpEventName
 }
