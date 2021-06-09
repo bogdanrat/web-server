@@ -1,6 +1,7 @@
 package listener
 
 import (
+	"bytes"
 	"fmt"
 	"github.com/bogdanrat/web-server/contracts/models"
 	"github.com/bogdanrat/web-server/service/core/mail"
@@ -53,8 +54,21 @@ func (p *EventProcessor) handleUserSignUpEvent(event *models.UserSignUpEvent) {
 	email := &mail.Message{
 		To:      user.Email,
 		Subject: "Welcome",
-		Body:    fmt.Sprintf("Welcome to Web Server App %s!!!", user.Name),
 	}
+
+	buffer := bytes.Buffer{}
+	buffer.WriteString(fmt.Sprintf("Welcome to Web Server App %s!\n", user.Name))
+
+	if event.QrImage != nil {
+		buffer.WriteString("Please scan the attached QR Code in Google Authenticator and use the generated codes to login in.\n")
+		email.Attachment = &mail.Attachment{
+			Name: "Personal QR Code",
+			Data: event.QrImage,
+		}
+	}
+
+	email.Body = buffer.String()
+
 	if err := mail.Send(email); err != nil {
 		log.Printf("cannot send email: %s", err)
 	}

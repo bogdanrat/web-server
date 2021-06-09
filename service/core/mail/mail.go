@@ -1,7 +1,9 @@
 package mail
 
 import (
+	"bytes"
 	"context"
+	"crypto/rand"
 	"encoding/base64"
 	"fmt"
 	"github.com/bogdanrat/web-server/service/core/config"
@@ -9,13 +11,20 @@ import (
 	"golang.org/x/oauth2/google"
 	"google.golang.org/api/gmail/v1"
 	"google.golang.org/api/option"
+	"net/http"
 	"time"
 )
 
 type Message struct {
-	To      string
-	Subject string
-	Body    string
+	To         string
+	Subject    string
+	Body       string
+	Attachment *Attachment
+}
+
+type Attachment struct {
+	Name string
+	Data []byte
 }
 
 type Service struct {
@@ -53,13 +62,41 @@ func NewService(smtpConfig config.SMTPConfig) error {
 }
 
 func Send(message *Message) error {
-	emailTo := "To: " + message.To + "\r\n"
-	subject := "Subject: " + message.Subject + "\n"
-	mime := "MIME-version: 1.0;\nContent-Type: text/plain; charset=\"UTF-8\";\n\n"
-	msg := []byte(emailTo + subject + mime + "\n" + message.Body)
+	hasAttachment := false
+	if message.Attachment != nil {
+		hasAttachment = true
+	}
+
+	boundary := randStr(32, "alphanum")
+
+	messageBody := bytes.Buffer{}
+	messageBody.WriteString(fmt.Sprintf("Content-Type: multipart/mixed; boundary=%s \n", boundary))
+	messageBody.WriteString("MIME-Version: 1.0\n")
+	messageBody.WriteString(fmt.Sprintf("To: %s\n", message.To))
+	messageBody.WriteString(fmt.Sprintf("Subject: %s \n\n", message.Subject))
+	if hasAttachment {
+		messageBody.WriteString(fmt.Sprintf("--%s\n", boundary))
+	}
+	messageBody.WriteString("Content-Type: text/html; charset=\"UTF-8\"\n")
+	messageBody.WriteString("MIME-Version: 1.0\n")
+	messageBody.WriteString("Content-Transfer-Encoding: 7bit\n\n")
+	messageBody.WriteString(fmt.Sprintf("%s\n\n", message.Body))
+	if hasAttachment {
+		messageBody.WriteString(fmt.Sprintf("--%s\n", boundary))
+	}
+	if hasAttachment {
+		fileMIMEType := http.DetectContentType(message.Attachment.Data)
+		fileData := base64.StdEncoding.EncodeToString(message.Attachment.Data)
+		messageBody.WriteString(fmt.Sprintf("Content-Type: %s"+"; name=\"%s\"\n", fileMIMEType, message.Attachment.Name))
+		messageBody.WriteString("MIME-Version: 1.0\n")
+		messageBody.WriteString("Content-Transfer-Encoding: base64\n")
+		messageBody.WriteString(fmt.Sprintf("Content-Disposition: attachment; filename=\"%s\"\n\n", message.Attachment.Name))
+		messageBody.WriteString(chunkSplit(fileData, 76, "\n"))
+		messageBody.WriteString(fmt.Sprintf("--%s--", boundary))
+	}
 
 	gMessage := &gmail.Message{
-		Raw: base64.URLEncoding.EncodeToString(msg),
+		Raw: base64.URLEncoding.EncodeToString(messageBody.Bytes()),
 	}
 
 	_, err := smtpService.Users.Messages.Send("me", gMessage).Do()
@@ -67,4 +104,48 @@ func Send(message *Message) error {
 		return err
 	}
 	return nil
+}
+
+func randStr(strSize int, randType string) string {
+	var dictionary string
+
+	if randType == "alphanum" {
+		dictionary = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
+	}
+
+	var strBytes = make([]byte, strSize)
+	_, _ = rand.Read(strBytes)
+
+	for k, v := range strBytes {
+		strBytes[k] = dictionary[v%byte(len(dictionary))]
+	}
+
+	return string(strBytes)
+}
+
+func chunkSplit(body string, limit int, end string) string {
+	var charSlice []rune
+
+	// push characters to slice
+	for _, char := range body {
+		charSlice = append(charSlice, char)
+	}
+
+	var result = ""
+
+	for len(charSlice) >= 1 {
+		// convert slice/array back to string
+		// but insert end at specified limit
+		result = result + string(charSlice[:limit]) + end
+
+		// discard the elements that were copied over to result
+		charSlice = charSlice[limit:]
+
+		// change the limit
+		// to cater for the last few words in
+		if len(charSlice) < limit {
+			limit = len(charSlice)
+		}
+	}
+	return result
 }
