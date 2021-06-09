@@ -19,7 +19,7 @@ func NewEventProcessor(listener queue.EventListener) *EventProcessor {
 }
 
 func (p *EventProcessor) ProcessEvent() error {
-	received, errors, err := p.EventListener.Listen("userSignUp")
+	received, errors, err := p.EventListener.Listen(models.UserSignUpEventName)
 	if err != nil {
 		return fmt.Errorf("could not listen for events: %s", err)
 	}

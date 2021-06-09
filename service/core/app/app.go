@@ -74,21 +74,8 @@ func Init() error {
 	log.Printf("GRPC Dial %s successful.", config.AppConfig.Services.Database.GRPC.Address)
 	databaseClient := database_service.NewDatabaseClient(conn)
 
-	amqpConnection, err := amqp.Dial("amqp://guest:guest@localhost:5672")
-	if err != nil {
-		return err
-	}
-	eventEmitter, err := initEventEmitter(amqpConnection)
-	if err != nil {
-		return err
-	}
-	log.Println("Event Emitter initialized.")
-
-	eventListener, err := initEventListener(amqpConnection)
-	if err != nil {
-		return err
-	}
-	log.Println("Event Listener initialized.")
+	eventEmitter, eventListener, err := initMessageBroker(config.AppConfig.MessageBroker)
+	log.Printf("Message Broker %s initialized.\n", config.AppConfig.MessageBroker.Broker)
 
 	processor := listener.NewEventProcessor(eventListener)
 	go func() {
@@ -127,18 +114,30 @@ func initGRPCConnection(addr string) (*grpc.ClientConn, error) {
 	return conn, nil
 }
 
-func initEventEmitter(conn *amqp.Connection) (queue.EventEmitter, error) {
-	eventEmitter, err := amqp_queue.NewEventEmitter(conn, "authentication")
-	if err != nil {
-		return nil, err
-	}
-	return eventEmitter, nil
-}
+func initMessageBroker(brokerConfig config.MessageBrokerConfig) (eventEmitter queue.EventEmitter, eventListener queue.EventListener, err error) {
+	switch brokerConfig.Broker {
+	case config.RabbitMQBroker:
+		var conn *amqp.Connection
+		amqpUri := fmt.Sprintf("amqp://%s:%s@%s:%s", brokerConfig.RabbitMQ.DefaultUser, brokerConfig.RabbitMQ.DefaultPassword, brokerConfig.RabbitMQ.Host, brokerConfig.RabbitMQ.Port)
 
-func initEventListener(conn *amqp.Connection) (queue.EventListener, error) {
-	eventListener, err := amqp_queue.NewListener(conn, "authentication", "auth_queue")
-	if err != nil {
-		return nil, err
+		conn, err = amqp.Dial(amqpUri)
+		if err != nil {
+			err = fmt.Errorf("could not dial %s: %s", amqpUri, err)
+			return
+		}
+
+		eventEmitter, err = amqp_queue.NewEventEmitter(conn, brokerConfig.RabbitMQ.Exchange)
+		if err != nil {
+			return
+		}
+		eventListener, err = amqp_queue.NewListener(conn, brokerConfig.RabbitMQ.Exchange, brokerConfig.RabbitMQ.Queue)
+		if err != nil {
+			return
+		}
+
+	default:
+		err = fmt.Errorf("unknown message broker %s", brokerConfig.Broker)
 	}
-	return eventListener, nil
+
+	return
 }

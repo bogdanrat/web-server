@@ -45,6 +45,20 @@ type SMTPConfig struct {
 	RefreshToken string
 }
 
+type RabbitMQConfig struct {
+	DefaultUser     string
+	DefaultPassword string
+	Host            string
+	Port            string
+	Exchange        string
+	Queue           string
+}
+
+type MessageBrokerConfig struct {
+	Broker   string
+	RabbitMQ RabbitMQConfig
+}
+
 type ServicesConfig struct {
 	Auth     AuthConfig
 	Storage  StorageConfig
@@ -74,6 +88,7 @@ type Config struct {
 	Redis          RedisConfig
 	Authentication AuthenticationConfig
 	SMTP           SMTPConfig
+	MessageBroker  MessageBrokerConfig
 	Services       ServicesConfig
 	TemplateCache  map[string]*template.Template
 }
@@ -81,6 +96,10 @@ type Config struct {
 var (
 	AppConfig  Config
 	configFile *string
+)
+
+const (
+	RabbitMQBroker = "RabbitMQ"
 )
 
 func ReadFlags() {
@@ -115,7 +134,5 @@ func initViper() {
 	viper.SetEnvKeyReplacer(strings.NewReplacer(".", "_"))
 	viper.SetConfigName(configFileName)
 	viper.SetConfigType(configFileType)
-	// SetEnvPrefix defines a prefix that ENVIRONMENT variables will use
-	// e.g., WEB_SERVER_SOME-VAR
-	viper.SetEnvPrefix("WEB_SERVER")
+	viper.SetEnvPrefix("CORE")
 }
