@@ -55,7 +55,7 @@ func (l *amqpEventListener) Listen(eventNames ...string) (<-chan queue.Event, <-
 	messages, err := channel.Consume(
 		l.queue,
 		"",    // consumer: when empty, a unique identifier will be automatically generated
-		true,  // autoAck: when true, received messages will be acknowledged automatically; when false, use Ack() method
+		false, // autoAck: when true, received messages will be acknowledged automatically; when false, use Ack() method
 		false, // exclusive: when true, this consumer will be the only one allowed to consume this queue
 		false, // noLocal: this consumer should not be delivered messages that were published on the same channel
 		false, // noWait: instructs the library not to wait for confirmation from the broker
@@ -98,7 +98,10 @@ func (l *amqpEventListener) Listen(eventNames ...string) (<-chan queue.Event, <-
 			}
 
 			events <- event
-			//message.Ack(false)
+			err = message.Ack(false)
+			if err != nil {
+				errors <- fmt.Errorf("could not acknowledge message: %s", err)
+			}
 		}
 	}()
 
