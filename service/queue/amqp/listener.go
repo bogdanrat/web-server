@@ -42,7 +42,6 @@ func (l *amqpEventListener) Listen(eventNames ...string) (<-chan queue.Event, <-
 	if err != nil {
 		return nil, nil, err
 	}
-	defer channel.Close()
 
 	for _, eventName := range eventNames {
 		// QueueBind binds an exchange to a queue so that publishings to the exchange will be routed to the queue
