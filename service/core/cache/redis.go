@@ -5,6 +5,7 @@ import (
 	"github.com/bogdanrat/web-server/service/core/config"
 	"github.com/go-redis/redis/v7"
 	"log"
+	"os"
 	"time"
 )
 
@@ -24,8 +25,19 @@ func NewRedis(config config.RedisConfig) (*Redis, error) {
 		return RedisClient.(*Redis), nil
 	}
 
+	host := os.Getenv("REDIS_HOST")
+	if host == "" {
+		log.Printf("env redis host not found, using config host %s\n", config.Host)
+		host = config.Host
+	}
+	port := os.Getenv("REDIS_PORT")
+	if port == "" {
+		log.Printf("env redis port not found, using config port %s\n", config.Port)
+		port = config.Port
+	}
+
 	client := redis.NewClient(&redis.Options{
-		Addr:     fmt.Sprintf("%s:%s", config.Host, config.Port),
+		Addr:     fmt.Sprintf("%s:%s", host, port),
 		Password: config.Password,
 		DB:       0,
 	})

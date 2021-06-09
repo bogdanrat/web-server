@@ -11,8 +11,6 @@
   },
   "AWS": {
     "Region": "eu-central-1",
-    "AssumeRole": "arn:aws:iam::820136616739:role/webserver-storageservice-role",
-    "ExternalID": "secretexternalid123.",
     "S3": {
       "Domain": "s3-eu-central-1.amazonaws.com",
       "Bucket": "web-server-storage-service-bucket",

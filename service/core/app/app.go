@@ -16,15 +16,29 @@ import (
 	amqp_queue "github.com/bogdanrat/web-server/service/queue/amqp"
 	"github.com/streadway/amqp"
 	"google.golang.org/grpc"
+	"io/ioutil"
 	"log"
 	"net/http"
+	"os"
 )
 
 var (
 	httpRouter http.Handler
 )
 
+type GRPCServiceID int
+
+const (
+	AuthService GRPCServiceID = iota
+	StorageService
+	DatabaseService
+)
+
 func Init() error {
+	if err := initTempDir(); err != nil {
+		return err
+	}
+
 	config.ReadFlags()
 	if err := config.ReadConfiguration(); err != nil {
 		return err
@@ -53,28 +67,31 @@ func Init() error {
 	}
 	log.Println("Cache connection established.")
 
-	conn, err := initGRPCConnection(config.AppConfig.Services.Auth.GRPC.Address)
+	conn, err := initGRPC(AuthService)
 	if err != nil {
 		return err
 	}
-	log.Printf("GRPC Dial %s successful.", config.AppConfig.Services.Auth.GRPC.Address)
+	log.Println("Auth Service GRPC connection established.")
 	authClient := pb.NewAuthClient(conn)
 
-	conn, err = initGRPCConnection(config.AppConfig.Services.Storage.GRPC.Address)
+	conn, err = initGRPC(StorageService)
 	if err != nil {
 		return err
 	}
-	log.Printf("GRPC Dial %s successful.", config.AppConfig.Services.Storage.GRPC.Address)
+	log.Println("Storage Service GRPC connection established.")
 	storageClient := storage_service.NewStorageClient(conn)
 
-	conn, err = initGRPCConnection(config.AppConfig.Services.Database.GRPC.Address)
+	conn, err = initGRPC(DatabaseService)
 	if err != nil {
 		return err
 	}
-	log.Printf("GRPC Dial %s successful.", config.AppConfig.Services.Database.GRPC.Address)
+	log.Println("Database Service GRPC connection established.")
 	databaseClient := database_service.NewDatabaseClient(conn)
 
 	eventEmitter, eventListener, err := initMessageBroker(config.AppConfig.MessageBroker)
+	if err != nil {
+		return err
+	}
 	log.Printf("Message Broker %s initialized.\n", config.AppConfig.MessageBroker.Broker)
 
 	processor := listener.NewEventProcessor(eventListener)
@@ -103,22 +120,45 @@ func Start() {
 	}
 }
 
-func initGRPCConnection(addr string) (*grpc.ClientConn, error) {
-	conn, err := grpc.Dial(addr,
-		grpc.WithInsecure(),
-	)
-	if err != nil {
-		return nil, fmt.Errorf("error connecting to server: %v", err)
+func initGRPC(service GRPCServiceID) (conn *grpc.ClientConn, err error) {
+	var host string
+	var port string
+
+	switch service {
+	case AuthService:
+		host = os.Getenv("AUTH_SERVICE_HOST")
+		port = os.Getenv("AUTH_SERVICE_PORT")
+	case StorageService:
+		host = os.Getenv("STORAGE_SERVICE_HOST")
+		port = os.Getenv("STORAGE_SERVICE_PORT")
+	case DatabaseService:
+		host = os.Getenv("DATABASE_SERVICE_HOST")
+		port = os.Getenv("DATABASE_SERVICE_PORT")
+	default:
+		return nil, fmt.Errorf("unknown grpc service id: %d", service)
 	}
 
-	return conn, nil
+	target := fmt.Sprintf("%s:%s", host, port)
+	conn, err = grpc.Dial(target,
+		grpc.WithInsecure(),
+	)
+
+	if err != nil {
+		err = fmt.Errorf("error dialing %s: %v", target, err)
+		return
+	}
+	return
 }
 
 func initMessageBroker(brokerConfig config.MessageBrokerConfig) (eventEmitter queue.EventEmitter, eventListener queue.EventListener, err error) {
 	switch brokerConfig.Broker {
 	case config.RabbitMQBroker:
 		var conn *amqp.Connection
-		amqpUri := fmt.Sprintf("amqp://%s:%s@%s:%s", brokerConfig.RabbitMQ.DefaultUser, brokerConfig.RabbitMQ.DefaultPassword, brokerConfig.RabbitMQ.Host, brokerConfig.RabbitMQ.Port)
+		amqpUri := os.Getenv("RABBITMQ_URL")
+		if amqpUri == "" {
+			log.Printf("missing env rabbitmq url, using config url")
+			amqpUri = fmt.Sprintf("amqp://%s:%s@%s:%s", brokerConfig.RabbitMQ.DefaultUser, brokerConfig.RabbitMQ.DefaultPassword, brokerConfig.RabbitMQ.Host, brokerConfig.RabbitMQ.Port)
+		}
 
 		conn, err = amqp.Dial(amqpUri)
 		if err != nil {
@@ -140,4 +180,38 @@ func initMessageBroker(brokerConfig config.MessageBrokerConfig) (eventEmitter qu
 	}
 
 	return
+}
+
+/*
+	Error: cannot parse multipart form: open /tmp/multipart-2576925029: no such file or directory.
+	Platform: Docker
+
+	In case the multipart data does not fit in the specified memory size, the data is written to a temporary file on disk instead.
+	This file is created with ioutil.TempFile, and then os.TempDir() is called which:
+	"The directory is neither guaranteed to exist nor have accessible permissions."
+	To fix this, we ensure the directory exists.
+*/
+func initTempDir() error {
+	// make sure we have a working tempdir, because:
+	// os.TempDir(): The directory is neither guaranteed to exist nor have accessible permissions.
+	tempDir := os.TempDir()
+	if err := os.MkdirAll(tempDir, 1777); err != nil {
+		return fmt.Errorf("failed to create temporary directory %s: %s", tempDir, err)
+	}
+	tempFile, err := ioutil.TempFile("", "genericInit_")
+	if err != nil {
+		return fmt.Errorf("failed to create tempFile: %s", err)
+	}
+	_, err = fmt.Fprintf(tempFile, "Hello, World!")
+	if err != nil {
+		return fmt.Errorf("failed to write to tempFile: %s", err)
+	}
+	if err := tempFile.Close(); err != nil {
+		return fmt.Errorf("failed to close tempFile: %s", err)
+	}
+	if err := os.Remove(tempFile.Name()); err != nil {
+		return fmt.Errorf("failed to delete tempFile: %s", err)
+	}
+	log.Printf("Using temporary directory %s", tempDir)
+	return nil
 }

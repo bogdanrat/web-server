@@ -66,7 +66,6 @@ type ServicesConfig struct {
 }
 
 type GRPCConfig struct {
-	Address        string
 	Deadline       int64 // milliseconds
 	UseCompression bool
 }

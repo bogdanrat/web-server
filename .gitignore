@@ -16,3 +16,4 @@
 /service/core/config.json
 /service/database/database.yml
 /service/storage/data/
+/.env

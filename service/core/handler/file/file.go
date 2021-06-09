@@ -38,7 +38,7 @@ func NewHandler(rpcConfig *RPCConfig) *Handler {
 
 func (h *Handler) PostFiles(c *gin.Context) {
 	if err := c.Request.ParseMultipartForm(100000); err != nil {
-		jsonErr := models.NewInternalServerError("cannot parse multipart form")
+		jsonErr := models.NewInternalServerError(fmt.Sprintf("cannot parse multipart form: %s", err))
 		c.JSON(jsonErr.StatusCode, jsonErr)
 		return
 	}

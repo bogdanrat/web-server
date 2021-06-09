@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/awserr"
-	"github.com/aws/aws-sdk-go/aws/credentials/stscreds"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/s3"
 	"github.com/aws/aws-sdk-go/service/s3/s3manager"
@@ -28,18 +27,11 @@ type S3Store struct {
 }
 
 func New(sess *session.Session, s3Config config.S3Config) store.Store {
-	stsCredentials := stscreds.NewCredentials(sess, config.AppConfig.AWS.AssumeRole, func(provider *stscreds.AssumeRoleProvider) {
-		provider.ExternalID = &config.AppConfig.AWS.ExternalID
-	})
-	sess.Config.Credentials = stsCredentials
-
 	storage := &S3Store{}
 	storage.Session = sess
+	storage.S3 = s3.New(sess)
 
-	storage.S3 = s3.New(sess, &aws.Config{
-		Credentials: stsCredentials,
-	})
-	creds, _ := stsCredentials.Get()
+	creds, _ := sess.Config.Credentials.Get()
 
 	storage.S3Gofer = s3gof3r.New(s3Config.Domain, s3gof3r.Keys{
 		AccessKey: creds.AccessKeyID,
@@ -162,17 +154,6 @@ func (s *S3Store) GetAll() ([]*pb.StorageObject, error) {
 		Bucket: aws.String(s.Bucket.Name),
 	})
 	if err != nil {
-		if aerr, ok := err.(awserr.Error); ok {
-			code := aerr.Code()
-			switch code {
-			case "AccessDenied":
-				s.retrieveNewCredentials()
-				return s.GetAll()
-			}
-		} else {
-			return nil, err
-		}
-
 		return nil, err
 	}
 
@@ -212,14 +193,4 @@ func (s *S3Store) DeleteAll(prefix ...string) error {
 	}
 
 	return nil
-}
-
-func (s *S3Store) retrieveNewCredentials() {
-	stsCredentials := stscreds.NewCredentials(s.Session, config.AppConfig.AWS.AssumeRole, func(provider *stscreds.AssumeRoleProvider) {
-		provider.ExternalID = &config.AppConfig.AWS.ExternalID
-	})
-	s.Session.Config.Credentials = stsCredentials
-	s.S3 = s3.New(s.Session, &aws.Config{
-		Credentials: stsCredentials,
-	})
 }

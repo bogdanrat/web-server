@@ -1,5 +1,6 @@
 version: "3.9"
 services:
+  # RabbitMQ Message Broker
   rabbitmq:
     image: rabbitmq:3-management
     ports:
@@ -17,8 +18,77 @@ services:
       interval: 30s
       timeout: 30s
       retries: 3
-    networks:
-      - rabbitmq_go_net
-networks:
-  rabbitmq_go_net:
-    driver: bridge
+  redis:
+    image: redis
+  # Core Service
+  core-service:
+    build:
+      context: ./service/core
+    ports:
+      - "3000:3000"
+    restart: on-failure
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+      redis:
+        condition: service_started
+      auth-service:
+        condition: service_started
+      storage-service:
+        condition: service_started
+      database-service:
+        condition: service_started
+    links:
+      - rabbitmq
+      - redis
+      - auth-service
+      - storage-service
+      - database-service
+    environment:
+      - RABBITMQ_URL=amqp://user:password@rabbitmq:5672
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - AUTH_SERVICE_HOST=auth-service
+      - AUTH_SERVICE_PORT=50051
+      - STORAGE_SERVICE_HOST=storage-service
+      - STORAGE_SERVICE_PORT=50052
+      - DATABASE_SERVICE_HOST=database-service
+      - DATABASE_SERVICE_PORT=50053
+    volumes:
+    - ./service/core/config.json:/config.json
+  # Auth Service
+  auth-service:
+    hostname: auth-service
+    build:
+      context: ./service/auth
+    ports:
+      - "8081:8081"
+      - "50051:50051"
+    restart: on-failure
+    volumes:
+    - ./service/auth/config.json:/config.json
+  # Storage Service
+  storage-service:
+    hostname: storage-service
+    build:
+      context: ./service/storage
+    ports:
+      - "50052:50052"
+    restart: on-failure
+    volumes:
+      - ./service/storage/data:/data
+      - ./service/storage/config.json:/config.json
+    environment:
+      - AWS_ACCESS_KEY_ID=${ACCESS_KEY}
+      - AWS_SECRET_ACCESS_KEY=${SECRET_ACCESS_KEY}
+  # Database Service
+  database-service:
+    hostname: database-service
+    build:
+      context: ./service/database
+    ports:
+      - "50053:50053"
+    restart: on-failure
+    volumes:
+    - ./service/database/config.json:/config.json
+

@@ -32,6 +32,7 @@ func Init() error {
 	if err = initAwsSession(config.AppConfig.AWS); err != nil {
 		return err
 	}
+	log.Println("AWS Session initialized.")
 
 	// init storage
 	var storage store.Store
@@ -65,7 +66,8 @@ func Init() error {
 
 func initAwsSession(awsConfig config.AWSConfig) error {
 	sess, err := session.NewSession(&aws.Config{
-		Region: aws.String(awsConfig.Region),
+		Region:                        aws.String(awsConfig.Region),
+		CredentialsChainVerboseErrors: aws.Bool(true),
 	})
 	if err != nil {
 		return err
