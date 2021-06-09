@@ -11,6 +11,7 @@ import (
 	"github.com/bogdanrat/web-server/service/core/handler/users"
 	"github.com/bogdanrat/web-server/service/core/middleware"
 	"github.com/bogdanrat/web-server/service/core/repository"
+	"github.com/bogdanrat/web-server/service/queue"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"google.golang.org/grpc"
@@ -18,7 +19,7 @@ import (
 	"net/http"
 )
 
-func New(repo repository.DatabaseRepository, cacheClient cache.Client, authClient pb.AuthClient, storageClient storage_service.StorageClient, databaseClient database_service.DatabaseClient) http.Handler {
+func New(repo repository.DatabaseRepository, cacheClient cache.Client, authClient pb.AuthClient, storageClient storage_service.StorageClient, databaseClient database_service.DatabaseClient, eventEmitter queue.EventEmitter) http.Handler {
 	router := gin.Default()
 	gin.SetMode(config.AppConfig.Server.GinMode)
 	router.Use(cors.Default())
@@ -31,11 +32,16 @@ func New(repo repository.DatabaseRepository, cacheClient cache.Client, authClien
 		options = append(options, grpc.UseCompressor(gzip.Name))
 	}
 
-	authenticationHandler := authentication.NewHandler(repo, cacheClient, &authentication.RPCConfig{
-		Client:      authClient,
-		Deadline:    config.AppConfig.Services.Auth.GRPC.Deadline,
-		CallOptions: options,
-	})
+	authenticationHandler := authentication.NewHandler(
+		repo,
+		cacheClient,
+		&authentication.RPCConfig{
+			Client:      authClient,
+			Deadline:    config.AppConfig.Services.Auth.GRPC.Deadline,
+			CallOptions: options,
+		},
+		eventEmitter,
+	)
 
 	usersHandler := users.NewHandler(repo, &users.RPCConfig{
 		Client:      databaseClient,

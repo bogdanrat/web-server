@@ -7,10 +7,14 @@ import (
 	"github.com/bogdanrat/web-server/contracts/proto/storage_service"
 	"github.com/bogdanrat/web-server/service/core/cache"
 	"github.com/bogdanrat/web-server/service/core/config"
+	"github.com/bogdanrat/web-server/service/core/listener"
 	"github.com/bogdanrat/web-server/service/core/mail"
 	"github.com/bogdanrat/web-server/service/core/render"
 	"github.com/bogdanrat/web-server/service/core/repository/postgres"
 	"github.com/bogdanrat/web-server/service/core/router"
+	"github.com/bogdanrat/web-server/service/queue"
+	amqp_queue "github.com/bogdanrat/web-server/service/queue/amqp"
+	"github.com/streadway/amqp"
 	"google.golang.org/grpc"
 	"log"
 	"net/http"
@@ -70,7 +74,31 @@ func Init() error {
 	log.Printf("GRPC Dial %s successful.", config.AppConfig.Services.Database.GRPC.Address)
 	databaseClient := database_service.NewDatabaseClient(conn)
 
-	httpRouter = router.New(postgresDB, redisCache, authClient, storageClient, databaseClient)
+	amqpConnection, err := amqp.Dial("amqp://guest:guest@localhost:5672")
+	if err != nil {
+		return err
+	}
+	eventEmitter, err := initEventEmitter(amqpConnection)
+	if err != nil {
+		return err
+	}
+	log.Println("Event Emitter initialized.")
+
+	eventListener, err := initEventListener(amqpConnection)
+	if err != nil {
+		return err
+	}
+	log.Println("Event Listener initialized.")
+
+	processor := listener.NewEventProcessor(eventListener)
+	go func() {
+		err := processor.ProcessEvent()
+		if err != nil {
+			log.Println(err)
+		}
+	}()
+
+	httpRouter = router.New(postgresDB, redisCache, authClient, storageClient, databaseClient, eventEmitter)
 
 	redisCache.Subscribe("self", cache.HandleAuthServiceMessages, config.AppConfig.Authentication.Channel)
 
@@ -97,4 +125,20 @@ func initGRPCConnection(addr string) (*grpc.ClientConn, error) {
 	}
 
 	return conn, nil
+}
+
+func initEventEmitter(conn *amqp.Connection) (queue.EventEmitter, error) {
+	eventEmitter, err := amqp_queue.NewEventEmitter(conn, "authentication")
+	if err != nil {
+		return nil, err
+	}
+	return eventEmitter, nil
+}
+
+func initEventListener(conn *amqp.Connection) (queue.EventListener, error) {
+	eventListener, err := amqp_queue.NewListener(conn, "authentication", "auth_queue")
+	if err != nil {
+		return nil, err
+	}
+	return eventListener, nil
 }

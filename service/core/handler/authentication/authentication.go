@@ -12,6 +12,7 @@ import (
 	"github.com/bogdanrat/web-server/service/core/lib"
 	"github.com/bogdanrat/web-server/service/core/repository"
 	"github.com/bogdanrat/web-server/service/core/util"
+	"github.com/bogdanrat/web-server/service/queue"
 	"github.com/gin-gonic/gin"
 	"google.golang.org/grpc"
 	"net/http"
@@ -27,16 +28,18 @@ type RPCConfig struct {
 }
 
 type Handler struct {
-	Repository repository.DatabaseRepository
-	Cache      cache.Client
-	RPC        *RPCConfig
+	Repository   repository.DatabaseRepository
+	Cache        cache.Client
+	RPC          *RPCConfig
+	EventEmitter queue.EventEmitter
 }
 
-func NewHandler(repo repository.DatabaseRepository, cacheClient cache.Client, rpcConfig *RPCConfig) *Handler {
+func NewHandler(repo repository.DatabaseRepository, cacheClient cache.Client, rpcConfig *RPCConfig, eventEmitter queue.EventEmitter) *Handler {
 	return &Handler{
-		Repository: repo,
-		Cache:      cacheClient,
-		RPC:        rpcConfig,
+		Repository:   repo,
+		Cache:        cacheClient,
+		RPC:          rpcConfig,
+		EventEmitter: eventEmitter,
 	}
 }
 
@@ -65,6 +68,8 @@ func (h *Handler) SignUp(c *gin.Context) {
 		return
 	}
 
+	var qrImage []byte
+
 	// If MFA is enabled, send a request to get a QR code
 	if config.AppConfig.Authentication.MFA {
 		// Deadlines: the entire request chain needs to respond by the deadline set by the app that initiated the request.
@@ -84,7 +89,7 @@ func (h *Handler) SignUp(c *gin.Context) {
 		}
 
 		user.QRSecret = &response.Secret
-		qrImage := response.Image
+		qrImage = response.Image
 
 		c.Writer.Header().Set("Content-Type", "image/png")
 		c.Writer.Header().Set("Content-Length", strconv.Itoa(len(qrImage)))
@@ -108,6 +113,16 @@ func (h *Handler) SignUp(c *gin.Context) {
 			return
 		}
 		h.Cache.(*cache.Redis).Publish(config.AppConfig.Authentication.Channel, userJson)
+	}
+
+	err := h.EventEmitter.Emit(&models.UserSignUpEvent{
+		User:    user,
+		QrImage: qrImage,
+	})
+	if err != nil {
+		jsonErr := models.NewInternalServerError(fmt.Sprintf("cannot emit user sign up event: %s", err))
+		c.JSON(jsonErr.StatusCode, jsonErr)
+		return
 	}
 }
 
