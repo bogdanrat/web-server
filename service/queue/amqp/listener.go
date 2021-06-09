@@ -1,25 +1,34 @@
 package amqp
 
 import (
-	"encoding/json"
 	"fmt"
-	"github.com/bogdanrat/web-server/contracts/models"
 	"github.com/bogdanrat/web-server/service/queue"
 	"github.com/streadway/amqp"
+)
+
+const (
+	eventNameHeader = "x-event-name"
 )
 
 type amqpEventListener struct {
 	connection *amqp.Connection
 	exchange   string
 	queue      string
+	mapper     queue.EventMapper
 }
 
-func NewListener(conn *amqp.Connection, exchange string, queue string) (queue.EventListener, error) {
+func NewListener(conn *amqp.Connection, exchangeName string, queueName string) (queue.EventListener, error) {
 	listener := &amqpEventListener{
 		connection: conn,
-		exchange:   exchange,
-		queue:      queue,
+		exchange:   exchangeName,
+		queue:      queueName,
 	}
+
+	mapper, err := queue.NewEventMapper(queue.StaticMapper)
+	if err != nil {
+		return nil, err
+	}
+	listener.mapper = mapper
 
 	if err := listener.setup(); err != nil {
 		return nil, err
@@ -63,9 +72,9 @@ func (l *amqpEventListener) Listen(eventNames ...string) (<-chan queue.Event, <-
 	go func() {
 		for message := range messages {
 			// use the x-event-name header to map message back to their respective struct types
-			rawEventName, ok := message.Headers["x-event-name"]
+			rawEventName, ok := message.Headers[eventNameHeader]
 			if !ok {
-				errors <- fmt.Errorf("message did not contain x-event-name header")
+				errors <- fmt.Errorf("message did not contain %s header", eventNameHeader)
 				// Nack() negatively acknowledge the delivery of message(s)
 				// This method must not be used to select or requeue messages the client wishes not to handle,
 				// rather it is to inform the server that the client is incapable of handling this message at this time.
@@ -76,28 +85,21 @@ func (l *amqpEventListener) Listen(eventNames ...string) (<-chan queue.Event, <-
 				continue
 			}
 
-			// todo event mapper, see cloud native w. go book
-
-			var event queue.Event
-			switch rawEventName {
-			case "userSignUp":
-				event = new(models.UserSignUpEvent)
-			default:
-				errors <- fmt.Errorf("event type %s is unknown", rawEventName)
+			eventName, ok := rawEventName.(string)
+			if !ok {
+				errors <- fmt.Errorf("header %s did not contain string value", eventNameHeader)
+				message.Nack(false, false)
 				continue
 			}
 
-			err := json.Unmarshal(message.Body, event)
+			event, err := l.mapper.MapEvent(eventName, message.Body)
 			if err != nil {
-				errors <- err
-				continue
+				errors <- fmt.Errorf("could not unmarshal event %s: %s", eventName, err)
+				message.Nack(false, false)
 			}
 
 			events <- event
-			err = message.Ack(false)
-			if err != nil {
-				errors <- fmt.Errorf("could not acknowledge message: %s", err)
-			}
+			message.Ack(false)
 		}
 	}()
 
@@ -120,4 +122,8 @@ func (l *amqpEventListener) setup() error {
 		nil,
 	)
 	return err
+}
+
+func (l *amqpEventListener) EventMapper() queue.EventMapper {
+	return l.mapper
 }

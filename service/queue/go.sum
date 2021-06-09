@@ -1,5 +1,7 @@
-github.com/bogdanrat/web-server/contracts v0.0.0-20210608205138-1139940597bd h1:9E+qK20uN4zYC1P8+c4F/o6l2PXtqnN3Ls/BYFWZC78=
-github.com/bogdanrat/web-server/contracts v0.0.0-20210608205138-1139940597bd/go.mod h1:fpY+JNP1ZFi2bIZEWFncTsIWjDCKsHAfQOIcBuWBj0M=
+github.com/bogdanrat/web-server/contracts v0.0.0-20210609063922-20041c59a2a1 h1:xQFxkscldLpw7HdAWz/m6YMJs2tErgomWji42yZrKis=
+github.com/bogdanrat/web-server/contracts v0.0.0-20210609063922-20041c59a2a1/go.mod h1:fpY+JNP1ZFi2bIZEWFncTsIWjDCKsHAfQOIcBuWBj0M=
+github.com/mitchellh/mapstructure v1.4.1 h1:CpVNEelQCZBooIPDn+AR3NpivK/TIKU8bDxdASFVQag=
+github.com/mitchellh/mapstructure v1.4.1/go.mod h1:bFUtVrKA4DC2yAKiSyO/QUcy7e+RRV2QTWOzhPopBRo=
 github.com/streadway/amqp v1.0.0 h1:kuuDrUJFZL1QYL9hUNuCxNObNzB0bV/ZG5jV3RWAQgo=
 github.com/streadway/amqp v1.0.0/go.mod h1:AZpEONHx3DKn8O/DFsRAY58/XVQiIPMTMB1SddzLXVw=
 golang.org/x/crypto v0.0.0-20210513164829-c07d793c2f9a h1:kr2P4QFmQr29mSLA43kwrOcgcReGTfbE9N577tCTuBc=
