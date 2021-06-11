@@ -32,7 +32,7 @@
 <ul>
     {{range $files}}
     <li>
-        <a href="http://localhost:3000/api/file?file_name={{.Key}}">{{.Key}}</a>
+        <a href="/api/file?file_name={{.Key}}">{{.Key}}</a>
         <button onclick="deleteFile({{.Key}})" style="background-color: yellow">Delete</button>
     </li>
     {{end}}
@@ -41,7 +41,7 @@
 
 <script>
     function deleteFile(fileKey) {
-        const url = "http://localhost:3000/api/file";
+        const url = "/api/file";
         const data = JSON.stringify({key: fileKey})
         fetch(url, {
             credentials: "same-origin",
@@ -65,7 +65,7 @@
             return;
         }
 
-        const url = "http://localhost:3000/api/file?file_name=" + fileNameInput.value;
+        const url = "/api/file?file_name=" + fileNameInput.value;
         fetch(url, {
             credentials: "same-origin",
             mode: "same-origin",
