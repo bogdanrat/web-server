@@ -5,7 +5,7 @@
   "Upload": {
     "MaxFileSize": 10000000
   },
-  "StorageEngine": "disk",
+  "StorageEngine": "s3",
   "DiskStorage": {
     "Path": "./data"
   },

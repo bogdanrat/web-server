@@ -37,7 +37,7 @@
     </li>
     {{end}}
 </ul>
-<button style="background-color: red">Delete All</button>
+<button onclick="deleteAll()" style="background-color: red">Delete All</button>
 
 <script>
     function deleteFile(fileKey) {
@@ -56,57 +56,20 @@
         }).catch(error => console.log);
     }
 
-    document.getElementById("download").addEventListener("click", ev => {
-        ev.preventDefault()
-
-        const fileNameInput = document.getElementById("file_name")
-        if (fileNameInput.value === "") {
-            alert("file name is required");
-            return;
-        }
-
-        const url = "/api/file?file_name=" + fileNameInput.value;
+    function deleteAll() {
+        const url = "/api/files";
         fetch(url, {
             credentials: "same-origin",
             mode: "same-origin",
-            method: "GET",
-            headers: {"Content-Type": "application/json"},
-        }).then(response => {
-            if (response.status !== 200) {
-                return;
+            method: "DELETE",
+            headers: {"Content-Type": "application/json"}
+        }).then(result => {
+            if (result.status === 200) {
+                location.reload();
             }
+        }).catch(error => console.log);
+    }
 
-            const contentDisposition = response.headers.get('content-disposition');
-            let fileName = "unnamed.jpg"
-
-            if (contentDisposition) {
-                const fileNameRegex = new RegExp(`(filename=)(.*)`, 'g');
-                const match = contentDisposition.match(fileNameRegex);
-                if (match && match.length) {
-                    fileName = match[0].split("=")[1];
-                }
-            }
-
-            response.blob().then(function (myBlob) {
-                const a = document.createElement('a');
-                const objectURL = window.URL.createObjectURL(myBlob);
-
-                try {
-                    a.style.display = 'none';
-                    a.href = objectURL;
-                    a.download = fileName;
-                    document.body.appendChild(a);
-                    a.click();
-                } finally {
-                    window.URL.revokeObjectURL(objectURL);
-                    document.body.removeChild(a);
-                }
-            });
-
-        }).catch(err => {
-            alert(err);
-        });
-    });
 </script>
 </body>
 </html>
