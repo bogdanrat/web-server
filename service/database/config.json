@@ -2,12 +2,8 @@
   "Service": {
     "Address": ":50053"
   },
-  "DB": {
-    "Host": "bogdansdb.cx63glnmqp5s.eu-central-1.rds.amazonaws.com",
-    "Port": "5432",
-    "Username": "postgres",
-    "Password": "postgres",
-    "Database": "webserver",
-    "SslMode": "disable"
+  "AWS": {
+    "Region": "eu-central-1",
+    "DatabaseSecretARN": "arn:aws:secretsmanager:eu-central-1:820136616739:secret:webserver/database-yZwIPt"
   }
 }

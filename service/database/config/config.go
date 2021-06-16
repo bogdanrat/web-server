@@ -3,6 +3,7 @@ package config
 import (
 	"flag"
 	"fmt"
+	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/spf13/viper"
 	"path"
 	"path/filepath"
@@ -13,22 +14,19 @@ type ServiceConfig struct {
 	Address string
 }
 
-type DbConfig struct {
-	Host     string
-	Port     string
-	Username string
-	Password string
-	Database string
-	SslMode  string
+type AWSConfig struct {
+	Region            string
+	DatabaseSecretARN string
 }
 
 type Config struct {
 	Service ServiceConfig
-	DB      DbConfig
+	AWS     AWSConfig
 }
 
 var (
 	AppConfig  Config
+	AWSSession *session.Session
 	configFile *string
 )
 
@@ -64,4 +62,8 @@ func initViper() {
 	viper.SetConfigName(configFileName)
 	viper.SetConfigType(configFileType)
 	viper.SetEnvPrefix("DATABASE_SERVICE")
+}
+
+func SetAWSSession(sess *session.Session) {
+	AWSSession = sess
 }

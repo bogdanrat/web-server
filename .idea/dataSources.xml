@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
-    <data-source source="LOCAL" name="webserver@aws" uuid="38f06f0c-98c5-4a29-b977-07df924accc4">
+    <data-source source="LOCAL" name="webserver@aws" uuid="93d2c852-84bb-41fa-8af1-7c5d81963abd">
       <driver-ref>postgresql</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>org.postgresql.Driver</jdbc-driver>
-      <jdbc-url>jdbc:postgresql://bogdansdb.cx63glnmqp5s.eu-central-1.rds.amazonaws.com:5432/webserver</jdbc-url>
+      <jdbc-url>jdbc:postgresql://webserver.cx63glnmqp5s.eu-central-1.rds.amazonaws.com:5432/webserver</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
   </component>

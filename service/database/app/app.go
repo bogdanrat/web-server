@@ -2,6 +2,9 @@ package app
 
 import (
 	"fmt"
+	"github.com/aws/aws-sdk-go/aws"
+	"github.com/aws/aws-sdk-go/aws/session"
+	"github.com/aws/aws-sdk-go/service/sts"
 	pb "github.com/bogdanrat/web-server/contracts/proto/database_service"
 	"github.com/bogdanrat/web-server/service/database/config"
 	"github.com/bogdanrat/web-server/service/database/db/postgres"
@@ -25,8 +28,14 @@ func Init() error {
 		return err
 	}
 
+	// init aws
+	if err = initAwsSession(config.AppConfig.AWS); err != nil {
+		return err
+	}
+	log.Println("AWS Session initialized.")
+
 	// init database
-	database, err := postgres.NewDatabase(config.AppConfig.DB)
+	database, err := postgres.NewDatabase()
 	if err != nil {
 		return fmt.Errorf("could not establish database connection: %s", err.Error())
 	}
@@ -52,4 +61,25 @@ func Start() {
 	if err := grpcServer.Serve(listener); err != nil {
 		log.Fatalf("failed to serve: %v", err)
 	}
+}
+
+func initAwsSession(awsConfig config.AWSConfig) error {
+	sess, err := session.NewSession(&aws.Config{
+		Region:                        aws.String(awsConfig.Region),
+		CredentialsChainVerboseErrors: aws.Bool(true),
+	})
+	if err != nil {
+		return err
+	}
+
+	config.SetAWSSession(sess)
+
+	stsService := sts.New(sess)
+	output, err := stsService.GetCallerIdentity(&sts.GetCallerIdentityInput{})
+	if err != nil {
+		return err
+	}
+	log.Printf("Caller Identity: %s\n", *output.Arn)
+
+	return nil
 }

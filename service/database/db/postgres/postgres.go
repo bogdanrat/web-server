@@ -5,9 +5,11 @@ import (
 	"database/sql"
 	"fmt"
 	"github.com/bogdanrat/web-server/contracts/models"
-	"github.com/bogdanrat/web-server/service/database/config"
+	"github.com/bogdanrat/web-server/service/database/common"
 	"github.com/bogdanrat/web-server/service/database/db"
+	"github.com/bogdanrat/web-server/service/database/lib"
 	_ "github.com/lib/pq"
+	"strconv"
 	"time"
 )
 
@@ -22,8 +24,13 @@ type Database struct {
 	DB *sql.DB
 }
 
-func NewDatabase(dbConfig config.DbConfig) (db.UsersDatabase, error) {
-	conn, err := initConnection(dbConfig)
+func NewDatabase() (db.UsersDatabase, error) {
+	secrets, err := lib.GetDatabaseSecrets()
+	if err != nil {
+		return nil, err
+	}
+
+	conn, err := initConnection(secrets)
 	if err != nil {
 		return nil, err
 	}
@@ -33,8 +40,9 @@ func NewDatabase(dbConfig config.DbConfig) (db.UsersDatabase, error) {
 	}, nil
 }
 
-func initConnection(dbConfig config.DbConfig) (*sql.DB, error) {
-	dataSource := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=%s", dbConfig.Host, dbConfig.Port, dbConfig.Username, dbConfig.Password, dbConfig.Database, dbConfig.SslMode)
+func initConnection(secrets *common.DatabaseSecrets) (*sql.DB, error) {
+	port := strconv.Itoa(secrets.Port)
+	dataSource := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=%s", secrets.Host, port, secrets.Username, secrets.Password, secrets.DbName, "disable")
 	conn, err := sql.Open("postgres", dataSource)
 
 	if err != nil {
