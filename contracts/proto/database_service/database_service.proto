@@ -5,12 +5,26 @@ option go_package = "/;database_service";
 
 service Database {
   rpc GetAllUsers(GetAllUsersRequest) returns (GetAllUsersResponse);
+  rpc GetUserByEmail(GetUserByEmailRequest) returns (GetUserByEmailResponse);
+  rpc InsertUser(InsertUserRequest) returns (InsertUserResponse);
 }
 
 message GetAllUsersRequest{}
 message GetAllUsersResponse {
   repeated User users = 1;
 }
+
+message GetUserByEmailRequest {
+  string email = 1;
+}
+message GetUserByEmailResponse {
+  User user = 1;
+}
+
+message InsertUserRequest {
+  User user = 1;
+}
+message InsertUserResponse{}
 
 message User {
   uint64 id = 1;
