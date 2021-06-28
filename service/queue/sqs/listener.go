@@ -76,11 +76,12 @@ func (l *sqsEventListener) Listen(eventNames ...string) (<-chan queue.Event, <-c
 
 func (l *sqsEventListener) receiveMessage(events chan queue.Event, errors chan error, eventNames ...string) {
 	output, err := l.svc.ReceiveMessage(&sqs.ReceiveMessageInput{
-		QueueUrl:            l.queueUrl,
-		MaxNumberOfMessages: aws.Int64(l.config.MaxNumberOfMessages),
-		VisibilityTimeout:   aws.Int64(l.config.VisibilityTimeout),
-		WaitTimeSeconds:     aws.Int64(l.config.WaitTimeSeconds),
-		AttributeNames:      aws.StringSlice([]string{"MessageGroupId"}),
+		QueueUrl:              l.queueUrl,
+		MaxNumberOfMessages:   aws.Int64(l.config.MaxNumberOfMessages),
+		VisibilityTimeout:     aws.Int64(l.config.VisibilityTimeout),
+		WaitTimeSeconds:       aws.Int64(l.config.WaitTimeSeconds),
+		AttributeNames:        aws.StringSlice([]string{sqs.MessageSystemAttributeNameMessageGroupId}),
+		MessageAttributeNames: aws.StringSlice([]string{sqs.QueueAttributeNameAll}),
 	})
 	if err != nil {
 		errors <- err
