@@ -36,6 +36,10 @@ func NewEventEmitter(sess *session.Session, config Config) (queue.EventEmitter, 
 }
 
 func (e *sqsEventEmitter) setup(config Config) error {
+	if strings.Contains(config.QueueName, ".fifo") {
+		e.isFifo = true
+	}
+
 	output, err := e.svc.GetQueueUrl(&sqs.GetQueueUrlInput{
 		QueueName: aws.String(config.QueueName),
 	})
@@ -48,7 +52,6 @@ func (e *sqsEventEmitter) setup(config Config) error {
 					return err
 				}
 				log.Printf("SQS Queue initialized: %s\n", *e.queueUrl)
-				return nil
 			}
 		}
 		return err
@@ -60,7 +63,7 @@ func (e *sqsEventEmitter) setup(config Config) error {
 
 func (e *sqsEventEmitter) createQueue(config Config) error {
 	isFifoQueue := "false"
-	if strings.Contains(config.QueueName, ".fifo") {
+	if e.isFifo {
 		isFifoQueue = "true"
 	}
 
