@@ -43,7 +43,7 @@ func NewEventListener(sess *session.Session, config Config) (queue.EventListener
 }
 
 func (l *sqsEventListener) setup(config Config) error {
-	_, err := l.svc.GetQueueUrl(&sqs.GetQueueUrlInput{
+	output, err := l.svc.GetQueueUrl(&sqs.GetQueueUrlInput{
 		QueueName: aws.String(config.QueueName),
 	})
 	if err != nil {
@@ -57,6 +57,7 @@ func (l *sqsEventListener) setup(config Config) error {
 		}
 		return err
 	}
+	l.queueUrl = output.QueueUrl
 	return nil
 }
 
