@@ -67,7 +67,7 @@ func (l *sqsEventListener) Listen(eventNames ...string) (<-chan queue.Event, <-c
 
 	go func() {
 		for {
-			l.receiveMessage(events, errors)
+			l.receiveMessage(events, errors, eventNames...)
 		}
 	}()
 
