@@ -9,20 +9,14 @@ import (
 	"github.com/aws/aws-sdk-go/service/sqs"
 	"github.com/bogdanrat/web-server/service/queue"
 	"log"
+	"strings"
 )
-
-type Config struct {
-	QueueName                 string
-	FifoQueue                 string
-	ContentBasedDeduplication string
-	DelaySeconds              string
-	MessageRetentionPeriod    string
-}
 
 type sqsEventEmitter struct {
 	svc      *sqs.SQS
 	queueUrl *string
 	isFifo   bool
+	config   Config
 }
 
 func NewEventEmitter(sess *session.Session, config Config) (queue.EventEmitter, error) {
@@ -65,10 +59,15 @@ func (e *sqsEventEmitter) setup(config Config) error {
 }
 
 func (e *sqsEventEmitter) createQueue(config Config) error {
+	isFifoQueue := "false"
+	if strings.Contains(config.QueueName, ".fifo") {
+		isFifoQueue = "true"
+	}
+
 	output, err := e.svc.CreateQueue(&sqs.CreateQueueInput{
 		QueueName: aws.String(config.QueueName),
 		Attributes: map[string]*string{
-			"FifoQueue":                 aws.String(config.FifoQueue),
+			"FifoQueue":                 aws.String(isFifoQueue),
 			"ContentBasedDeduplication": aws.String(config.ContentBasedDeduplication),
 			"DelaySeconds":              aws.String(config.DelaySeconds),
 			"MessageRetentionPeriod":    aws.String(config.MessageRetentionPeriod),
@@ -79,7 +78,6 @@ func (e *sqsEventEmitter) createQueue(config Config) error {
 	}
 
 	e.queueUrl = output.QueueUrl
-	e.isFifo = true
 	return nil
 }
 
