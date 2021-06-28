@@ -101,7 +101,7 @@ func (e *sqsEventEmitter) Emit(event queue.Event) error {
 		MessageBody: aws.String(string(jsonBody)),
 		MessageAttributes: map[string]*sqs.MessageAttributeValue{
 			"event_name": {
-				DataType:    aws.String("string"),
+				DataType:    aws.String("String"),
 				StringValue: aws.String(event.Name()),
 			},
 		},
