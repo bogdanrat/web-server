@@ -16,6 +16,7 @@ import (
 	"github.com/bogdanrat/web-server/service/core/router"
 	"github.com/bogdanrat/web-server/service/queue"
 	amqp_queue "github.com/bogdanrat/web-server/service/queue/amqp"
+	sqs_queue "github.com/bogdanrat/web-server/service/queue/sqs"
 	"github.com/streadway/amqp"
 	"google.golang.org/grpc"
 	"io/ioutil"
@@ -91,7 +92,7 @@ func Init() error {
 
 	eventEmitter, eventListener, err := initMessageBroker(config.AppConfig.MessageBroker)
 	if err != nil {
-		return err
+		return fmt.Errorf("could not initialize %s message broker: %s", config.AppConfig.MessageBroker.Broker, err)
 	}
 	log.Printf("Message Broker %s initialized.\n", config.AppConfig.MessageBroker.Broker)
 
@@ -169,6 +170,24 @@ func initMessageBroker(brokerConfig config.MessageBrokerConfig) (eventEmitter qu
 			return
 		}
 		eventListener, err = amqp_queue.NewListener(conn, brokerConfig.RabbitMQ.Exchange, brokerConfig.RabbitMQ.Queue)
+		if err != nil {
+			return
+		}
+	case config.SQSBroker:
+		sqsConfig := sqs_queue.Config{
+			QueueName:                 brokerConfig.SQS.QueueName,
+			ContentBasedDeduplication: brokerConfig.SQS.ContentBasedDeduplication,
+			DelaySeconds:              brokerConfig.SQS.DelaySeconds,
+			MessageRetentionPeriod:    brokerConfig.SQS.MessageRetentionPeriod,
+			MaxNumberOfMessages:       brokerConfig.SQS.MaxNumberOfMessages,
+			VisibilityTimeout:         brokerConfig.SQS.VisibilityTimeout,
+			WaitTimeSeconds:           brokerConfig.SQS.WaitTimeSeconds,
+		}
+		eventEmitter, err = sqs_queue.NewEventEmitter(config.AWSSession, sqsConfig)
+		if err != nil {
+			return
+		}
+		eventListener, err = sqs_queue.NewEventListener(config.AWSSession, sqsConfig)
 		if err != nil {
 			return
 		}

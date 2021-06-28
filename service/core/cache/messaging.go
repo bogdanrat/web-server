@@ -18,6 +18,6 @@ func HandleAuthServiceMessages(message *redis.Message) {
 		return
 	}
 
-	// Replaced with AMQP
+	// Replaced with SQS
 	log.Printf("Should send Welcome Email to %s\n", user.Email)
 }

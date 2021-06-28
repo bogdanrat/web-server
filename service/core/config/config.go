@@ -46,9 +46,20 @@ type RabbitMQConfig struct {
 	Queue           string
 }
 
+type SQSConfig struct {
+	QueueName                 string
+	ContentBasedDeduplication string
+	DelaySeconds              string
+	MessageRetentionPeriod    string
+	MaxNumberOfMessages       int64
+	VisibilityTimeout         int64
+	WaitTimeSeconds           int64
+}
+
 type MessageBrokerConfig struct {
 	Broker   string
 	RabbitMQ RabbitMQConfig
+	SQS      SQSConfig
 }
 
 type AWSConfig struct {
@@ -97,6 +108,7 @@ var (
 
 const (
 	RabbitMQBroker = "RabbitMQ"
+	SQSBroker      = "SQS"
 )
 
 func ReadFlags() {

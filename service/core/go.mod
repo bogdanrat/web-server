@@ -4,9 +4,9 @@ go 1.16
 
 require (
 	cloud.google.com/go v0.84.0 // indirect
-	github.com/aws/aws-sdk-go v1.38.65
-	github.com/bogdanrat/web-server/contracts v0.0.0-20210623070208-240a861e108e
-	github.com/bogdanrat/web-server/service/queue v0.0.0-20210623070208-240a861e108e
+	github.com/aws/aws-sdk-go v1.38.69
+	github.com/bogdanrat/web-server/contracts v0.0.0-20210628215900-8e6c036a2a44
+	github.com/bogdanrat/web-server/service/queue v0.0.0-20210628215900-8e6c036a2a44
 	github.com/coreos/bbolt v1.3.2 // indirect
 	github.com/coreos/etcd v3.3.13+incompatible // indirect
 	github.com/coreos/go-systemd v0.0.0-20190321100706-95778dfbb74e // indirect
@@ -35,7 +35,7 @@ require (
 	github.com/spf13/cast v1.3.1 // indirect
 	github.com/spf13/jwalterweatherman v1.1.0 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
-	github.com/spf13/viper v1.8.0
+	github.com/spf13/viper v1.8.1
 	github.com/streadway/amqp v1.0.0
 	github.com/tmc/grpc-websocket-proxy v0.0.0-20190109142713-0ad062ec5ee5 // indirect
 	github.com/ugorji/go v1.2.6 // indirect
@@ -43,11 +43,12 @@ require (
 	go.etcd.io/bbolt v1.3.2 // indirect
 	golang.org/x/crypto v0.0.0-20210616213533-5ff15b29337e // indirect
 	golang.org/x/net v0.0.0-20210614182718-04defd469f4e // indirect
-	golang.org/x/oauth2 v0.0.0-20210622215436-a8dc77f794b6
+	golang.org/x/oauth2 v0.0.0-20210628180205-a41e5a781914
 	golang.org/x/sys v0.0.0-20210616094352-59db8d763f22 // indirect
-	google.golang.org/api v0.48.0
-	google.golang.org/genproto v0.0.0-20210617175327-b9e0b3197ced
+	google.golang.org/api v0.49.0
+	google.golang.org/genproto v0.0.0-20210624195500-8bfb893ecb84
 	google.golang.org/grpc v1.38.0
+	google.golang.org/protobuf v1.27.1 // indirect
 	gopkg.in/ini.v1 v1.62.0 // indirect
 	gopkg.in/resty.v1 v1.12.0 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
