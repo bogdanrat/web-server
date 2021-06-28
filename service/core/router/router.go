@@ -2,7 +2,6 @@ package router
 
 import (
 	pb "github.com/bogdanrat/web-server/contracts/proto/auth_service"
-	"github.com/bogdanrat/web-server/contracts/proto/database_service"
 	"github.com/bogdanrat/web-server/contracts/proto/storage_service"
 	"github.com/bogdanrat/web-server/service/core/cache"
 	"github.com/bogdanrat/web-server/service/core/config"
@@ -19,17 +18,17 @@ import (
 	"net/http"
 )
 
-func New(repo repository.DatabaseRepository, cacheClient cache.Client, authClient pb.AuthClient, storageClient storage_service.StorageClient, databaseClient database_service.DatabaseClient, eventEmitter queue.EventEmitter) http.Handler {
+func New(repo repository.DatabaseRepository, cacheClient cache.Client, authClient pb.AuthClient, storageClient storage_service.StorageClient, eventEmitter queue.EventEmitter) http.Handler {
 	router := gin.Default()
 	gin.SetMode(config.AppConfig.Server.GinMode)
 	router.Use(cors.Default())
 
-	var options []grpc.CallOption
+	var authOptions []grpc.CallOption
 
 	// Compression: use network bandwidth efficiently when performing RPCs between client and services.
 	// From the server side, registered compressors will be used automatically to decode request message and encode the responses.
 	if config.AppConfig.Services.Auth.GRPC.UseCompression {
-		options = append(options, grpc.UseCompressor(gzip.Name))
+		authOptions = append(authOptions, grpc.UseCompressor(gzip.Name))
 	}
 
 	authenticationHandler := authentication.NewHandler(
@@ -38,26 +37,22 @@ func New(repo repository.DatabaseRepository, cacheClient cache.Client, authClien
 		&authentication.RPCConfig{
 			Client:      authClient,
 			Deadline:    config.AppConfig.Services.Auth.GRPC.Deadline,
-			CallOptions: options,
+			CallOptions: authOptions,
 		},
 		eventEmitter,
 	)
 
-	usersHandler := users.NewHandler(repo, &users.RPCConfig{
-		Client:      databaseClient,
-		Deadline:    config.AppConfig.Services.Auth.GRPC.Deadline,
-		CallOptions: options,
-	})
+	usersHandler := users.NewHandler(repo)
 
-	options = []grpc.CallOption{}
+	authOptions = []grpc.CallOption{}
 	if config.AppConfig.Services.Storage.GRPC.UseCompression {
-		options = append(options, grpc.UseCompressor(gzip.Name))
+		authOptions = append(authOptions, grpc.UseCompressor(gzip.Name))
 	}
 
 	fileHandler := file.NewHandler(&file.RPCConfig{
 		Client:      storageClient,
 		Deadline:    config.AppConfig.Services.Storage.GRPC.Deadline,
-		CallOptions: options,
+		CallOptions: authOptions,
 	})
 
 	// public endpoints
@@ -71,7 +66,7 @@ func New(repo repository.DatabaseRepository, cacheClient cache.Client, authClien
 	router.POST("/token/refresh", authenticationHandler.RefreshToken)
 
 	// private endpoints, requires jwt
-	apiGroup := router.Group("/api").Use(middleware.Authorization(config.AppConfig.Server.DevelopmentMode, authenticationHandler.Cache, authenticationHandler.RPC.Client))
+	apiGroup := router.Group("/api").Use(middleware.Authorization(config.AppConfig.Server.DevelopmentMode, authenticationHandler.Cache, authenticationHandler.AuthService.Client))
 	apiGroup.GET("/users", usersHandler.GetUsers)
 
 	apiGroup.GET("/file-page", fileHandler.GetFilePage)

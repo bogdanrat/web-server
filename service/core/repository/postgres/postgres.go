@@ -5,9 +5,11 @@ import (
 	"database/sql"
 	"fmt"
 	"github.com/bogdanrat/web-server/contracts/models"
-	"github.com/bogdanrat/web-server/service/core/config"
+	"github.com/bogdanrat/web-server/service/core/common"
+	"github.com/bogdanrat/web-server/service/core/lib"
 	"github.com/bogdanrat/web-server/service/core/repository"
 	_ "github.com/lib/pq"
+	"strconv"
 	"time"
 )
 
@@ -22,8 +24,13 @@ type Repository struct {
 	DB *sql.DB
 }
 
-func NewRepository(dbConfig config.DbConfig) (repository.DatabaseRepository, error) {
-	conn, err := initConnection(dbConfig)
+func NewRepository() (repository.DatabaseRepository, error) {
+	secrets, err := lib.GetDatabaseSecrets()
+	if err != nil {
+		return nil, err
+	}
+
+	conn, err := initConnection(secrets)
 	if err != nil {
 		return nil, err
 	}
@@ -33,8 +40,9 @@ func NewRepository(dbConfig config.DbConfig) (repository.DatabaseRepository, err
 	}, nil
 }
 
-func initConnection(dbConfig config.DbConfig) (*sql.DB, error) {
-	dataSource := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=%s", dbConfig.Host, dbConfig.Port, dbConfig.Username, dbConfig.Password, dbConfig.Database, dbConfig.SslMode)
+func initConnection(secrets *common.DatabaseSecrets) (*sql.DB, error) {
+	port := strconv.Itoa(secrets.Port)
+	dataSource := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=%s", secrets.Host, port, secrets.Username, secrets.Password, secrets.DbName, "disable")
 	conn, err := sql.Open("postgres", dataSource)
 
 	if err != nil {
@@ -61,7 +69,14 @@ func (repo *Repository) GetAllUsers() ([]*models.User, error) {
 	for rows.Next() {
 		user := &models.User{}
 
-		if err := rows.Scan(&user.ID, &user.Name, &user.Email, &user.Password, &user.QRSecret); err != nil {
+		err := rows.Scan(
+			&user.ID,
+			&user.Name,
+			&user.Email,
+			&user.Password,
+			&user.QRSecret,
+		)
+		if err != nil {
 			return nil, err
 		}
 
@@ -71,7 +86,6 @@ func (repo *Repository) GetAllUsers() ([]*models.User, error) {
 	if err := rows.Err(); err != nil {
 		return nil, err
 	}
-
 	return users, nil
 }
 

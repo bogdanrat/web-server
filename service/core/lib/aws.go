@@ -6,8 +6,8 @@ import (
 	"fmt"
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/service/secretsmanager"
-	"github.com/bogdanrat/web-server/service/database/common"
-	"github.com/bogdanrat/web-server/service/database/config"
+	"github.com/bogdanrat/web-server/service/core/common"
+	"github.com/bogdanrat/web-server/service/core/config"
 )
 
 var (

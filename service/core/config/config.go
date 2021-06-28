@@ -3,6 +3,7 @@ package config
 import (
 	"flag"
 	"fmt"
+	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/spf13/viper"
 	"html/template"
 	"path"
@@ -14,15 +15,6 @@ type ServerConfig struct {
 	ListenAddress   string
 	GinMode         string
 	DevelopmentMode bool
-}
-
-type DbConfig struct {
-	Host     string
-	Port     string
-	Username string
-	Password string
-	Database string
-	SslMode  string
 }
 
 type RedisConfig struct {
@@ -59,6 +51,11 @@ type MessageBrokerConfig struct {
 	RabbitMQ RabbitMQConfig
 }
 
+type AWSConfig struct {
+	Region            string
+	DatabaseSecretARN string
+}
+
 type ServicesConfig struct {
 	Auth     AuthConfig
 	Storage  StorageConfig
@@ -83,17 +80,18 @@ type DatabaseConfig struct {
 
 type Config struct {
 	Server         ServerConfig
-	DB             DbConfig
 	Redis          RedisConfig
 	Authentication AuthenticationConfig
 	SMTP           SMTPConfig
 	MessageBroker  MessageBrokerConfig
+	AWS            AWSConfig
 	Services       ServicesConfig
 	TemplateCache  map[string]*template.Template
 }
 
 var (
 	AppConfig  Config
+	AWSSession *session.Session
 	configFile *string
 )
 
@@ -134,4 +132,8 @@ func initViper() {
 	viper.SetConfigName(configFileName)
 	viper.SetConfigType(configFileType)
 	viper.SetEnvPrefix("CORE")
+}
+
+func SetAWSSession(sess *session.Session) {
+	AWSSession = sess
 }

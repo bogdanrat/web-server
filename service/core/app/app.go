@@ -2,8 +2,10 @@ package app
 
 import (
 	"fmt"
+	"github.com/aws/aws-sdk-go/aws"
+	"github.com/aws/aws-sdk-go/aws/session"
+	"github.com/aws/aws-sdk-go/service/sts"
 	pb "github.com/bogdanrat/web-server/contracts/proto/auth_service"
-	"github.com/bogdanrat/web-server/contracts/proto/database_service"
 	"github.com/bogdanrat/web-server/contracts/proto/storage_service"
 	"github.com/bogdanrat/web-server/service/core/cache"
 	"github.com/bogdanrat/web-server/service/core/config"
@@ -31,18 +33,24 @@ type GRPCServiceID int
 const (
 	AuthService GRPCServiceID = iota
 	StorageService
-	DatabaseService
 )
 
 func Init() error {
-	if err := initTempDir(); err != nil {
+	var err error
+	if err = initTempDir(); err != nil {
 		return err
 	}
 
 	config.ReadFlags()
-	if err := config.ReadConfiguration(); err != nil {
+	if err = config.ReadConfiguration(); err != nil {
 		return err
 	}
+
+	// init aws
+	if err = initAwsSession(config.AppConfig.AWS); err != nil {
+		return err
+	}
+	log.Println("AWS Session initialized.")
 
 	templateCache, err := render.CreateTemplateCache()
 	if err != nil {
@@ -55,7 +63,7 @@ func Init() error {
 	}
 	log.Println("SMTP Service initialized.")
 
-	postgresDB, err := postgres.NewRepository(config.AppConfig.DB)
+	postgresDB, err := postgres.NewRepository()
 	if err != nil {
 		return fmt.Errorf("could not establish database connection: %s", err.Error())
 	}
@@ -81,13 +89,6 @@ func Init() error {
 	log.Println("Storage Service GRPC connection established.")
 	storageClient := storage_service.NewStorageClient(conn)
 
-	conn, err = initGRPC(DatabaseService)
-	if err != nil {
-		return err
-	}
-	log.Println("Database Service GRPC connection established.")
-	databaseClient := database_service.NewDatabaseClient(conn)
-
 	eventEmitter, eventListener, err := initMessageBroker(config.AppConfig.MessageBroker)
 	if err != nil {
 		return err
@@ -102,7 +103,7 @@ func Init() error {
 		}
 	}()
 
-	httpRouter = router.New(postgresDB, redisCache, authClient, storageClient, databaseClient, eventEmitter)
+	httpRouter = router.New(postgresDB, redisCache, authClient, storageClient, eventEmitter)
 
 	redisCache.Subscribe("self", cache.HandleAuthServiceMessages, config.AppConfig.Authentication.Channel)
 
@@ -131,9 +132,6 @@ func initGRPC(service GRPCServiceID) (conn *grpc.ClientConn, err error) {
 	case StorageService:
 		host = os.Getenv("STORAGE_SERVICE_HOST")
 		port = os.Getenv("STORAGE_SERVICE_PORT")
-	case DatabaseService:
-		host = os.Getenv("DATABASE_SERVICE_HOST")
-		port = os.Getenv("DATABASE_SERVICE_PORT")
 	default:
 		return nil, fmt.Errorf("unknown grpc service id: %d", service)
 	}
@@ -213,5 +211,26 @@ func initTempDir() error {
 		return fmt.Errorf("failed to delete tempFile: %s", err)
 	}
 	log.Printf("Using temporary directory %s", tempDir)
+	return nil
+}
+
+func initAwsSession(awsConfig config.AWSConfig) error {
+	sess, err := session.NewSession(&aws.Config{
+		Region:                        aws.String(awsConfig.Region),
+		CredentialsChainVerboseErrors: aws.Bool(true),
+	})
+	if err != nil {
+		return err
+	}
+
+	config.SetAWSSession(sess)
+
+	stsService := sts.New(sess)
+	output, err := stsService.GetCallerIdentity(&sts.GetCallerIdentityInput{})
+	if err != nil {
+		return err
+	}
+	log.Printf("Caller Identity: %s\n", *output.Arn)
+
 	return nil
 }

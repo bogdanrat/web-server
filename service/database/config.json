@@ -1,9 +1,0 @@
-{
-  "Service": {
-    "Address": ":50053"
-  },
-  "AWS": {
-    "Region": "eu-central-1",
-    "DatabaseSecretARN": "arn:aws:secretsmanager:eu-central-1:820136616739:secret:webserver/database-yZwIPt"
-  }
-}
