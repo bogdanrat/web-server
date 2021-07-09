@@ -60,6 +60,8 @@ func New(repo repository.DatabaseRepository, cacheClient cache.Client, authClien
 		c.Status(http.StatusOK)
 		c.String(http.StatusOK, "App is alive!\n")
 	})
+	router.GET("/login", authenticationHandler.ShowLogin)
+
 	router.POST("/sign-up", authenticationHandler.SignUp)
 	router.POST("/login", authenticationHandler.Login)
 	router.POST("/logout", authenticationHandler.Logout)

@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Login Page</title>
+    <style>
+        button {
+            cursor: pointer;
+        }
+
+        input[type=submit] {
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+{{$mfa := index .IntMap "mfa"}}
+<form id="myform" action="/login" method="post">
+    <label for="email">Email:</label>
+    <input type="text" name="email" id="email" required>
+    <br>
+    <label for="password">Password:</label>
+    <input type="password" name="password" id="password" required>
+    <br>
+    {{if eq $mfa 1}}
+    <label for="qr_code">QR Code:</label>
+    <input type="text" name="qr_code" id="qr_code" required>
+    <br>
+    {{end}}
+    <input type="submit" name="submit" value="Login" style="background-color: darkcyan">
+</form>
+
+<script>
+    document.forms['myform'].addEventListener('submit', (event) => {
+        event.preventDefault();
+
+        fetch(event.target.action, {
+            method: 'POST',
+            body: new URLSearchParams(new FormData(event.target))
+        }).then((resp) => {
+            console.log("status:", resp.status);
+            resp.json().then((body) => {
+                if (resp.status === 200) {
+                    localStorage.setItem("access_token", body.access_token);
+                    localStorage.setItem("refresh_token", body.refresh_token);
+                    alert("logged in!");
+                } else if (resp.status === 401) {
+                    alert(body.description);
+                }
+            }).catch((error) => {
+                console.log("err: ", error);
+            })
+        }).catch((error) => {
+            console.log("err:", error);
+        });
+    });
+
+</script>
+</body>
+</html>

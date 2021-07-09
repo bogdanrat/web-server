@@ -10,6 +10,7 @@ import (
 	"github.com/bogdanrat/web-server/service/core/config"
 	"github.com/bogdanrat/web-server/service/core/forms"
 	"github.com/bogdanrat/web-server/service/core/lib"
+	"github.com/bogdanrat/web-server/service/core/render"
 	"github.com/bogdanrat/web-server/service/core/repository"
 	"github.com/bogdanrat/web-server/service/core/util"
 	"github.com/bogdanrat/web-server/service/queue"
@@ -41,6 +42,16 @@ func NewHandler(repo repository.DatabaseRepository, cacheClient cache.Client, au
 		AuthService:  authConfig,
 		EventEmitter: eventEmitter,
 	}
+}
+
+func (h *Handler) ShowLogin(c *gin.Context) {
+	templateData := &models.TemplateData{}
+	if config.AppConfig.Authentication.MFA {
+		intMap := make(map[string]int)
+		intMap["mfa"] = 1
+		templateData.IntMap = intMap
+	}
+	_ = render.Template(c.Writer, c.Request, "login.page.tmpl", templateData)
 }
 
 func (h *Handler) SignUp(c *gin.Context) {
