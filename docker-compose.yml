@@ -52,6 +52,8 @@ services:
       - AUTH_SERVICE_PORT=50051
       - STORAGE_SERVICE_HOST=storage-service
       - STORAGE_SERVICE_PORT=50052
+      - AWS_ACCESS_KEY_ID=${ACCESS_KEY}
+      - AWS_SECRET_ACCESS_KEY=${SECRET_ACCESS_KEY}
     volumes:
     - ./service/core/config.json:/config.json
   # Auth Service
@@ -88,4 +90,18 @@ services:
       - ./config/prometheus.yml:/etc/prometheus/prometheus.yml
     ports:
       - 9090:9090
-    restart: always
+    restart: unless-stopped
+  # Grafana
+  grafana:
+    image: grafana/grafana:7.5.6
+    ports:
+      - 3001:3000
+    volumes:
+      - ./data/grafana:/var/lib/grafana
+    restart: unless-stopped
+  # Telegraf
+  telegraf:
+    image: telegraf:latest
+    volumes:
+      - ./config/telegraf.conf:/etc/telegraf/telegraf.conf
+      - /var/run/docker.sock:/var/run/docker.sock
