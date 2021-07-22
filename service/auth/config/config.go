@@ -13,15 +13,28 @@ type ServiceConfig struct {
 	Address string
 }
 
+type ServerConfig struct {
+	ListenAddress   string
+	GinMode         string
+	DevelopmentMode bool
+}
+
 type OpenCensusConfig struct {
 	Enabled   bool
 	StatsPage string
 	Address   string
 }
 
+type PrometheusConfig struct {
+	Enabled     bool
+	MetricsPath string
+}
+
 type Config struct {
 	Service    ServiceConfig
+	Server     ServerConfig
 	OpenCensus OpenCensusConfig
+	Prometheus PrometheusConfig
 }
 
 var (

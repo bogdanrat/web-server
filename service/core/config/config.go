@@ -73,6 +73,7 @@ type ServicesConfig struct {
 }
 
 type PrometheusConfig struct {
+	Enabled     bool
 	MetricsPath string
 }
 

@@ -5,6 +5,7 @@ go 1.16
 require (
 	github.com/aws/aws-sdk-go v1.38.69
 	github.com/bogdanrat/web-server/contracts v0.0.0-20210628215900-8e6c036a2a44
+	github.com/bogdanrat/web-server/service/monitor v0.0.0-20210722123852-4e5407f87ed3
 	github.com/bogdanrat/web-server/service/queue v0.0.0-20210628215900-8e6c036a2a44
 	github.com/gin-contrib/cors v1.3.1
 	github.com/gin-gonic/gin v1.7.2

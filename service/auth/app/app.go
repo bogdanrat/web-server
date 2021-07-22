@@ -6,6 +6,10 @@ import (
 	"github.com/bogdanrat/web-server/service/auth/config"
 	"github.com/bogdanrat/web-server/service/auth/handler"
 	"github.com/bogdanrat/web-server/service/auth/interceptor"
+	"github.com/bogdanrat/web-server/service/monitor"
+	"github.com/gin-contrib/cors"
+	"github.com/gin-gonic/gin"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"go.opencensus.io/examples/exporter"
 	"go.opencensus.io/plugin/ocgrpc"
 	"go.opencensus.io/stats/view"
@@ -36,6 +40,10 @@ func Init() error {
 	if config.AppConfig.OpenCensus.Enabled {
 		initOpenCensus()
 		serverOptions = append(serverOptions, grpc.StatsHandler(&ocgrpc.ServerHandler{}))
+	}
+
+	if config.AppConfig.Prometheus.Enabled {
+		initPrometheus()
 	}
 
 	listener, err = net.Listen("tcp", config.AppConfig.Service.Address)
@@ -82,4 +90,26 @@ func initOpenCensus() {
 	log.Println("OpenCensus Enabled.")
 	log.Printf("RPC Stats: http://%s/%s/rpcz\n", config.AppConfig.OpenCensus.Address, config.AppConfig.OpenCensus.StatsPage)
 	log.Printf("Trace Spans: http://%s/%s/tracez\n", config.AppConfig.OpenCensus.Address, config.AppConfig.OpenCensus.StatsPage)
+}
+
+func initPrometheus() {
+	_ = monitor.Setup()
+	log.Println("Monitoring enabled.")
+
+	router := gin.Default()
+	router.Use(cors.Default())
+
+	router.Use(monitor.PrometheusMiddleware())
+	router.GET(config.AppConfig.Prometheus.MetricsPath, gin.WrapH(promhttp.Handler()))
+
+	server := &http.Server{
+		Addr:    config.AppConfig.Server.ListenAddress,
+		Handler: router,
+	}
+
+	go func() {
+		if err := server.ListenAndServe(); err != nil {
+			log.Fatal(err)
+		}
+	}()
 }

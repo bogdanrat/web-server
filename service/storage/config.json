@@ -2,6 +2,11 @@
   "Service": {
     "Address": ":50052"
   },
+  "Server": {
+    "ListenAddress": ":3002",
+    "GinMode": "debug",
+    "DevelopmentMode": true
+  },
   "Upload": {
     "MaxFileSize": 10000000
   },
@@ -20,5 +25,9 @@
       "MaxAttempts": 10,
       "Timeout": 5
     }
+  },
+  "Prometheus": {
+    "Enabled": true,
+    "MetricsPath": "/monitor/storage-service"
   }
 }

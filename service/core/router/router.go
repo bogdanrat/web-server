@@ -9,8 +9,8 @@ import (
 	"github.com/bogdanrat/web-server/service/core/handler/file"
 	"github.com/bogdanrat/web-server/service/core/handler/users"
 	"github.com/bogdanrat/web-server/service/core/middleware"
-	"github.com/bogdanrat/web-server/service/core/monitor"
 	"github.com/bogdanrat/web-server/service/core/repository"
+	"github.com/bogdanrat/web-server/service/monitor"
 	"github.com/bogdanrat/web-server/service/queue"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
@@ -26,10 +26,12 @@ func New(repo repository.DatabaseRepository, cacheClient cache.Client, authClien
 	gin.SetMode(config.AppConfig.Server.GinMode)
 	router.Use(cors.Default())
 
-	_ = monitor.Setup()
-	log.Println("Monitoring enabled.")
-	router.Use(monitor.PrometheusMiddleware())
-	router.GET(config.AppConfig.Prometheus.MetricsPath, gin.WrapH(promhttp.Handler()))
+	if config.AppConfig.Prometheus.Enabled {
+		_ = monitor.Setup()
+		log.Println("Monitoring enabled.")
+		router.Use(monitor.PrometheusMiddleware())
+		router.GET(config.AppConfig.Prometheus.MetricsPath, gin.WrapH(promhttp.Handler()))
+	}
 
 	var authOptions []grpc.CallOption
 

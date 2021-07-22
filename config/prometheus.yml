@@ -6,11 +6,21 @@ scrape_configs:
   - job_name: prometheus
     static_configs:
       - targets: [ 'localhost:9090' ]
-  - job_name: core-service-monitoring
+  - job_name: core-service
     metrics_path: /monitor/core-service
     static_configs:
       - targets:
           - core-service:3000
+  - job_name: auth-service
+    metrics_path: /monitor/auth-service
+    static_configs:
+      - targets:
+        - auth-service:3001
+  - job_name: storage-service
+    metrics_path: /monitor/storage-service
+    static_configs:
+      - targets:
+        - storage-service:3002
   - job_name: telegraf
     scrape_interval: 15s
     static_configs:

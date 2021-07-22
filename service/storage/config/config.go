@@ -14,6 +14,12 @@ type ServiceConfig struct {
 	Address string
 }
 
+type ServerConfig struct {
+	ListenAddress   string
+	GinMode         string
+	DevelopmentMode bool
+}
+
 type UploadConfig struct {
 	MaxFileSize uint32
 }
@@ -37,12 +43,19 @@ type AWSConfig struct {
 	S3     S3Config
 }
 
+type PrometheusConfig struct {
+	Enabled     bool
+	MetricsPath string
+}
+
 type Config struct {
 	Service       ServiceConfig
+	Server        ServerConfig
 	Upload        UploadConfig
 	StorageEngine string
 	DiskStorage   DiskStorageConfig
 	AWS           AWSConfig
+	Prometheus    PrometheusConfig
 }
 
 var (

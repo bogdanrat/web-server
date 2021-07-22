@@ -62,6 +62,8 @@ github.com/bketelsen/crypt v0.0.4/go.mod h1:aI6NrJ0pMGgvZKL1iVgXLnfIFJtfV+bKCoqO
 github.com/bogdanrat/web-server/contracts v0.0.0-20210628193136-bfcbabf54276/go.mod h1:fpY+JNP1ZFi2bIZEWFncTsIWjDCKsHAfQOIcBuWBj0M=
 github.com/bogdanrat/web-server/contracts v0.0.0-20210628215900-8e6c036a2a44 h1:Us6MOx1uvpMhlG2UfYVppXxep3AcWkCSIojqXbxlqKA=
 github.com/bogdanrat/web-server/contracts v0.0.0-20210628215900-8e6c036a2a44/go.mod h1:fpY+JNP1ZFi2bIZEWFncTsIWjDCKsHAfQOIcBuWBj0M=
+github.com/bogdanrat/web-server/service/monitor v0.0.0-20210722123852-4e5407f87ed3 h1:Hg03x2BFuZK+I6pIBQreyF5TtVAvOrLlSNDVN0BlJBk=
+github.com/bogdanrat/web-server/service/monitor v0.0.0-20210722123852-4e5407f87ed3/go.mod h1:ygvQ26o0z+89It7+xM9sQU2yUQyFyJiD3aUhxzcAXDY=
 github.com/bogdanrat/web-server/service/queue v0.0.0-20210628215900-8e6c036a2a44 h1:ZjiaDGSP6vf8yCVv86hbZydzhEOJCqAXpewFP4sa/Ck=
 github.com/bogdanrat/web-server/service/queue v0.0.0-20210628215900-8e6c036a2a44/go.mod h1:atFUxpVSViV7pdmpazIE/td8DXKH5vKKIKClki13MfM=
 github.com/census-instrumentation/opencensus-proto v0.2.1/go.mod h1:f6KPmirojxKA12rnyqOA5BBL4O983OfeGPqjHWSTneU=

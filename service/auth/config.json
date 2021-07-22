@@ -2,9 +2,18 @@
   "Service": {
     "Address": ":50051"
   },
+  "Server": {
+    "ListenAddress": ":3001",
+    "GinMode": "debug",
+    "DevelopmentMode": true
+  },
   "OpenCensus": {
-    "Enabled": true,
+    "Enabled": false,
     "StatsPage": "debug",
     "Address": "localhost:8081"
+  },
+  "Prometheus": {
+    "Enabled": true,
+    "MetricsPath": "/monitor/auth-service"
   }
 }
