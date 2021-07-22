@@ -17,3 +17,5 @@
 /service/database/database.yml
 /service/storage/data/
 /.env
+/data/
+/service/core/build-image.sh
