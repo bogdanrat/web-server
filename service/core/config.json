@@ -1,0 +1,74 @@
+{
+  "Server": {
+    "ListenAddress": ":3000",
+    "GinMode": "debug",
+    "DevelopmentMode": true
+  },
+  "Redis": {
+    "Host": "localhost",
+    "Port": "6379",
+    "Password": ""
+  },
+  "Authentication": {
+    "AccessTokenDuration": 15,
+    "RefreshTokenDuration": 1440,
+    "MFA": true,
+    "Channel": "auth"
+  },
+  "SMTP": {
+    "ClientID": "962241618705-2rfi3carbcphut4v9as4lebqndk4dvg2.apps.googleusercontent.com",
+    "ClientSecret": "7j5FTlj5YnvOe62pdnzLQsoF",
+    "AccessToken": "ya29.a0AfH6SMDfzuD3VqPIkblSLSnxl_pWcjY9NlDhW0YuA5Op8QjmP2x_J15Lmtr74kT2Uw-_RuLeb2HI9rcxNYSxod_F4l02T4vEckx-O0EDu9EoEVVyb3n1nNwyKyQRdMkMfGo52NUChxx8pB6qkAyiytOkCQm9",
+    "RefreshToken": "1//04YJv4_cvOqrvCgYIARAAGAQSNwF-L9IrC5Grq27txAXbZrmQmPu-X25JwD5OQpqMRaz-Obn9cfSaKi63ekLOGn6K24J5n3d8Eps"
+  },
+  "MessageBroker": {
+    "Broker": "SQS",
+    "RabbitMQ": {
+      "DefaultUser": "guest",
+      "DefaultPassword": "guest",
+      "Host": "localhost",
+      "Port": "5672",
+      "Exchange": "CoreExchange",
+      "Queue": "CoreQueue"
+    },
+    "SQS": {
+      "QueueName": "webserver_queue.fifo",
+      "ContentBasedDeduplication": "true",
+      "DelaySeconds": "0",
+      "MessageRetentionPeriod": "86400",
+      "MaxNumberOfMessages": 10,
+      "VisibilityTimeout": 5,
+      "WaitTimeSeconds": 20
+    }
+  },
+  "AWS": {
+    "Region": "eu-central-1",
+    "DatabaseSecretARN": "arn:aws:secretsmanager:eu-central-1:820136616739:secret:webserver/database-yZwIPt"
+  },
+  "Services": {
+    "Auth": {
+      "GRPC": {
+        "Deadline": 50000,
+        "UseCompression": true
+      }
+    },
+    "Storage": {
+      "GRPC": {
+        "Deadline": 10000,
+        "UseCompression": true
+      },
+      "ImagesPrefix": "img",
+      "DocumentsPrefix": "docs"
+    },
+    "Database": {
+      "GRPC": {
+        "Deadline": 500,
+        "UseCompression": true
+      }
+    }
+  },
+  "Prometheus": {
+    "Enabled": true,
+    "MetricsPath": "/monitor/core-service"
+  }
+}

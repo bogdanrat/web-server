@@ -13,8 +13,6 @@
 
 # Dependency directories (remove the comment below to include it)
 # vendor/
-/service/core/config.json
-/service/database/database.yml
 /service/storage/data/
 /.env
 /data/

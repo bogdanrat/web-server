@@ -5,8 +5,6 @@ RUN apk update && apk upgrade && apk add --no-cache ca-certificates && update-ca
 ARG ACCESS_TOKEN_USR="nothing"
 ARG ACCESS_TOKEN_PWD="nothing"
 
-ARG ACCESS_KEY_ID="nothing"
-ARG SECRET_ACCESS_KEY="nothing"
 
 RUN printf "machine github.com\n\
     login ${ACCESS_TOKEN_USR}\n\
