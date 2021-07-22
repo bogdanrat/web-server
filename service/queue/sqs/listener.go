@@ -94,8 +94,8 @@ func (l *sqsEventListener) receiveMessage(events chan queue.Event, errors chan e
 		if !ok {
 			continue
 		}
-		messageGroupID, ok := message.Attributes["MessageGroupId"]
-		if ok && strings.EqualFold(*messageGroupID, "auth") {
+		messageGroupID, ok := message.Attributes[sqs.MessageSystemAttributeNameMessageGroupId]
+		if ok && strings.EqualFold(*messageGroupID, MessageGroupIDAuth) {
 
 		}
 

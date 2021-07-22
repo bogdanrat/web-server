@@ -93,7 +93,7 @@ func (e *sqsEventEmitter) Emit(event queue.Event) error {
 	var messageGroupID *string
 	switch event.Name() {
 	case "userSignUp":
-		messageGroupID = aws.String("auth")
+		messageGroupID = aws.String(MessageGroupIDAuth)
 	}
 
 	message := &sqs.SendMessageInput{

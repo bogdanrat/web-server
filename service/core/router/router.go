@@ -9,12 +9,15 @@ import (
 	"github.com/bogdanrat/web-server/service/core/handler/file"
 	"github.com/bogdanrat/web-server/service/core/handler/users"
 	"github.com/bogdanrat/web-server/service/core/middleware"
+	"github.com/bogdanrat/web-server/service/core/monitor"
 	"github.com/bogdanrat/web-server/service/core/repository"
 	"github.com/bogdanrat/web-server/service/queue"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/encoding/gzip"
+	"log"
 	"net/http"
 )
 
@@ -22,6 +25,11 @@ func New(repo repository.DatabaseRepository, cacheClient cache.Client, authClien
 	router := gin.Default()
 	gin.SetMode(config.AppConfig.Server.GinMode)
 	router.Use(cors.Default())
+
+	_ = monitor.Setup()
+	log.Println("Monitoring enabled.")
+	router.Use(monitor.PrometheusMiddleware())
+	router.GET(config.AppConfig.Prometheus.MetricsPath, gin.WrapH(promhttp.Handler()))
 
 	var authOptions []grpc.CallOption
 

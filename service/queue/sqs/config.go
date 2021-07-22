@@ -1,5 +1,9 @@
 package sqs
 
+const (
+	MessageGroupIDAuth = "auth"
+)
+
 type Config struct {
 	QueueName                 string
 	ContentBasedDeduplication string

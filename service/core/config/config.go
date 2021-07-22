@@ -68,9 +68,12 @@ type AWSConfig struct {
 }
 
 type ServicesConfig struct {
-	Auth     AuthConfig
-	Storage  StorageConfig
-	Database DatabaseConfig
+	Auth    AuthConfig
+	Storage StorageConfig
+}
+
+type PrometheusConfig struct {
+	MetricsPath string
 }
 
 type GRPCConfig struct {
@@ -85,9 +88,6 @@ type StorageConfig struct {
 	ImagesPrefix    string
 	DocumentsPrefix string
 }
-type DatabaseConfig struct {
-	GRPC GRPCConfig
-}
 
 type Config struct {
 	Server         ServerConfig
@@ -97,6 +97,7 @@ type Config struct {
 	MessageBroker  MessageBrokerConfig
 	AWS            AWSConfig
 	Services       ServicesConfig
+	Prometheus     PrometheusConfig
 	TemplateCache  map[string]*template.Template
 }
 

@@ -22,8 +22,9 @@ services:
     image: redis
   # Core Service
   core-service:
-    build:
-      context: ./service/core
+#    build:
+#      context: ./service/core
+    image: bogdanrat/webserver_coreservice
     ports:
       - "3000:3000"
     restart: on-failure
@@ -36,14 +37,13 @@ services:
         condition: service_started
       storage-service:
         condition: service_started
-      database-service:
+      prometheus:
         condition: service_started
     links:
       - rabbitmq
       - redis
       - auth-service
       - storage-service
-      - database-service
     environment:
       - RABBITMQ_URL=amqp://user:password@rabbitmq:5672
       - REDIS_HOST=redis
@@ -52,15 +52,14 @@ services:
       - AUTH_SERVICE_PORT=50051
       - STORAGE_SERVICE_HOST=storage-service
       - STORAGE_SERVICE_PORT=50052
-      - DATABASE_SERVICE_HOST=database-service
-      - DATABASE_SERVICE_PORT=50053
     volumes:
     - ./service/core/config.json:/config.json
   # Auth Service
   auth-service:
     hostname: auth-service
-    build:
-      context: ./service/auth
+#    build:
+#      context: ./service/auth
+    image: bogdanrat/webserver_authservice
     ports:
       - "8081:8081"
       - "50051:50051"
@@ -70,8 +69,9 @@ services:
   # Storage Service
   storage-service:
     hostname: storage-service
-    build:
-      context: ./service/storage
+#    build:
+#      context: ./service/storage
+    image: bogdanrat/webserver_storageservice
     ports:
       - "50052:50052"
     restart: on-failure
@@ -81,14 +81,11 @@ services:
     environment:
       - AWS_ACCESS_KEY_ID=${ACCESS_KEY}
       - AWS_SECRET_ACCESS_KEY=${SECRET_ACCESS_KEY}
-  # Database Service
-  database-service:
-    hostname: database-service
-    build:
-      context: ./service/database
-    ports:
-      - "50053:50053"
-    restart: on-failure
+  # Prometheus
+  prometheus:
+    image: prom/prometheus:v2.27.0
     volumes:
-    - ./service/database/config.json:/config.json
-
+      - ./config/prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - 9090:9090
+    restart: always
