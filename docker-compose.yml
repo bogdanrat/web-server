@@ -97,7 +97,7 @@ services:
     ports:
       - 4000:3000
     volumes:
-      - ./data/grafana:/var/lib/grafana
+      - grafana-storage:/var/lib/grafana
     restart: unless-stopped
   # Telegraf
   # Telegraf will collect the metrics about the server resources (memory, CPU, disk, and network traffic)
@@ -107,3 +107,5 @@ services:
     volumes:
       - ./config/telegraf.conf:/etc/telegraf/telegraf.conf
       - /var/run/docker.sock:/var/run/docker.sock
+volumes:
+  grafana-storage:
