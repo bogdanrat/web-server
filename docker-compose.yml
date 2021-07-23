@@ -26,7 +26,7 @@ services:
 #      context: ./service/core
     image: bogdanrat/webserver_coreservice
     ports:
-      - "3000:3000"
+      - "8080:8080"
     restart: on-failure
     depends_on:
 #      rabbitmq:
