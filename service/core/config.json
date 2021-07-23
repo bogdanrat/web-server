@@ -1,6 +1,6 @@
 {
   "Server": {
-    "ListenAddress": ":3000",
+    "ListenAddress": ":8080",
     "GinMode": "debug",
     "DevelopmentMode": true
   },

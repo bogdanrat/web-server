@@ -95,7 +95,7 @@ services:
   grafana:
     image: grafana/grafana:7.5.6
     ports:
-      - 4000:3000
+      - 3000:3000
     volumes:
       - grafana-storage:/var/lib/grafana
     restart: unless-stopped

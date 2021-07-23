@@ -45,6 +45,6 @@ COPY --from=gobuild /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
 # Copy our static executable.
 COPY --from=gobuild /core /
 
-EXPOSE 3000
+EXPOSE 8080
 
 ENTRYPOINT ["/coreservice"]
