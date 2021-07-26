@@ -16,10 +16,10 @@
     "Channel": "auth"
   },
   "SMTP": {
-    "ClientID": "962241618705-2rfi3carbcphut4v9as4lebqndk4dvg2.apps.googleusercontent.com",
-    "ClientSecret": "7j5FTlj5YnvOe62pdnzLQsoF",
-    "AccessToken": "ya29.a0AfH6SMDfzuD3VqPIkblSLSnxl_pWcjY9NlDhW0YuA5Op8QjmP2x_J15Lmtr74kT2Uw-_RuLeb2HI9rcxNYSxod_F4l02T4vEckx-O0EDu9EoEVVyb3n1nNwyKyQRdMkMfGo52NUChxx8pB6qkAyiytOkCQm9",
-    "RefreshToken": "1//04YJv4_cvOqrvCgYIARAAGAQSNwF-L9IrC5Grq27txAXbZrmQmPu-X25JwD5OQpqMRaz-Obn9cfSaKi63ekLOGn6K24J5n3d8Eps"
+    "ClientID": "",
+    "ClientSecret": "",
+    "AccessToken": "",
+    "RefreshToken": ""
   },
   "MessageBroker": {
     "Broker": "SQS",
@@ -32,7 +32,7 @@
       "Queue": "CoreQueue"
     },
     "SQS": {
-      "QueueName": "webserver_queue.fifo",
+      "QueueName": "webserver_queue",
       "ContentBasedDeduplication": "true",
       "DelaySeconds": "0",
       "MessageRetentionPeriod": "86400",

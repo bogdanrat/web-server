@@ -51,6 +51,8 @@ func (p *EventProcessor) handleUserSignUpEvent(event *models.UserSignUpEvent) {
 		return
 	}
 
+	// TODO: take email subject & body from an I18N ket-value store in DynamoDB
+
 	email := &mail.Message{
 		To:      user.Email,
 		Subject: "Welcome",

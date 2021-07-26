@@ -12,6 +12,7 @@ import (
 	"google.golang.org/api/gmail/v1"
 	"google.golang.org/api/option"
 	"net/http"
+	"os"
 	"time"
 )
 
@@ -36,6 +37,8 @@ var (
 )
 
 func NewService(smtpConfig config.SMTPConfig) error {
+	smtpConfig = sanitizeConfig(smtpConfig)
+
 	oauth2Config := oauth2.Config{
 		ClientID:     smtpConfig.ClientID,
 		ClientSecret: smtpConfig.ClientSecret,
@@ -59,6 +62,23 @@ func NewService(smtpConfig config.SMTPConfig) error {
 
 	smtpService = &Service{service}
 	return nil
+}
+
+func sanitizeConfig(smtpConfig config.SMTPConfig) config.SMTPConfig {
+	if smtpConfig.ClientID == "" {
+		smtpConfig.ClientID = os.Getenv("SMTP_CLIENT_ID")
+	}
+	if smtpConfig.ClientSecret == "" {
+		smtpConfig.ClientSecret = os.Getenv("SMTP_CLIENT_SECRET")
+	}
+	if smtpConfig.AccessToken == "" {
+		smtpConfig.AccessToken = os.Getenv("SMTP_ACCESS_TOKEN")
+	}
+	if smtpConfig.RefreshToken == "" {
+		smtpConfig.RefreshToken = os.Getenv("SMTP_REFRESH_TOKEN")
+	}
+
+	return smtpConfig
 }
 
 func Send(message *Message) error {

@@ -54,6 +54,10 @@ services:
       - STORAGE_SERVICE_PORT=50052
       - AWS_ACCESS_KEY_ID=${ACCESS_KEY}
       - AWS_SECRET_ACCESS_KEY=${SECRET_ACCESS_KEY}
+      - SMTP_CLIENT_ID=${SMTP_CLIENT_ID}
+      - SMTP_CLIENT_SECRET=${SMTP_CLIENT_SECRET}
+      - SMTP_ACCESS_TOKEN=${SMTP_ACCESS_TOKEN}
+      - SMTP_REFRESH_TOKEN=${SMTP_REFRESH_TOKEN}
     volumes:
     - ./service/core/config.json:/config.json
   # Auth Service
