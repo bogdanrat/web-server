@@ -17,11 +17,11 @@
 					}
 				],
 				"url": {
-					"raw": "localhost:3000/api/users",
+					"raw": "localhost:8080/api/users",
 					"host": [
 						"localhost"
 					],
-					"port": "3000",
+					"port": "8080",
 					"path": [
 						"api",
 						"users"
@@ -37,7 +37,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"name\": \"Bogdan Rat\",\n    \"email\": \"bogdanalexandru.rat@gmail.com\",\n    \"password\": \"test\"\n}",
+					"raw": "{\n    \"name\": \"Bogdan Rat\",\n    \"email\": \"bogdan.rat@zenitech.co.uk\",\n    \"password\": \"test\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -45,11 +45,11 @@
 					}
 				},
 				"url": {
-					"raw": "localhost:3000/sign-up",
+					"raw": "localhost:8080/sign-up",
 					"host": [
 						"localhost"
 					],
-					"port": "3000",
+					"port": "8080",
 					"path": [
 						"sign-up"
 					]
@@ -63,13 +63,24 @@
 				"method": "POST",
 				"header": [],
 				"body": {
-					"mode": "raw",
-					"raw": "{\n    \"email\": \"bogdanalexandru.rat@gmail.com\",\n    \"password\": \"test\",\n    \"qr_code\": \"279296\"   \n}",
-					"options": {
-						"raw": {
-							"language": "json"
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "email",
+							"value": "bogdan.rat@zenitech.co.uk",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "test",
+							"type": "text"
+						},
+						{
+							"key": "qr_code",
+							"value": "767949",
+							"type": "text"
 						}
-					}
+					]
 				},
 				"url": {
 					"raw": "localhost:3000/login",
@@ -123,11 +134,11 @@
 					}
 				},
 				"url": {
-					"raw": "localhost:3000/token/refresh",
+					"raw": "localhost:8080/token/refresh",
 					"host": [
 						"localhost"
 					],
-					"port": "3000",
+					"port": "8080",
 					"path": [
 						"token",
 						"refresh"
@@ -163,11 +174,11 @@
 					]
 				},
 				"url": {
-					"raw": "localhost:3000/api/files",
+					"raw": "localhost:8080/api/files",
 					"host": [
 						"localhost"
 					],
-					"port": "3000",
+					"port": "8080",
 					"path": [
 						"api",
 						"files"
@@ -188,11 +199,11 @@
 					}
 				],
 				"url": {
-					"raw": "localhost:3000/api/file?file_name=images/Cassette player.jpg",
+					"raw": "localhost:8080/api/file?file_name=images/Cassette player.jpg",
 					"host": [
 						"localhost"
 					],
-					"port": "3000",
+					"port": "8080",
 					"path": [
 						"api",
 						"file"
@@ -219,11 +230,11 @@
 					}
 				],
 				"url": {
-					"raw": "localhost:3000/api/files",
+					"raw": "localhost:8080/api/files",
 					"host": [
 						"localhost"
 					],
-					"port": "3000",
+					"port": "8080",
 					"path": [
 						"api",
 						"files"
@@ -253,11 +264,11 @@
 					}
 				},
 				"url": {
-					"raw": "localhost:3000/api/file",
+					"raw": "localhost:8080/api/file",
 					"host": [
 						"localhost"
 					],
-					"port": "3000",
+					"port": "8080",
 					"path": [
 						"api",
 						"file"
@@ -287,11 +298,11 @@
 					}
 				},
 				"url": {
-					"raw": "localhost:3000/api/files",
+					"raw": "localhost:8080/api/files",
 					"host": [
 						"localhost"
 					],
-					"port": "3000",
+					"port": "8080",
 					"path": [
 						"api",
 						"files"
