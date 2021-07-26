@@ -63,20 +63,19 @@ func (e *sqsEventEmitter) setup(config Config) error {
 }
 
 func (e *sqsEventEmitter) createQueue(config Config) error {
-	isFifoQueue := "false"
-	if e.isFifo {
-		isFifoQueue = "true"
-	}
-
-	output, err := e.svc.CreateQueue(&sqs.CreateQueueInput{
+	createQueueInput := &sqs.CreateQueueInput{
 		QueueName: aws.String(config.QueueName),
 		Attributes: map[string]*string{
-			"FifoQueue":                 aws.String(isFifoQueue),
 			"ContentBasedDeduplication": aws.String(config.ContentBasedDeduplication),
 			"DelaySeconds":              aws.String(config.DelaySeconds),
 			"MessageRetentionPeriod":    aws.String(config.MessageRetentionPeriod),
 		},
-	})
+	}
+	if e.isFifo {
+		createQueueInput.Attributes["FifoQueue"] = aws.String("true")
+	}
+
+	output, err := e.svc.CreateQueue(createQueueInput)
 	if err != nil {
 		return err
 	}
