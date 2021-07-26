@@ -4,10 +4,7 @@ import (
 	"fmt"
 	"github.com/bogdanrat/web-server/service/queue"
 	"github.com/streadway/amqp"
-)
-
-const (
-	eventNameHeader = "x-event-name"
+	"log"
 )
 
 type amqpEventListener struct {
@@ -44,7 +41,7 @@ func (l *amqpEventListener) Listen(eventNames ...string) (<-chan queue.Event, <-
 	}
 
 	for _, eventName := range eventNames {
-		// QueueBind binds an exchange to a queue so that publishings to the exchange will be routed to the queue
+		// QueueBind binds an exchange to a queue so that publishing to the exchange will be routed to the queue
 		// when the publishing routing key matches the binding routing key
 		if err := channel.QueueBind(l.queue, eventName, l.exchange, false, nil); err != nil {
 			return nil, nil, err
@@ -71,30 +68,36 @@ func (l *amqpEventListener) Listen(eventNames ...string) (<-chan queue.Event, <-
 	go func() {
 		for message := range messages {
 			// use the x-event-name header to map message back to their respective struct types
-			rawEventName, ok := message.Headers[eventNameHeader]
+			rawEventName, ok := message.Headers[queue.EventNameHeader]
 			if !ok {
-				errors <- fmt.Errorf("message did not contain %s header", eventNameHeader)
+				errors <- fmt.Errorf("message did not contain %s header", queue.EventNameHeader)
 				// Nack() negatively acknowledge the delivery of message(s)
 				// This method must not be used to select or requeue messages the client wishes not to handle,
 				// rather it is to inform the server that the client is incapable of handling this message at this time.
 
 				// When requeue is true, request the server to deliver this message to a different consumer.
 				// If it is not possible or requeue is false, the message will be dropped or delivered to a server configured dead-letter queue.
-				message.Nack(false, false)
+				if err := message.Nack(false, false); err != nil {
+					log.Printf("Error Nack: %s\n", err)
+				}
 				continue
 			}
 
 			eventName, ok := rawEventName.(string)
 			if !ok {
-				errors <- fmt.Errorf("header %s did not contain string value", eventNameHeader)
-				message.Nack(false, false)
+				errors <- fmt.Errorf("header %s did not contain string value", queue.EventNameHeader)
+				if err := message.Nack(false, false); err != nil {
+					log.Printf("Error Nack: %s\n", err)
+				}
 				continue
 			}
 
 			event, err := l.mapper.MapEvent(eventName, message.Body)
 			if err != nil {
 				errors <- fmt.Errorf("could not unmarshal event %s: %s", eventName, err)
-				message.Nack(false, false)
+				if err := message.Nack(false, false); err != nil {
+					log.Printf("Error Nack: %s\n", err)
+				}
 			}
 
 			events <- event

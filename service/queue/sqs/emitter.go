@@ -7,6 +7,7 @@ import (
 	"github.com/aws/aws-sdk-go/aws/awserr"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/sqs"
+	"github.com/bogdanrat/web-server/contracts/models"
 	"github.com/bogdanrat/web-server/service/queue"
 	"log"
 	"strings"
@@ -92,7 +93,7 @@ func (e *sqsEventEmitter) Emit(event queue.Event) error {
 
 	var messageGroupID *string
 	switch event.Name() {
-	case "userSignUp":
+	case models.UserSignUpEventName:
 		messageGroupID = aws.String(MessageGroupIDAuth)
 	}
 
@@ -100,7 +101,7 @@ func (e *sqsEventEmitter) Emit(event queue.Event) error {
 		QueueUrl:    e.queueUrl,
 		MessageBody: aws.String(string(jsonBody)),
 		MessageAttributes: map[string]*sqs.MessageAttributeValue{
-			"event_name": {
+			queue.EventNameHeader: {
 				DataType:    aws.String("String"),
 				StringValue: aws.String(event.Name()),
 			},

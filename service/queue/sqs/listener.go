@@ -90,13 +90,13 @@ func (l *sqsEventListener) receiveMessage(events chan queue.Event, errors chan e
 
 	foundEvent := false
 	for _, message := range output.Messages {
-		attributeValue, ok := message.MessageAttributes["event_name"]
+		attributeValue, ok := message.MessageAttributes[queue.EventNameHeader]
 		if !ok {
 			continue
 		}
 		messageGroupID, ok := message.Attributes[sqs.MessageSystemAttributeNameMessageGroupId]
 		if ok && strings.EqualFold(*messageGroupID, MessageGroupIDAuth) {
-
+			// have a fan-out based on message group id, for example
 		}
 
 		eventName := aws.StringValue(attributeValue.StringValue)
