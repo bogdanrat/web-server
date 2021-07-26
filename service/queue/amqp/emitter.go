@@ -85,7 +85,7 @@ func (e *amqpEventEmitter) Emit(event queue.Event) error {
 	}
 
 	message := amqp.Publishing{
-		Headers:     amqp.Table{eventNameHeader: event.Name()},
+		Headers:     amqp.Table{queue.EventNameHeader: event.Name()},
 		ContentType: "application/json",
 		Body:        jsonBody,
 	}
