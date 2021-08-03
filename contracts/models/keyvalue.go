@@ -1,8 +1,8 @@
 package models
 
 type KeyValuePair struct {
-	Key   string
-	Value interface{}
+	Key   string      `json:"key"`
+	Value interface{} `json:"value"`
 }
 
 type GetPairRequest struct {
@@ -14,9 +14,8 @@ type GetPairResponse struct {
 	Value string `form:"value" json:"value"`
 }
 
-type PutPairRequest struct {
-	Key   string `form:"key"`
-	Value string `form:"value"`
+type PostPairRequest struct {
+	Pairs []*KeyValuePair
 }
 
 type DeletePairRequest struct {
