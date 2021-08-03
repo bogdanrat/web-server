@@ -63,8 +63,12 @@ type MessageBrokerConfig struct {
 }
 
 type AWSConfig struct {
-	Region            string
-	DatabaseSecretARN string
+	Region                  string
+	DatabaseSecretARN       string
+	DynamoDBRoleARN         string
+	DynamoDBRoleSessionName string
+	DynamoDBRCU             int64
+	DynamoDBWCU             int64
 }
 
 type ServicesConfig struct {
@@ -75,6 +79,16 @@ type ServicesConfig struct {
 type PrometheusConfig struct {
 	Enabled     bool
 	MetricsPath string
+}
+
+type KeyValuePair struct {
+	Key   string
+	Value string
+}
+type I18NConfig struct {
+	TableName  string
+	Seed       bool
+	SeedValues []*KeyValuePair
 }
 
 type GRPCConfig struct {
@@ -99,6 +113,7 @@ type Config struct {
 	AWS            AWSConfig
 	Services       ServicesConfig
 	Prometheus     PrometheusConfig
+	I18N           I18NConfig
 	TemplateCache  map[string]*template.Template
 }
 

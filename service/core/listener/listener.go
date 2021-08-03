@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"fmt"
 	"github.com/bogdanrat/web-server/contracts/models"
+	"github.com/bogdanrat/web-server/service/core/i18n"
 	"github.com/bogdanrat/web-server/service/core/mail"
 	"github.com/bogdanrat/web-server/service/queue"
 	"log"
@@ -11,11 +12,13 @@ import (
 
 type EventProcessor struct {
 	EventListener queue.EventListener
+	Translator    i18n.Translator
 }
 
-func NewEventProcessor(listener queue.EventListener) *EventProcessor {
+func NewEventProcessor(listener queue.EventListener, translator i18n.Translator) *EventProcessor {
 	return &EventProcessor{
 		EventListener: listener,
+		Translator:    translator,
 	}
 }
 
@@ -51,18 +54,19 @@ func (p *EventProcessor) handleUserSignUpEvent(event *models.UserSignUpEvent) {
 		return
 	}
 
-	// TODO: take email subject & body from an I18N ket-value store in DynamoDB
-
 	email := &mail.Message{
 		To:      user.Email,
-		Subject: "Welcome",
+		Subject: p.Translator.Do(i18n.EmailWelcomeSubjectKey, nil),
 	}
 
+	emailSubstitutions := map[string]string{
+		"username": user.Name,
+	}
 	buffer := bytes.Buffer{}
-	buffer.WriteString(fmt.Sprintf("Welcome to Web Server App %s!\n", user.Name))
+	buffer.WriteString(p.Translator.Do(i18n.EmailWelcomeBodyKey, emailSubstitutions))
 
 	if event.QrImage != nil {
-		buffer.WriteString("Please scan the attached QR Code in Google Authenticator and use the generated codes to login in.\n")
+		buffer.WriteString(p.Translator.Do(i18n.EmailWelcomeBodyMFAKey, nil))
 		email.Attachment = &mail.Attachment{
 			Name: "Personal QR Code",
 			Data: event.QrImage,

@@ -43,7 +43,11 @@
   },
   "AWS": {
     "Region": "eu-central-1",
-    "DatabaseSecretARN": "arn:aws:secretsmanager:eu-central-1:820136616739:secret:webserver/database-yZwIPt"
+    "DatabaseSecretARN": "arn:aws:secretsmanager:eu-central-1:820136616739:secret:webserver/database-yZwIPt",
+    "DynamoDBRoleARN": "arn:aws:iam::820136616739:role/DynamoDBFullAccessRole",
+    "DynamoDBRoleSessionName": "CoreService-DynamoDBAccess",
+    "DynamoDBRCU": 1,
+    "DynamoDBWCU": 1
   },
   "Services": {
     "Auth": {
@@ -70,5 +74,23 @@
   "Prometheus": {
     "Enabled": true,
     "MetricsPath": "/monitor/core-service"
+  },
+  "I18N": {
+    "TableName": "i18n",
+    "Seed": true,
+    "SeedValues": [
+      {
+        "Key": "EMAIL_WELCOME_SUBJECT",
+        "Value": "Welcome"
+      },
+      {
+        "Key": "EMAIL_WELCOME_BODY",
+        "Value": "Welcome to Web Server App POC {{username}}!\n"
+      },
+      {
+        "Key": "EMAIL_WELCOME_BODY_MFA",
+        "Value": "Please scan the attached QR Code in Google Authenticator and use the generated codes to login in."
+      }
+    ]
   }
 }

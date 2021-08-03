@@ -9,6 +9,7 @@ import (
 	"github.com/bogdanrat/web-server/contracts/proto/storage_service"
 	"github.com/bogdanrat/web-server/service/core/cache"
 	"github.com/bogdanrat/web-server/service/core/config"
+	"github.com/bogdanrat/web-server/service/core/i18n/dynamo"
 	"github.com/bogdanrat/web-server/service/core/listener"
 	"github.com/bogdanrat/web-server/service/core/mail"
 	"github.com/bogdanrat/web-server/service/core/render"
@@ -90,13 +91,20 @@ func Init() error {
 	log.Println("Storage Service GRPC connection established.")
 	storageClient := storage_service.NewStorageClient(conn)
 
+	// init emitter & listener
 	eventEmitter, eventListener, err := initMessageBroker(config.AppConfig.MessageBroker)
 	if err != nil {
 		return fmt.Errorf("could not initialize %s message broker: %s", config.AppConfig.MessageBroker.Broker, err)
 	}
 	log.Printf("Message Broker %s initialized.\n", config.AppConfig.MessageBroker.Broker)
 
-	processor := listener.NewEventProcessor(eventListener)
+	// init i18n
+	translator, err := dynamo.NewTranslator()
+	if err != nil {
+		return err
+	}
+
+	processor := listener.NewEventProcessor(eventListener, translator)
 	go func() {
 		err := processor.ProcessEvent()
 		if err != nil {
