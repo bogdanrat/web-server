@@ -19,4 +19,5 @@ type KeyValue interface {
 	Put(*models.KeyValuePair) error
 	Delete(key string) error
 	GetAll() ([]*models.KeyValuePair, error)
+	PutMany([]*models.KeyValuePair) error
 }

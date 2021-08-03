@@ -118,7 +118,7 @@ func Init() error {
 		}
 	}()
 
-	httpRouter = router.New(postgresDB, redisCache, authClient, storageClient, eventEmitter)
+	httpRouter = router.New(postgresDB, redisCache, keyValueStore, authClient, storageClient, eventEmitter)
 
 	redisCache.Subscribe("self", cache.HandleAuthServiceMessages, config.AppConfig.Authentication.Channel)
 

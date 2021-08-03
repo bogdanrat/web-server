@@ -7,6 +7,7 @@ import (
 	"github.com/bogdanrat/web-server/service/core/config"
 	"github.com/bogdanrat/web-server/service/core/handler/authentication"
 	"github.com/bogdanrat/web-server/service/core/handler/file"
+	storeHandler "github.com/bogdanrat/web-server/service/core/handler/store"
 	"github.com/bogdanrat/web-server/service/core/handler/users"
 	"github.com/bogdanrat/web-server/service/core/middleware"
 	"github.com/bogdanrat/web-server/service/core/store"
@@ -21,7 +22,7 @@ import (
 	"net/http"
 )
 
-func New(repo store.DatabaseRepository, cacheClient cache.Client, authClient pb.AuthClient, storageClient storage_service.StorageClient, eventEmitter queue.EventEmitter) http.Handler {
+func New(repo store.DatabaseRepository, cacheClient cache.Client, keyValueStore store.KeyValue, authClient pb.AuthClient, storageClient storage_service.StorageClient, eventEmitter queue.EventEmitter) http.Handler {
 	router := gin.Default()
 	gin.SetMode(config.AppConfig.Server.GinMode)
 	router.Use(cors.Default())
@@ -65,6 +66,8 @@ func New(repo store.DatabaseRepository, cacheClient cache.Client, authClient pb.
 		CallOptions: authOptions,
 	})
 
+	storeHandler := storeHandler.NewHandler(keyValueStore, eventEmitter)
+
 	// public endpoints
 	router.GET("/", func(c *gin.Context) {
 		c.Status(http.StatusOK)
@@ -88,6 +91,11 @@ func New(repo store.DatabaseRepository, cacheClient cache.Client, authClient pb.
 	apiGroup.DELETE("/file", fileHandler.DeleteFile)
 	apiGroup.DELETE("/files", fileHandler.DeleteFiles)
 	apiGroup.GET("/files/csv", fileHandler.GetFilesCSV)
+
+	apiGroup.GET("/store/pair", storeHandler.GetPair)
+	apiGroup.GET("/store/pairs", storeHandler.GetPairs)
+	apiGroup.POST("/store/pairs", storeHandler.PostPairs)
+	apiGroup.DELETE("/store/pair", storeHandler.DeletePair)
 
 	return router
 }

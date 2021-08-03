@@ -4,6 +4,7 @@ import (
 	"flag"
 	"fmt"
 	"github.com/aws/aws-sdk-go/aws/session"
+	"github.com/bogdanrat/web-server/contracts/models"
 	"github.com/spf13/viper"
 	"html/template"
 	"path"
@@ -81,14 +82,10 @@ type PrometheusConfig struct {
 	MetricsPath string
 }
 
-type KeyValuePair struct {
-	Key   string
-	Value string
-}
 type I18NConfig struct {
 	TableName  string
 	Seed       bool
-	SeedValues []*KeyValuePair
+	SeedValues []*models.KeyValuePair
 }
 
 type GRPCConfig struct {

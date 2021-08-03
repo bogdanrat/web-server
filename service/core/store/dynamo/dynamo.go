@@ -149,6 +149,10 @@ func (s *KeyValueStore) GetAll() ([]*models.KeyValuePair, error) {
 	return keyValuePairs, nil
 }
 
+func (s *KeyValueStore) PutMany(pairs []*models.KeyValuePair) error {
+	return s.writeBatch(pairs)
+}
+
 func (s *KeyValueStore) setup() error {
 	exists, err := s.tableExists(s.tableName)
 	if err != nil {
@@ -163,7 +167,7 @@ func (s *KeyValueStore) setup() error {
 		log.Printf("Created I18N Table: %s\n", *tableDescription.TableArn)
 
 		if config.AppConfig.I18N.Seed {
-			_, err := s.seed(s.tableName)
+			err = s.seed()
 			if err != nil {
 				log.Println(err)
 			}
@@ -230,7 +234,7 @@ func (s *KeyValueStore) createTable(tableName string) (*dynamodb.TableDescriptio
 	return response.TableDescription, nil
 }
 
-func (s *KeyValueStore) seed(tableName string) (*dynamodb.BatchWriteItemOutput, error) {
+func (s *KeyValueStore) seed() error {
 	ticker := time.NewTicker(2 * time.Second)
 	waitChan := make(chan bool)
 	var active bool
@@ -244,7 +248,7 @@ func (s *KeyValueStore) seed(tableName string) (*dynamodb.BatchWriteItemOutput, 
 		for {
 			select {
 			case <-ticker.C:
-				active, routineErr = s.checkTableStatus(tableName, tableStatusActive)
+				active, routineErr = s.checkTableStatus(s.tableName, tableStatusActive)
 				if routineErr != nil || active {
 					return
 				}
@@ -259,38 +263,48 @@ func (s *KeyValueStore) seed(tableName string) (*dynamodb.BatchWriteItemOutput, 
 	log.Println("Waiting for table to become active...")
 	<-waitChan
 	if routineErr != nil {
-		return nil, routineErr
+		return routineErr
 	}
 	if !active {
-		return nil, fmt.Errorf("table did not become active in due time")
+		return fmt.Errorf("table did not become active in due time")
 	}
 
+	log.Println("Seeding table...")
+
+	err := s.writeBatch(config.AppConfig.I18N.SeedValues)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (s *KeyValueStore) writeBatch(batch []*models.KeyValuePair) error {
 	input := &dynamodb.BatchWriteItemInput{
 		RequestItems: make(map[string][]*dynamodb.WriteRequest),
 	}
 
-	for _, seedValue := range config.AppConfig.I18N.SeedValues {
-		attributeValues, err := dynamodbattribute.MarshalMap(seedValue)
-		if err != nil {
-			return nil, err
-		}
-
-		input.RequestItems[tableName] = append(input.RequestItems[tableName],
+	for _, item := range batch {
+		input.RequestItems[s.tableName] = append(input.RequestItems[s.tableName],
 			&dynamodb.WriteRequest{
 				PutRequest: &dynamodb.PutRequest{
-					Item: attributeValues,
+					Item: map[string]*dynamodb.AttributeValue{
+						store.KeyIdentifier: {
+							S: aws.String(item.Key),
+						},
+						store.ValueIdentifier: {
+							S: aws.String(item.Value.(string)),
+						},
+					},
 				},
 			},
 		)
 	}
 
-	log.Println("Seeding table...")
-	result, err := s.svc.BatchWriteItem(input)
+	_, err := s.svc.BatchWriteItem(input)
 	if err != nil {
-		return nil, err
+		return err
 	}
-
-	return result, nil
+	return nil
 }
 
 // checkTableStatus checks whether a given table has a given status (CREATING, ACTIVE...)
