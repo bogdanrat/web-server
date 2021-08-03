@@ -6,7 +6,12 @@ type KeyValuePair struct {
 }
 
 type GetPairRequest struct {
-	Key string `form:"key"`
+	Key string `form:"key" json:"key"`
+}
+
+type GetPairResponse struct {
+	Key   string `form:"key" json:"key"`
+	Value string `form:"value" json:"value"`
 }
 
 type PutPairRequest struct {
