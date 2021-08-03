@@ -19,7 +19,7 @@ type PostPairRequest struct {
 }
 
 type DeletePairRequest struct {
-	Key string `form:"key"`
+	Key string `form:"key" json:"key"`
 }
 
 type GetAllPairsRequest struct {
