@@ -11,7 +11,7 @@ import (
 	"github.com/bogdanrat/web-server/service/core/forms"
 	"github.com/bogdanrat/web-server/service/core/lib"
 	"github.com/bogdanrat/web-server/service/core/render"
-	"github.com/bogdanrat/web-server/service/core/repository"
+	"github.com/bogdanrat/web-server/service/core/store"
 	"github.com/bogdanrat/web-server/service/core/util"
 	"github.com/bogdanrat/web-server/service/queue"
 	"github.com/gin-gonic/gin"
@@ -29,13 +29,13 @@ type RPCConfig struct {
 }
 
 type Handler struct {
-	Repository   repository.DatabaseRepository
+	Repository   store.DatabaseRepository
 	Cache        cache.Client
 	AuthService  *RPCConfig
 	EventEmitter queue.EventEmitter
 }
 
-func NewHandler(repo repository.DatabaseRepository, cacheClient cache.Client, authConfig *RPCConfig, eventEmitter queue.EventEmitter) *Handler {
+func NewHandler(repo store.DatabaseRepository, cacheClient cache.Client, authConfig *RPCConfig, eventEmitter queue.EventEmitter) *Handler {
 	return &Handler{
 		Repository:   repo,
 		Cache:        cacheClient,

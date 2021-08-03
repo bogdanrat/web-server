@@ -10,6 +10,7 @@
         button {
             cursor: pointer;
         }
+
         input[type=submit] {
             cursor: pointer;
         }
@@ -37,6 +38,9 @@
     </li>
     {{end}}
 </ul>
+<button onclick="downloadCSV()" style="background-color: darkcyan">Download CSV</button>
+<br>
+<hr>
 <button onclick="deleteAll()" style="background-color: red">Delete All</button>
 
 <script>
@@ -66,6 +70,43 @@
         }).then(result => {
             if (result.status === 200) {
                 location.reload();
+            }
+        }).catch(error => console.log);
+    }
+
+    function downloadCSV() {
+        const url = "/api/files/csv";
+        let fileName = "unnamed.csv"
+
+        fetch(url, {
+            credentials: "same-origin",
+            mode: "same-origin",
+            method: "GET",
+            headers: {"Content-Type": "application/json"}
+        }).then(response => {
+            const contentDisposition = response.headers.get('content-disposition');
+            if (contentDisposition) {
+                const fileNameRegex = new RegExp(`(filename=)(.*)`, 'g');
+                const match = contentDisposition.match(fileNameRegex);
+                if (match && match.length) {
+                    fileName = match[0].split("=")[1];
+                }
+            }
+
+            return response.blob()
+        }).then(body => {
+            const a = document.createElement('a');
+            const objectURL = window.URL.createObjectURL(body);
+
+            try {
+                a.style.display = 'none';
+                a.href = objectURL;
+                a.download = fileName;
+                document.body.appendChild(a);
+                a.click();
+            } finally {
+                window.URL.revokeObjectURL(objectURL);
+                document.body.removeChild(a);
             }
         }).catch(error => console.log);
     }

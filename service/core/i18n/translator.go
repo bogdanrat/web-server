@@ -8,4 +8,5 @@ const (
 
 type Translator interface {
 	Do(key string, substitutions map[string]string) string
+	Reload() error
 }

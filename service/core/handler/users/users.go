@@ -2,16 +2,16 @@ package users
 
 import (
 	"github.com/bogdanrat/web-server/service/core/lib"
-	"github.com/bogdanrat/web-server/service/core/repository"
+	"github.com/bogdanrat/web-server/service/core/store"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )
 
 type Handler struct {
-	Repository repository.DatabaseRepository
+	Repository store.DatabaseRepository
 }
 
-func NewHandler(repo repository.DatabaseRepository) *Handler {
+func NewHandler(repo store.DatabaseRepository) *Handler {
 	return &Handler{
 		Repository: repo,
 	}

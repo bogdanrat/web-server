@@ -9,7 +9,7 @@ import (
 	"github.com/bogdanrat/web-server/service/core/handler/file"
 	"github.com/bogdanrat/web-server/service/core/handler/users"
 	"github.com/bogdanrat/web-server/service/core/middleware"
-	"github.com/bogdanrat/web-server/service/core/repository"
+	"github.com/bogdanrat/web-server/service/core/store"
 	"github.com/bogdanrat/web-server/service/monitor"
 	"github.com/bogdanrat/web-server/service/queue"
 	"github.com/gin-contrib/cors"
@@ -21,7 +21,7 @@ import (
 	"net/http"
 )
 
-func New(repo repository.DatabaseRepository, cacheClient cache.Client, authClient pb.AuthClient, storageClient storage_service.StorageClient, eventEmitter queue.EventEmitter) http.Handler {
+func New(repo store.DatabaseRepository, cacheClient cache.Client, authClient pb.AuthClient, storageClient storage_service.StorageClient, eventEmitter queue.EventEmitter) http.Handler {
 	router := gin.Default()
 	gin.SetMode(config.AppConfig.Server.GinMode)
 	router.Use(cors.Default())
@@ -87,6 +87,7 @@ func New(repo repository.DatabaseRepository, cacheClient cache.Client, authClien
 	apiGroup.POST("/files", fileHandler.PostFiles)
 	apiGroup.DELETE("/file", fileHandler.DeleteFile)
 	apiGroup.DELETE("/files", fileHandler.DeleteFiles)
+	apiGroup.GET("/files/csv", fileHandler.GetFilesCSV)
 
 	return router
 }

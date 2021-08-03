@@ -9,12 +9,13 @@ import (
 	"github.com/bogdanrat/web-server/contracts/proto/storage_service"
 	"github.com/bogdanrat/web-server/service/core/cache"
 	"github.com/bogdanrat/web-server/service/core/config"
-	"github.com/bogdanrat/web-server/service/core/i18n/dynamo"
+	"github.com/bogdanrat/web-server/service/core/i18n/kvtranslator"
 	"github.com/bogdanrat/web-server/service/core/listener"
 	"github.com/bogdanrat/web-server/service/core/mail"
 	"github.com/bogdanrat/web-server/service/core/render"
-	"github.com/bogdanrat/web-server/service/core/repository/postgres"
 	"github.com/bogdanrat/web-server/service/core/router"
+	"github.com/bogdanrat/web-server/service/core/store/dynamo"
+	"github.com/bogdanrat/web-server/service/core/store/postgres"
 	"github.com/bogdanrat/web-server/service/queue"
 	amqp_queue "github.com/bogdanrat/web-server/service/queue/amqp"
 	sqs_queue "github.com/bogdanrat/web-server/service/queue/sqs"
@@ -98,8 +99,13 @@ func Init() error {
 	}
 	log.Printf("Message Broker %s initialized.\n", config.AppConfig.MessageBroker.Broker)
 
+	// init store
+	keyValueStore, err := dynamo.NewStore(config.AppConfig.I18N.TableName)
+	if err != nil {
+		return err
+	}
 	// init i18n
-	translator, err := dynamo.NewTranslator()
+	translator, err := kvtranslator.New(keyValueStore)
 	if err != nil {
 		return err
 	}

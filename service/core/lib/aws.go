@@ -5,6 +5,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/aws/aws-sdk-go/aws"
+	"github.com/aws/aws-sdk-go/aws/credentials"
+	"github.com/aws/aws-sdk-go/aws/credentials/stscreds"
 	"github.com/aws/aws-sdk-go/service/secretsmanager"
 	"github.com/bogdanrat/web-server/service/core/common"
 	"github.com/bogdanrat/web-server/service/core/config"
@@ -57,4 +59,11 @@ func GetDatabaseSecrets() (*common.DatabaseSecrets, error) {
 	}
 
 	return secrets, nil
+}
+
+func GetRoleCredentials(roleARN, externalID string) (*credentials.Credentials, error) {
+	creds := stscreds.NewCredentials(config.AWSSession, roleARN, func(provider *stscreds.AssumeRoleProvider) {
+		provider.ExternalID = aws.String(externalID)
+	})
+	return creds, nil
 }
