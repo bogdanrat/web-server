@@ -87,7 +87,7 @@ func setup() (*dynamodb.DynamoDB, error) {
 
 func getCredentials() (*credentials.Credentials, error) {
 	creds := stscreds.NewCredentials(config.AWSSession, config.AppConfig.AWS.DynamoDBRoleARN, func(provider *stscreds.AssumeRoleProvider) {
-		provider.ExternalID = aws.String(os.Getenv("DYNAMO_DB_ROLE_EXTERNAL_ID"))
+		provider.ExternalID = aws.String(os.Getenv("DYNAMODB_ROLE_EXTERNAL_ID"))
 	})
 
 	return creds, nil
