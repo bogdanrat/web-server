@@ -3,10 +3,10 @@ package models
 import "time"
 
 type GetFilesResponse struct {
-	Key          string     `json:"key" csv:"Key"`
-	LastModified *time.Time `json:"last_modified,omitempty" csv:"Last modified"`
-	Size         uint64     `json:"size" csv:"Size"`
-	StorageClass string     `json:"storage_class" csv:"Storage Class"`
+	Key          string     `json:"key" csv:"Key" excel:"Key"`
+	LastModified *time.Time `json:"last_modified,omitempty" csv:"Last modified" excel:"Last modified"`
+	Size         uint64     `json:"size" csv:"Size" excel:"Size"`
+	StorageClass string     `json:"storage_class" csv:"Storage Class" excel:"Storage Class"`
 }
 
 type DeleteFileRequest struct {
