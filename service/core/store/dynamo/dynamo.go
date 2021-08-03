@@ -27,7 +27,7 @@ type KeyValueStore struct {
 }
 
 func NewStore(tableName string) (store.KeyValue, error) {
-	creds, err := lib.GetRoleCredentials(config.AppConfig.AWS.DynamoDBRoleARN, os.Getenv("DYNAMODB_ROLE_EXTERNAL_ID"))
+	creds, err := lib.GetRoleCredentials(config.AppConfig.AWS.DynamoDB.RoleARN, os.Getenv("DYNAMODB_ROLE_EXTERNAL_ID"))
 	if err != nil {
 		return nil, err
 	}
@@ -39,14 +39,6 @@ func NewStore(tableName string) (store.KeyValue, error) {
 
 	if err = keyValueStore.setup(); err != nil {
 		return nil, err
-	}
-
-	err = keyValueStore.Put(&models.KeyValuePair{
-		Key:   "test",
-		Value: "message",
-	})
-	if err != nil {
-		log.Println(err)
 	}
 
 	return keyValueStore, nil
@@ -167,7 +159,7 @@ func (s *KeyValueStore) setup() error {
 		log.Printf("Created I18N Table: %s\n", *tableDescription.TableArn)
 
 		if config.AppConfig.I18N.Seed {
-			err = s.seed()
+			err = s.seedTable()
 			if err != nil {
 				log.Println(err)
 			}
@@ -221,8 +213,8 @@ func (s *KeyValueStore) createTable(tableName string) (*dynamodb.TableDescriptio
 			},
 		},
 		ProvisionedThroughput: &dynamodb.ProvisionedThroughput{
-			ReadCapacityUnits:  aws.Int64(config.AppConfig.AWS.DynamoDBRCU),
-			WriteCapacityUnits: aws.Int64(config.AppConfig.AWS.DynamoDBWCU),
+			ReadCapacityUnits:  aws.Int64(config.AppConfig.AWS.DynamoDB.RCU),
+			WriteCapacityUnits: aws.Int64(config.AppConfig.AWS.DynamoDB.WCU),
 		},
 	}
 
@@ -234,7 +226,7 @@ func (s *KeyValueStore) createTable(tableName string) (*dynamodb.TableDescriptio
 	return response.TableDescription, nil
 }
 
-func (s *KeyValueStore) seed() error {
+func (s *KeyValueStore) seedTable() error {
 	ticker := time.NewTicker(2 * time.Second)
 	waitChan := make(chan bool)
 	var active bool

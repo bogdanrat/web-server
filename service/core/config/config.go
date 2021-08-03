@@ -63,13 +63,17 @@ type MessageBrokerConfig struct {
 	SQS      SQSConfig
 }
 
+type DynamoDBConfig struct {
+	RoleARN         string
+	RoleSessionName string
+	RCU             int64
+	WCU             int64
+}
+
 type AWSConfig struct {
-	Region                  string
-	DatabaseSecretARN       string
-	DynamoDBRoleARN         string
-	DynamoDBRoleSessionName string
-	DynamoDBRCU             int64
-	DynamoDBWCU             int64
+	Region            string
+	DatabaseSecretARN string
+	DynamoDB          DynamoDBConfig
 }
 
 type ServicesConfig struct {

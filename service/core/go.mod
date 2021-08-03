@@ -5,9 +5,9 @@ go 1.16
 require (
 	cloud.google.com/go v0.89.0 // indirect
 	github.com/aws/aws-sdk-go v1.40.13
-	github.com/bogdanrat/web-server/contracts v0.0.0-20210803165251-8976cd51b841
-	github.com/bogdanrat/web-server/service/monitor v0.0.0-20210803165251-8976cd51b841
-	github.com/bogdanrat/web-server/service/queue v0.0.0-20210803165251-8976cd51b841
+	github.com/bogdanrat/web-server/contracts v0.0.0-20210803173554-07da162fcd1b
+	github.com/bogdanrat/web-server/service/monitor v0.0.0-20210803173554-07da162fcd1b
+	github.com/bogdanrat/web-server/service/queue v0.0.0-20210803173554-07da162fcd1b
 	github.com/gin-contrib/cors v1.3.1
 	github.com/gin-gonic/gin v1.7.3
 	github.com/go-playground/validator/v10 v10.8.0 // indirect

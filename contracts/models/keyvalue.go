@@ -3,7 +3,6 @@ package models
 type KeyValuePair struct {
 	Key   string      `json:"key"`
 	Value interface{} `json:"value"`
-	TTL   *string     `json:"ttl,omitempty"`
 }
 
 type GetPairRequest struct {

@@ -44,10 +44,12 @@
   "AWS": {
     "Region": "eu-central-1",
     "DatabaseSecretARN": "arn:aws:secretsmanager:eu-central-1:820136616739:secret:webserver/database-yZwIPt",
-    "DynamoDBRoleARN": "arn:aws:iam::820136616739:role/DynamoDBFullAccessRole",
-    "DynamoDBRoleSessionName": "CoreService-DynamoDBAccess",
-    "DynamoDBRCU": 1,
-    "DynamoDBWCU": 1
+    "DynamoDB": {
+      "RoleARN": "arn:aws:iam::820136616739:role/DynamoDBFullAccessRole",
+      "RoleSessionName": "CoreService-DynamoDBAccess",
+      "RCU": 1,
+      "WCU": 1
+    }
   },
   "Services": {
     "Auth": {
