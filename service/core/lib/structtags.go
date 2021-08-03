@@ -20,22 +20,22 @@ func GetStructTagValues(structPtr interface{}, tag string) []string {
 }
 
 func getTags(structPtr interface{}, tag string) []string {
-	csvTagValues := make([]string, 0)
+	tagValues := make([]string, 0)
 
 	ptrValue := reflect.ValueOf(structPtr)
 	ptrType := ptrValue.Elem().Type()
 
 	for i := 0; i < ptrType.NumField(); i++ {
 		field := ptrType.Field(i)
-		csvTag := field.Tag.Get(tag)
+		fieldTag := field.Tag.Get(tag)
 
 		// skip fields marked with "-" tag
-		if csvTag != "" && csvTag != "-" {
-			csvTagValues = append(csvTagValues, csvTag)
+		if fieldTag != "" && fieldTag != "-" {
+			tagValues = append(tagValues, fieldTag)
 		}
 	}
 
-	return csvTagValues
+	return tagValues
 }
 
 func isPointer(obj interface{}) bool {

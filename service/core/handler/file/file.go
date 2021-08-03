@@ -386,3 +386,50 @@ func writeFilesAsCSV(c *gin.Context, csvHeaders []string, files []*models.GetFil
 
 	c.Status(http.StatusOK)
 }
+
+func (h *Handler) GetFilesExcel(c *gin.Context) {
+	deadline := time.Now().Add(time.Millisecond * time.Duration(h.RPC.Deadline))
+	ctx, cancel := context.WithDeadline(context.Background(), deadline)
+	defer cancel()
+
+	excelHeaders := lib.GetStructTagValues(&models.GetFilesResponse{}, excelTag)
+	if len(excelHeaders) == 0 {
+		jsonErr := models.NewInternalServerError("could not get excel tags for file model")
+		c.JSON(jsonErr.StatusCode, jsonErr)
+		return
+	}
+
+	stream, err := h.RPC.Client.GetFiles(ctx, &storage_service.GetFilesRequest{})
+	if err != nil {
+		if jsonErr := lib.HandleRPCError(err); err != nil {
+			c.JSON(jsonErr.StatusCode, jsonErr)
+			return
+		}
+	}
+
+	files, jsonErr := h.getAllFiles(stream)
+	if jsonErr != nil {
+		c.JSON(jsonErr.StatusCode, jsonErr)
+		return
+	}
+
+	file, err := WriteFilesToExcel(files, excelHeaders)
+	if err != nil {
+		jsonErr = models.NewInternalServerError("could not write excel file")
+		c.JSON(jsonErr.StatusCode, jsonErr)
+		return
+	}
+
+	_ = file.SaveAs("/var/export.xlsx")
+	buf, err := file.WriteToBuffer()
+	if err != nil {
+		jsonErr = models.NewInternalServerError("could not write excel file")
+		c.JSON(jsonErr.StatusCode, jsonErr)
+		return
+	}
+
+	c.Header("Content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=utf-8")
+	c.Header("Content-Disposition", fmt.Sprintf(`attachment; filename=%s`, excelFileName))
+	c.Writer.WriteHeader(http.StatusOK)
+	_, _ = c.Writer.Write(buf.Bytes())
+}

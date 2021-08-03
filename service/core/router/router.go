@@ -91,6 +91,7 @@ func New(repo store.DatabaseRepository, cacheClient cache.Client, keyValueStore 
 	apiGroup.DELETE("/file", fileHandler.DeleteFile)
 	apiGroup.DELETE("/files", fileHandler.DeleteFiles)
 	apiGroup.GET("/files/csv", fileHandler.GetFilesCSV)
+	apiGroup.GET("/files/excel", fileHandler.GetFilesExcel)
 
 	apiGroup.GET("/store/pair", storeHandler.GetPair)
 	apiGroup.GET("/store/pairs", storeHandler.GetPairs)
