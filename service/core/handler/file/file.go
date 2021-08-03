@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"bytes"
 	"context"
+	"encoding/csv"
 	"encoding/json"
 	"fmt"
 	"github.com/bogdanrat/web-server/contracts/models"
@@ -322,6 +323,65 @@ func (h *Handler) DeleteFiles(c *gin.Context) {
 			c.JSON(jsonErr.StatusCode, jsonErr)
 			return
 		}
+	}
+
+	c.Status(http.StatusOK)
+}
+
+func (h *Handler) GetFilesCSV(c *gin.Context) {
+	deadline := time.Now().Add(time.Millisecond * time.Duration(h.RPC.Deadline))
+	ctx, cancel := context.WithDeadline(context.Background(), deadline)
+	defer cancel()
+
+	csvHeaders := lib.GetStructTagValues(&models.GetFilesResponse{}, csvTag)
+	if csvHeaders == nil {
+		jsonErr := models.NewInternalServerError("could not get csv tags for file model")
+		c.JSON(jsonErr.StatusCode, jsonErr)
+		return
+	}
+
+	stream, err := h.RPC.Client.GetFiles(ctx, &storage_service.GetFilesRequest{})
+	if err != nil {
+		if jsonErr := lib.HandleRPCError(err); err != nil {
+			c.JSON(jsonErr.StatusCode, jsonErr)
+			return
+		}
+	}
+
+	files, jsonErr := h.getAllFiles(stream)
+	if jsonErr != nil {
+		c.JSON(jsonErr.StatusCode, jsonErr)
+		return
+	}
+
+	writeFilesAsCSV(c, csvHeaders, files)
+}
+
+func writeFilesAsCSV(c *gin.Context, csvHeaders []string, files []*models.GetFilesResponse) {
+	// get invoices in CSV format
+	csvRecords := GetFilesAsCSVRecords(files, csvHeaders)
+
+	// write CSV records
+	buffer := &bytes.Buffer{}
+	writer := csv.NewWriter(buffer)
+	err := writer.WriteAll(csvRecords)
+
+	if err != nil {
+		jsonErr := models.NewInternalServerError(fmt.Sprintf("could not write csv records: %s", err))
+		c.JSON(jsonErr.StatusCode, jsonErr)
+		return
+	}
+
+	// respond with CSV records as a CSV file
+	c.Header("Content-Type", "text/csv")
+	c.Header("Access-Control-Expose-Headers", "Content-Disposition")
+	c.Header("Content-Disposition", fmt.Sprintf(`attachment; filename=%s`, csvFileName))
+	_, err = c.Writer.Write(buffer.Bytes())
+
+	if err != nil {
+		jsonErr := models.NewInternalServerError(fmt.Sprintf("could not write csv response: %s", err))
+		c.JSON(jsonErr.StatusCode, jsonErr)
+		return
 	}
 
 	c.Status(http.StatusOK)
