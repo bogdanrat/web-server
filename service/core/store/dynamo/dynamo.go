@@ -41,23 +41,80 @@ func NewStore(tableName string) (store.KeyValue, error) {
 		return nil, err
 	}
 
+	err = keyValueStore.Put(&models.KeyValuePair{
+		Key:   "test",
+		Value: "message",
+	})
+	if err != nil {
+		log.Println(err)
+	}
+
 	return keyValueStore, nil
 }
 
 func (s *KeyValueStore) Get(key string) (interface{}, error) {
-	return nil, nil
+	output, err := s.svc.GetItem(&dynamodb.GetItemInput{
+		TableName: aws.String(s.tableName),
+		Key: map[string]*dynamodb.AttributeValue{
+			store.KeyIdentifier: {
+				S: aws.String(key),
+			},
+		},
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	var value interface{}
+	err = dynamodbattribute.Unmarshal(output.Item[store.ValueIdentifier], &value)
+	if err != nil {
+		return nil, err
+	}
+
+	if value == nil {
+		return nil, store.KeyNotFoundError
+	}
+	return value, nil
 }
 
 func (s *KeyValueStore) Put(pair *models.KeyValuePair) error {
+	attributeValues, err := dynamodbattribute.MarshalMap(pair)
+	if err != nil {
+		return err
+	}
+
+	_, err = s.svc.PutItem(&dynamodb.PutItemInput{
+		TableName: aws.String(s.tableName),
+		Item:      attributeValues,
+	})
+	if err != nil {
+		return err
+	}
+
 	return nil
 }
 
 func (s *KeyValueStore) Delete(key string) error {
+	input := &dynamodb.DeleteItemInput{
+		TableName: aws.String(s.tableName),
+		Key: map[string]*dynamodb.AttributeValue{
+			store.KeyIdentifier: {
+				S: aws.String(key),
+			},
+		},
+		ReturnValues: aws.String("NONE"),
+	}
+
+	_, err := s.svc.DeleteItem(input)
+	if err != nil {
+		return err
+	}
+
 	return nil
 }
 
 func (s *KeyValueStore) GetAll() ([]*models.KeyValuePair, error) {
-	projection := expression.NamesList(expression.Name("Key"), expression.Name("Value"))
+	projection := expression.NamesList(expression.Name(store.KeyIdentifier), expression.Name(store.ValueIdentifier))
 	expr, err := expression.NewBuilder().WithProjection(projection).Build()
 	if err != nil {
 		return nil, fmt.Errorf("error building expression: %s", err)
@@ -149,13 +206,13 @@ func (s *KeyValueStore) createTable(tableName string) (*dynamodb.TableDescriptio
 		TableName: aws.String(tableName),
 		AttributeDefinitions: []*dynamodb.AttributeDefinition{
 			{
-				AttributeName: aws.String("Key"),
+				AttributeName: aws.String(store.KeyIdentifier),
 				AttributeType: aws.String("S"),
 			},
 		},
 		KeySchema: []*dynamodb.KeySchemaElement{
 			{
-				AttributeName: aws.String("Key"),
+				AttributeName: aws.String(store.KeyIdentifier),
 				KeyType:       aws.String("HASH"),
 			},
 		},
