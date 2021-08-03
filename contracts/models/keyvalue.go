@@ -15,7 +15,7 @@ type GetPairResponse struct {
 }
 
 type PostPairRequest struct {
-	Pairs []*KeyValuePair `json:"pairs"`
+	KeyValuePair
 }
 
 type DeletePairRequest struct {
