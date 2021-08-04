@@ -1,8 +1,9 @@
 package models
 
 const (
-	UserSignUpEventName      = "userSignUp"
-	NewKeyValuePairEventName = "newKeyValuePair"
+	UserSignUpEventName         = "userSignUp"
+	NewKeyValuePairEventName    = "newKeyValuePair"
+	DeleteKeyValuePairEventName = "deleteKeyValuePair"
 )
 
 type UserSignUpEvent struct {
@@ -16,10 +17,17 @@ func (e *UserSignUpEvent) Name() string {
 }
 
 type NewKeyValuePairEvent struct {
-	Key   string      `json:"key"`
-	Value interface{} `json:"value"`
+	Pairs []*KeyValuePair
 }
 
 func (e *NewKeyValuePairEvent) Name() string {
 	return NewKeyValuePairEventName
+}
+
+type DeleteKeyValuePairEvent struct {
+	Pair *KeyValuePair
+}
+
+func (e *DeleteKeyValuePairEvent) Name() string {
+	return DeleteKeyValuePairEventName
 }
