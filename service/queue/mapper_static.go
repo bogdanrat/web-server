@@ -15,6 +15,11 @@ func (m *StaticEventMapper) MapEvent(eventName string, serialized interface{}) (
 	switch eventName {
 	case models.UserSignUpEventName:
 		event = &models.UserSignUpEvent{}
+	case models.NewKeyValuePairEventName:
+		event = &models.NewKeyValuePairEvent{}
+	case models.DeleteKeyValuePairEventName:
+		event = &models.DeleteKeyValuePairEvent{}
+
 	default:
 		return nil, fmt.Errorf("unknown event type: %s", eventName)
 	}
