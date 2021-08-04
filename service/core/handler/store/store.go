@@ -6,6 +6,7 @@ import (
 	"github.com/bogdanrat/web-server/service/core/store"
 	"github.com/bogdanrat/web-server/service/queue"
 	"github.com/gin-gonic/gin"
+	"log"
 	"net/http"
 )
 
@@ -80,6 +81,12 @@ func (h *Handler) PostPairs(c *gin.Context) {
 		return
 	}
 
+	if err := h.EventEmitter.Emit(&models.NewKeyValuePairEvent{
+		Pairs: request,
+	}); err != nil {
+		log.Printf("cannot emit new key value par event: %s", err)
+	}
+
 	c.Status(http.StatusCreated)
 }
 
@@ -96,6 +103,12 @@ func (h *Handler) DeletePair(c *gin.Context) {
 		jsonErr := models.NewInternalServerError(err.Error())
 		c.JSON(jsonErr.StatusCode, jsonErr)
 		return
+	}
+
+	if err := h.EventEmitter.Emit(&models.DeleteKeyValuePairEvent{
+		Key: request.Key,
+	}); err != nil {
+		log.Printf("cannot emit new key value par event: %s", err)
 	}
 
 	c.Status(http.StatusOK)

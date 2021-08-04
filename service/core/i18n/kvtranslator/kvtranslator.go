@@ -17,7 +17,6 @@ func New(keyValueStore store.KeyValue) (i18n.Translator, error) {
 		keyValuePairs: make(map[string]string),
 	}
 
-	// TODO: call method when a new key-value pair event was emitted
 	if err := translator.Reload(); err != nil {
 		return nil, err
 	}

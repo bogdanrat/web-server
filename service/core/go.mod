@@ -3,11 +3,11 @@ module github.com/bogdanrat/web-server/service/core
 go 1.16
 
 require (
-	cloud.google.com/go v0.89.0 // indirect
-	github.com/aws/aws-sdk-go v1.40.13
-	github.com/bogdanrat/web-server/contracts v0.0.0-20210803180158-4b656a2751a9
-	github.com/bogdanrat/web-server/service/monitor v0.0.0-20210803180158-4b656a2751a9
-	github.com/bogdanrat/web-server/service/queue v0.0.0-20210803180158-4b656a2751a9
+	cloud.google.com/go v0.90.0 // indirect
+	github.com/aws/aws-sdk-go v1.40.14
+	github.com/bogdanrat/web-server/contracts v0.0.0-20210804092751-c4524f8c353d
+	github.com/bogdanrat/web-server/service/monitor v0.0.0-20210804092751-c4524f8c353d
+	github.com/bogdanrat/web-server/service/queue v0.0.0-20210804092751-c4524f8c353d
 	github.com/gin-contrib/cors v1.3.1
 	github.com/gin-gonic/gin v1.7.3
 	github.com/go-playground/validator/v10 v10.8.0 // indirect

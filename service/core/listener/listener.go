@@ -23,7 +23,7 @@ func NewEventProcessor(listener queue.EventListener, translator i18n.Translator)
 }
 
 func (p *EventProcessor) ProcessEvent() error {
-	received, errors, err := p.EventListener.Listen(models.UserSignUpEventName)
+	received, errors, err := p.EventListener.Listen(models.UserSignUpEventName, models.NewKeyValuePairEventName, models.DeleteKeyValuePairEventName)
 	if err != nil {
 		return fmt.Errorf("could not listen for events: %s", err)
 	}
@@ -42,6 +42,8 @@ func (p *EventProcessor) handleEvent(event queue.Event) {
 	switch e := event.(type) {
 	case *models.UserSignUpEvent:
 		p.handleUserSignUpEvent(e)
+	case *models.NewKeyValuePairEvent, *models.DeleteKeyValuePairEvent:
+		p.handleKeyValuePairEvent()
 	default:
 		log.Printf("unknown event: %t", e)
 	}
@@ -80,4 +82,10 @@ func (p *EventProcessor) handleUserSignUpEvent(event *models.UserSignUpEvent) {
 	}
 
 	log.Printf("Sent Welcome Email to %s\n", user.Email)
+}
+
+func (p *EventProcessor) handleKeyValuePairEvent() {
+	if err := p.Translator.Reload(); err != nil {
+		log.Printf("cannot reload translations: %s", err)
+	}
 }
