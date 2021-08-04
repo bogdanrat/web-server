@@ -1,7 +1,8 @@
 package models
 
 const (
-	UserSignUpEventName = "userSignUp"
+	UserSignUpEventName      = "userSignUp"
+	NewKeyValuePairEventName = "newKeyValuePair"
 )
 
 type UserSignUpEvent struct {
@@ -12,4 +13,13 @@ type UserSignUpEvent struct {
 // Name returns the event's name
 func (e *UserSignUpEvent) Name() string {
 	return UserSignUpEventName
+}
+
+type NewKeyValuePairEvent struct {
+	Key   string      `json:"key"`
+	Value interface{} `json:"value"`
+}
+
+func (e *NewKeyValuePairEvent) Name() string {
+	return NewKeyValuePairEventName
 }
