@@ -25,7 +25,7 @@ func (e *NewKeyValuePairEvent) Name() string {
 }
 
 type DeleteKeyValuePairEvent struct {
-	DeletePairRequest
+	Key string `json:"key"`
 }
 
 func (e *DeleteKeyValuePairEvent) Name() string {
