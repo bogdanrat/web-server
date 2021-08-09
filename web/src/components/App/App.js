@@ -7,7 +7,7 @@ import Login from '../Login/Login';
 import useToken from './useToken';
 
 function App() {
-    const { token, setToken } = useToken();
+    const {token, setToken} = useToken();
     if (!token) {
         return <Login setToken={setToken}/>
     }
@@ -17,12 +17,19 @@ function App() {
             <BrowserRouter>
                 <Switch>
                     <Route path="/dashboard">
-                        <Dashboard token={token}/>
+                        <Dashboard token={token} setToken={setToken}/>
                     </Route>
                 </Switch>
             </BrowserRouter>
         </div>
     );
 }
+
+// async function fetchConfig() {
+//     return fetch('http://localhost:8080/config/auth', {
+//         method: 'GET',
+//     }).then(res => res.json())
+//         .catch(err => console.log(err));
+// }
 
 export default App;

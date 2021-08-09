@@ -11,6 +11,17 @@ function Login({setToken}) {
             setToken(res);
         }
     }
+    //
+    // let config;
+    // useEffect(() => {
+    //     async function fetchConfig() {
+    //         config = await getConfig();
+    //     }
+    //     fetchConfig();
+    //
+    // }, []);
+    // console.log("config:", config);
+
 
     return (
         <div className="login-wrapper">
@@ -24,6 +35,7 @@ function Login({setToken}) {
                 <br/>
                 <label htmlFor="qr_code">QR Code:</label>
                 <input type="text" name="qr_code" id="qr_code" required/>
+
                 <div>
                     <button type="submit">Submit</button>
                 </div>
