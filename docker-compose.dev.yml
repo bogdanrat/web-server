@@ -1,36 +1,37 @@
 version: "3.9"
 services:
-#   RabbitMQ Message Broker
-  rabbitmq:
-    profiles:
-      - rabbitmq
-    image: rabbitmq:3-management
-    ports:
-      - "15672:15672"
-      - "5672:5672"
-    volumes:
-      - ~/.docker-conf/rabbitmq/data/:/var/lib/rabbitmq/
-      - ~/.docker-conf/rabbitmq/log/:/var/log/rabbitmq
-    environment:
-      RABBITMQ_DEFAULT_USER: "user"
-      RABBITMQ_DEFAULT_PASS: "password"
-    restart: always
-    healthcheck:
-      test: rabbitmq-diagnostics -q ping
-      interval: 30s
-      timeout: 30s
-      retries: 3
+  # RabbitMQ Message Broker
+    rabbitmq:
+      profiles:
+        - rabbitmq
+      image: rabbitmq:3-management
+      ports:
+        - "15672:15672"
+        - "5672:5672"
+      volumes:
+        - ~/.docker-conf/rabbitmq/data/:/var/lib/rabbitmq/
+        - ~/.docker-conf/rabbitmq/log/:/var/log/rabbitmq
+      environment:
+        RABBITMQ_DEFAULT_USER: "user"
+        RABBITMQ_DEFAULT_PASS: "password"
+      restart: always
+      healthcheck:
+        test: rabbitmq-diagnostics -q ping
+        interval: 30s
+        timeout: 30s
+        retries: 3
   redis:
     image: redis
   # Core Service
   core-service:
-    image: bogdanrat/webserver_coreservice
+    build:
+      context: ./service/core
     ports:
       - "8080:8080"
     restart: on-failure
     depends_on:
-#      rabbitmq:
-#        condition: service_healthy
+      #      rabbitmq:
+      #        condition: service_healthy
       redis:
         condition: service_started
       auth-service:
@@ -40,7 +41,7 @@ services:
       prometheus:
         condition: service_started
     links:
-#      - rabbitmq
+      #      - rabbitmq
       - redis
       - auth-service
       - storage-service
@@ -60,21 +61,23 @@ services:
       - SMTP_REFRESH_TOKEN=${SMTP_REFRESH_TOKEN}
       - DYNAMODB_ROLE_EXTERNAL_ID=${DYNAMODB_ROLE_EXTERNAL_ID}
     volumes:
-    - ./service/core/config.json:/config.json
+      - ./service/core/config.json:/config.json
   # Auth Service
   auth-service:
     hostname: auth-service
-    image: bogdanrat/webserver_authservice
+    build:
+      context: ./service/auth
     ports:
       - "8081:8081"
       - "50051:50051"
     restart: on-failure
     volumes:
-    - ./service/auth/config.json:/config.json
+      - ./service/auth/config.json:/config.json
   # Storage Service
   storage-service:
     hostname: storage-service
-    image: bogdanrat/webserver_storageservice
+    build:
+      context: ./service/storage
     ports:
       - "50052:50052"
     restart: on-failure

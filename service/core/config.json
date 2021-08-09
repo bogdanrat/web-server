@@ -2,7 +2,7 @@
   "Server": {
     "ListenAddress": ":8080",
     "GinMode": "debug",
-    "DevelopmentMode": true
+    "DevelopmentMode": false
   },
   "Redis": {
     "Host": "localhost",

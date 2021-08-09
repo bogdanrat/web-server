@@ -17,3 +17,4 @@
 /.env
 /data/
 /service/core/build-image.sh
+/web/node_modules

@@ -25,7 +25,18 @@ import (
 func New(repo store.DatabaseRepository, cacheClient cache.Client, keyValueStore store.KeyValue, authClient pb.AuthClient, storageClient storage_service.StorageClient, eventEmitter queue.EventEmitter) http.Handler {
 	router := gin.Default()
 	gin.SetMode(config.AppConfig.Server.GinMode)
-	router.Use(cors.Default())
+	corsConfig := cors.DefaultConfig()
+
+	corsConfig.AllowOrigins = []string{"http://localhost:3000"}
+	corsConfig.AllowHeaders = []string{"Authorization"}
+	// To be able to send tokens to the server.
+	corsConfig.AllowCredentials = true
+
+	// OPTIONS method for ReactJS
+	corsConfig.AddAllowMethods("OPTIONS")
+
+	// Register the middleware
+	router.Use(cors.New(corsConfig))
 
 	if config.AppConfig.Prometheus.Enabled {
 		_ = monitor.Setup()
