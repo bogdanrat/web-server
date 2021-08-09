@@ -10,7 +10,7 @@ scrape_configs:
     metrics_path: /monitor/core-service
     static_configs:
       - targets:
-          - core-service:3000
+          - core-service:8080
   - job_name: auth-service
     metrics_path: /monitor/auth-service
     static_configs:
