@@ -28,7 +28,7 @@ func New(repo store.DatabaseRepository, cacheClient cache.Client, keyValueStore 
 	corsConfig := cors.DefaultConfig()
 
 	corsConfig.AllowOrigins = []string{"http://localhost:3000"}
-	corsConfig.AllowHeaders = []string{"Authorization"}
+	corsConfig.AllowHeaders = []string{"Authorization", "Content-Type"}
 	// To be able to send tokens to the server.
 	corsConfig.AllowCredentials = true
 
@@ -84,6 +84,10 @@ func New(repo store.DatabaseRepository, cacheClient cache.Client, keyValueStore 
 		c.Status(http.StatusOK)
 		c.String(http.StatusOK, "App is alive!\n")
 	})
+
+	configHandler := config.NewHandler()
+	router.GET("/config/auth", configHandler.GetConfig)
+
 	router.GET("/login", authenticationHandler.ShowLogin)
 
 	router.POST("/sign-up", authenticationHandler.SignUp)

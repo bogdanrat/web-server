@@ -25,10 +25,10 @@ type RedisConfig struct {
 }
 
 type AuthenticationConfig struct {
-	AccessTokenDuration  int64 // minutes
-	RefreshTokenDuration int64 // minutes
-	MFA                  bool
-	Channel              string
+	AccessTokenDuration  int64  `json:"access_token_duration"`  // minutes
+	RefreshTokenDuration int64  `json:"refresh_token_duration"` // minutes
+	MFA                  bool   `json:"mfa"`
+	Channel              string `json:"channel"`
 }
 
 type SMTPConfig struct {

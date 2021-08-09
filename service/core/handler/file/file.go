@@ -429,6 +429,7 @@ func (h *Handler) GetFilesExcel(c *gin.Context) {
 	}
 
 	c.Header("Content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=utf-8")
+	c.Header("Access-Control-Expose-Headers", "Content-Disposition")
 	c.Header("Content-Disposition", fmt.Sprintf(`attachment; filename=%s`, excelFileName))
 	c.Writer.WriteHeader(http.StatusOK)
 	_, _ = c.Writer.Write(buf.Bytes())
