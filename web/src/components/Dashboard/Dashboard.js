@@ -61,7 +61,7 @@ class Dashboard extends React.Component {
 
         axios.get('http://localhost:8080/api/files', {
             headers: {
-                "Authorization": `Bearer ${this.props.token}`
+                "Authorization": `Bearer ${this.props.token?.access_token}`
             },
         }).then(response => {
             this.setState({files: response.data, isFetching: false});
