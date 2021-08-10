@@ -122,7 +122,7 @@ services:
     ports:
       - 80:80
     volumes:
-      - ./config/nginx.conf:/etc/nginx/nginx.conf
+      - ./router/nginx.conf:/etc/nginx/nginx.conf
     depends_on:
       - core-service
       - web
