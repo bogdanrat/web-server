@@ -21,7 +21,7 @@ class Dashboard extends React.Component {
                 <h2>Dashboard</h2>
                 {this.state.isFetching ? 'Fetching files...' :
                     <div>
-                        <Form method="post" action="http://localhost:8080/api/files" id="files-form">
+                        <Form method="post" action="/api/files" id="files-form">
                             <Form.Group controlId="formFileMultiple" className="mb-3">
                                 <Form.Control type="file"
                                               multiple
@@ -70,7 +70,7 @@ class Dashboard extends React.Component {
     fetchFilesAsync() {
         this.setState({...this.state, isFetching: true});
 
-        axios.get('http://localhost:8080/api/files', {
+        axios.get('api/files', {
             headers: {
                 "Authorization": `Bearer ${this.props.token?.access_token}`
             },
@@ -86,7 +86,7 @@ class Dashboard extends React.Component {
     }
 
     downloadCSV = () => {
-        axios.get('http://localhost:8080/api/files/csv', {
+        axios.get('/api/files/csv', {
             headers: {
                 "Authorization": `Bearer ${this.props.token?.access_token}`
             },
@@ -127,7 +127,7 @@ class Dashboard extends React.Component {
 
     downloadExcel = () => {
         axios({
-            url: 'http://localhost:8080/api/files/excel',
+            url: '/api/files/excel',
             method: 'get',
             responseType: 'blob',
             headers: {
@@ -156,7 +156,7 @@ class Dashboard extends React.Component {
 
     deleteFile = (fileKey) => {
         return () => {
-            axios.delete(`http://localhost:8080/api/file`, {
+            axios.delete(`/api/file`, {
                 headers: {
                     "Authorization": `Bearer ${this.props.token?.access_token}`
                 },
@@ -173,7 +173,7 @@ class Dashboard extends React.Component {
 
     deleteAllFiles = () => {
         axios({
-            url: 'http://localhost:8080/api/files',
+            url: '/api/files',
             method: 'delete',
             headers: {
                 "Authorization": `Bearer ${this.props.token?.access_token}`,
@@ -202,7 +202,7 @@ class Dashboard extends React.Component {
         })
 
         axios({
-            url: 'http://localhost:8080/api/files',
+            url: '/api/files',
             method: 'post',
             data: formData,
             headers: {
@@ -220,7 +220,7 @@ class Dashboard extends React.Component {
     }
 
     refreshToken = () => {
-        axios.post('http://localhost:8080/token/refresh', {
+        axios.post('/api/token/refresh', {
             'refresh_token': this.props.token?.refresh_token,
         }, {
             headers: {
@@ -229,7 +229,9 @@ class Dashboard extends React.Component {
         }).then(res => {
             const token = res.data;
             this.props.setToken(token);
-        }).catch(err => console.log(err));
+        }).catch(err => {
+            console.log("error refreshing token: ", err);
+        });
     }
 }
 

@@ -7,7 +7,7 @@ function Login({setToken}) {
         e.preventDefault();
         const body = new URLSearchParams(new FormData(e.target));
         const res = await loginUser(body);
-        if (res.status_code !== 401) {
+        if (res?.status_code !== 401) {
             setToken(res);
         }
     }
@@ -45,10 +45,10 @@ function Login({setToken}) {
 }
 
 async function loginUser(body) {
-    return fetch('http://localhost:8080/login', {
+    return fetch('/api/login', {
         method: 'POST',
         body: body
-    }).then(data => data.json()).catch(err => console.log("err:", err))
+    }).then(data => data.json()).catch(err => console.log("error login:", err))
 }
 
 Login.propTypes = {

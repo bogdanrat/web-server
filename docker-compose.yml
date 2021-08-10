@@ -84,6 +84,12 @@ services:
     environment:
       - AWS_ACCESS_KEY_ID=${ACCESS_KEY}
       - AWS_SECRET_ACCESS_KEY=${SECRET_ACCESS_KEY}
+  # Web
+  web:
+    build:
+      context: ./web
+    ports:
+      - "3000:3000"
   # Prometheus
   prometheus:
     image: prom/prometheus:v2.27.0
@@ -96,7 +102,7 @@ services:
   grafana:
     image: grafana/grafana:7.5.6
     ports:
-      - 3000:3000
+      - 3001:3000
     volumes:
       - grafana-storage:/var/lib/grafana
     restart: unless-stopped
@@ -117,6 +123,7 @@ services:
       - ./config/nginx.conf:/etc/nginx/nginx.conf
     depends_on:
       - core-service
+      - web
     restart: always
 volumes:
   grafana-storage:

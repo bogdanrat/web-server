@@ -19,7 +19,7 @@ function App() {
 }
 
 // async function fetchConfig() {
-//     return fetch('http://localhost:8080/config/auth', {
+//     return fetch('/config/auth', {
 //         method: 'GET',
 //     }).then(res => res.json())
 //         .catch(err => console.log(err));

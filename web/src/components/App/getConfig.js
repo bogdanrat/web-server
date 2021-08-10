@@ -2,7 +2,7 @@ import { useState } from 'react';
 
 export default function getConfig() {
     const fetchConfig = () => {
-        return fetch('http://localhost:8080/config/auth', {
+        return fetch('/config/auth', {
             method: 'GET',
         })
             .then(response => response.json())
