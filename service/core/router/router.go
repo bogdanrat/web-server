@@ -97,9 +97,11 @@ func New(repo store.DatabaseRepository, cacheClient cache.Client, keyValueStore 
 
 	// private endpoints, requires jwt
 	apiGroup := router.Group("/api").Use(middleware.Authorization(config.AppConfig.Server.DevelopmentMode, authenticationHandler.Cache, authenticationHandler.AuthService.Client))
+
 	apiGroup.GET("/users", usersHandler.GetUsers)
 
 	apiGroup.GET("/file-page", fileHandler.GetFilePage)
+
 	apiGroup.GET("/file", fileHandler.GetFile)
 	apiGroup.GET("/files", fileHandler.GetFiles)
 	apiGroup.POST("/files", fileHandler.PostFiles)

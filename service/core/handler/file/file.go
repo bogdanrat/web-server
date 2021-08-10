@@ -62,7 +62,7 @@ func (h *Handler) PostFiles(c *gin.Context) {
 
 	wg.Wait()
 
-	http.Redirect(c.Writer, c.Request, "/api/file-page", http.StatusSeeOther)
+	c.Status(http.StatusCreated)
 }
 
 func (h *Handler) uploadFile(file *multipart.FileHeader) *models.JSONError {

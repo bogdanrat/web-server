@@ -12,7 +12,7 @@ const (
 	excelTag      = "excel"
 	dateFormat    = "2006-01-02"
 	csvFileName   = "Files.csv"
-	excelFileName = "Excel.xlsx"
+	excelFileName = "Files.xlsx"
 )
 
 // GetFilesAsCSVRecords returns the files as CSV writeable records

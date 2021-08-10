@@ -11,6 +11,7 @@ class Dashboard extends React.Component {
             files: [],
             token: props.token,
             setToken: props.setToken,
+            filesToUpload: [],
         };
     }
 
@@ -22,10 +23,14 @@ class Dashboard extends React.Component {
                     <div>
                         <Form method="post" action="http://localhost:8080/api/files" id="files-form">
                             <Form.Group controlId="formFileMultiple" className="mb-3">
-                                <Form.Control type="file" multiple/>
+                                <Form.Control type="file"
+                                              multiple
+                                              size={"sm"}
+                                              style={{width: '30%'}}
+                                              onChange={e => this.handleFilesChanged(e.target.files)}/>
                             </Form.Group>
-                            <Button variant="success" type="submit" onClick={this.submitForm}>
-                                Submit
+                            <Button variant="success" type="submit" onClick={e => this.handleFormSubmit(e)} size={"sm"}>
+                                Upload
                             </Button>
                         </Form>
                         <ul>
@@ -48,7 +53,8 @@ class Dashboard extends React.Component {
                             <Button variant="info" className="btn-sm" onClick={this.downloadExcel}>Download
                                 Excel</Button>
                         </div>
-                        <Button variant="danger" className="btn-sm mt-2">Delete All</Button>
+                        <Button variant="danger" className="btn-sm mt-2" onClick={this.deleteAllFiles}>Delete
+                            All</Button>
 
                     </div>
                 }
@@ -73,6 +79,7 @@ class Dashboard extends React.Component {
         }).catch(e => {
             if (e.response.status === 401) {
                 this.refreshToken();
+                window.location.reload();
             }
             this.setState({...this.state, isFetching: false});
         });
@@ -128,7 +135,7 @@ class Dashboard extends React.Component {
             }
         }).then((response) => {
             const contentDisposition = response.headers['content-disposition'];
-            let fileName = "unnamed.csv"
+            let fileName = "unnamed.xlsx"
 
             if (contentDisposition) {
                 const fileNameRegex = new RegExp(`(filename=)(.*)`, 'g');
@@ -164,8 +171,56 @@ class Dashboard extends React.Component {
         }
     }
 
+    deleteAllFiles = () => {
+        axios({
+            url: 'http://localhost:8080/api/files',
+            method: 'delete',
+            headers: {
+                "Authorization": `Bearer ${this.props.token?.access_token}`,
+            }
+        }).then(res => {
+            if (res.status === 200) {
+                window.location.reload();
+            } else if (res.status === 401) {
+                this.refreshToken();
+                window.location.reload();
+            }
+        }).then(err => console.log(err));
+    }
+
+    handleFilesChanged = (files) => {
+        this.setState({filesToUpload: Array.from(files)})
+    }
+
+    handleFormSubmit = (event) => {
+        event.preventDefault();
+
+        let formData = new FormData();
+        this.state.filesToUpload.forEach(file => {
+            formData.append("files", file);
+            console.log("file", file);
+        })
+
+        axios({
+            url: 'http://localhost:8080/api/files',
+            method: 'post',
+            data: formData,
+            headers: {
+                "Authorization": `Bearer ${this.props.token?.access_token}`,
+                "Content-Type": "multipart/form-data"
+            }
+        }).then(res => {
+            if (res.status === 201) {
+                window.location.reload();
+            } else if (res.status === 401) {
+                this.refreshToken();
+                window.location.reload();
+            }
+        }).then(err => console.log(err));
+    }
+
     refreshToken = () => {
-        return axios.post('http://localhost:8080/token/refresh', {
+        axios.post('http://localhost:8080/token/refresh', {
             'refresh_token': this.props.token?.refresh_token,
         }, {
             headers: {
@@ -174,10 +229,8 @@ class Dashboard extends React.Component {
         }).then(res => {
             const token = res.data;
             this.props.setToken(token);
-            window.location.reload();
-        })
+        }).catch(err => console.log(err));
     }
 }
-
 
 export default Dashboard;
