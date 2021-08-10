@@ -147,7 +147,6 @@ class Dashboard extends React.Component {
             },
         }).then(res => {
             const token = res.data;
-            console.log("refresh:", token);
             this.props.setToken(token);
             window.location.reload();
         })
