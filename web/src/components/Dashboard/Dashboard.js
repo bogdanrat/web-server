@@ -2,6 +2,7 @@ import React from 'react';
 import axios from "axios";
 import Button from 'react-bootstrap/Button';
 import {Form} from "react-bootstrap";
+import Logout from "../Logout/Logout";
 
 class Dashboard extends React.Component {
     constructor(props) {
@@ -19,6 +20,7 @@ class Dashboard extends React.Component {
         return (
             <div>
                 <h2>Dashboard</h2>
+                <Logout token={this.props.token}/>
                 {this.state.isFetching ? 'Fetching files...' :
                     <div>
                         <Form>
@@ -56,7 +58,7 @@ class Dashboard extends React.Component {
                         <div style={{maxWidth: '400px', display: "flex", justifyContent: "space-between"}}>
                             <Button variant="primary" className="btn-sm" onClick={this.downloadCSV}>Download
                                 CSV</Button>
-                            <Button variant="info" className="btn-sm" onClick={this.downloadExcel}>Download
+                            <Button variant="primary" className="btn-sm" onClick={this.downloadExcel}>Download
                                 Excel</Button>
                             <Button variant="danger" className="btn-sm" onClick={this.deleteAllFiles}>Delete
                                 All</Button>

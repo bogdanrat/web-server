@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import './Login.css'
-import axios from "axios";
 
 function Login({setToken}) {
     const handleSubmit = async e => {
