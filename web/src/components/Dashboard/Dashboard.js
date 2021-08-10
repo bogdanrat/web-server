@@ -119,6 +119,32 @@ class Dashboard extends React.Component {
     }
 
     downloadExcel = () => {
+        axios({
+            url: 'http://localhost:8080/api/files/excel',
+            method: 'get',
+            responseType: 'blob',
+            headers: {
+                "Authorization": `Bearer ${this.props.token?.access_token}`
+            }
+        }).then((response) => {
+            const contentDisposition = response.headers['content-disposition'];
+            let fileName = "unnamed.csv"
+
+            if (contentDisposition) {
+                const fileNameRegex = new RegExp(`(filename=)(.*)`, 'g');
+                const match = contentDisposition.match(fileNameRegex);
+                if (match && match.length) {
+                    fileName = match[0].split("=")[1];
+                }
+            }
+
+            const url = window.URL.createObjectURL(new Blob([response.data]));
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', fileName);
+            document.body.appendChild(link);
+            link.click();
+        });
     }
 
     deleteFile = (fileKey) => {
