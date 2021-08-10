@@ -94,7 +94,7 @@ services:
     ports:
       - "3000:3000"
     environment:
-      - REACT_APP_API_URL=""
+      - REACT_APP_API_URL=/api
   # Prometheus
   prometheus:
     image: prom/prometheus:v2.27.0

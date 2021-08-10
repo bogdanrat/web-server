@@ -46,7 +46,7 @@ function Login({setToken}) {
 }
 
 async function loginUser(body) {
-    return fetch(`${process.env.REACT_APP_API_URL}/api/login`, {
+    return fetch(`${process.env.REACT_APP_API_URL}/login`, {
         method: 'POST',
         body: body
     }).then(data => data.json()).catch(err => console.log("error login:", err))

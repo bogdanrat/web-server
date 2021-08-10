@@ -77,7 +77,7 @@ class Dashboard extends React.Component {
     fetchFilesAsync() {
         this.setState({...this.state, isFetching: true});
 
-        axios.get(`${process.env.REACT_APP_API_URL}/api/files`, {
+        axios.get(`${process.env.REACT_APP_API_URL}/files`, {
             headers: {
                 "Authorization": `Bearer ${this.props.token?.access_token}`
             },
@@ -99,7 +99,7 @@ class Dashboard extends React.Component {
 
     downloadFile = (fileKey) => {
         return () => {
-            axios.get(`${process.env.REACT_APP_API_URL}/api/file?file_name=${fileKey}`, {
+            axios.get(`${process.env.REACT_APP_API_URL}/file?file_name=${fileKey}`, {
                 headers: {
                     "Authorization": `Bearer ${this.props.token?.access_token}`
                 },
@@ -139,7 +139,7 @@ class Dashboard extends React.Component {
     }
 
     downloadCSV = () => {
-        axios.get(`${process.env.REACT_APP_API_URL}/api/files/csv`, {
+        axios.get(`${process.env.REACT_APP_API_URL}/files/csv`, {
             headers: {
                 "Authorization": `Bearer ${this.props.token?.access_token}`
             },
@@ -185,7 +185,7 @@ class Dashboard extends React.Component {
 
     downloadExcel = () => {
         axios({
-            url: `${process.env.REACT_APP_API_URL}/api/files/excel`,
+            url: `${process.env.REACT_APP_API_URL}/files/excel`,
             method: 'get',
             responseType: 'blob',
             headers: {
@@ -219,7 +219,7 @@ class Dashboard extends React.Component {
 
     deleteFile = (fileKey) => {
         return () => {
-            axios.delete(`${process.env.REACT_APP_API_URL}/api/file`, {
+            axios.delete(`${process.env.REACT_APP_API_URL}/file`, {
                 headers: {
                     "Authorization": `Bearer ${this.props.token?.access_token}`
                 },
@@ -239,7 +239,7 @@ class Dashboard extends React.Component {
 
     deleteAllFiles = () => {
         axios({
-            url: `${process.env.REACT_APP_API_URL}/api/files`,
+            url: `${process.env.REACT_APP_API_URL}/files`,
             method: 'delete',
             headers: {
                 "Authorization": `Bearer ${this.props.token?.access_token}`,
@@ -267,7 +267,7 @@ class Dashboard extends React.Component {
         })
 
         axios({
-            url: `${process.env.REACT_APP_API_URL}/api/files`,
+            url: `${process.env.REACT_APP_API_URL}/files`,
             method: 'post',
             data: formData,
             headers: {
@@ -291,7 +291,7 @@ class Dashboard extends React.Component {
     }
 
     refreshToken = async () => {
-        return axios.post(`${process.env.REACT_APP_API_URL}/api/token/refresh`, {
+        return axios.post(`${process.env.REACT_APP_API_URL}/token/refresh`, {
             'refresh_token': this.props.token?.refresh_token,
         }).then(res => {
             const token = res.data;
