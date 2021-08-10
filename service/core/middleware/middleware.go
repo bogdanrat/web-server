@@ -8,11 +8,21 @@ import (
 	"github.com/bogdanrat/web-server/service/core/lib"
 	"github.com/bogdanrat/web-server/service/core/util"
 	"github.com/gin-gonic/gin"
+	"strings"
+)
+
+var (
+	pathsToSkipFromAuthorization = []string{"/sign-up", "/login", "/logout", "/token/refresh"}
 )
 
 // Authorization validates jwt and authorizes users based by Header 'Authorization Bearer {{token}}'
 func Authorization(developmentMode bool, cacheClient cache.Client, authClient pb.AuthClient) gin.HandlerFunc {
 	return func(c *gin.Context) {
+		if shouldSkipPath(c.Request.URL.Path) {
+			c.Next()
+			return
+		}
+
 		if developmentMode == false {
 			token, jsonErr := util.ExtractToken(c.Request)
 			if jsonErr != nil {
@@ -42,4 +52,13 @@ func Authorization(developmentMode bool, cacheClient cache.Client, authClient pb
 		// It executes the pending handlers in the chain inside the calling handler
 		c.Next()
 	}
+}
+
+func shouldSkipPath(path string) bool {
+	for _, pathToSkip := range pathsToSkipFromAuthorization {
+		if strings.Contains(path, pathToSkip) {
+			return true
+		}
+	}
+	return false
 }

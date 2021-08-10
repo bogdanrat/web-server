@@ -90,13 +90,13 @@ func New(repo store.DatabaseRepository, cacheClient cache.Client, keyValueStore 
 
 	router.GET("/login", authenticationHandler.ShowLogin)
 
-	router.POST("/sign-up", authenticationHandler.SignUp)
-	router.POST("/login", authenticationHandler.Login)
-	router.POST("/logout", authenticationHandler.Logout)
-	router.POST("/token/refresh", authenticationHandler.RefreshToken)
-
 	// private endpoints, requires jwt
 	apiGroup := router.Group("/api").Use(middleware.Authorization(config.AppConfig.Server.DevelopmentMode, authenticationHandler.Cache, authenticationHandler.AuthService.Client))
+
+	apiGroup.POST("/sign-up", authenticationHandler.SignUp)
+	apiGroup.POST("/login", authenticationHandler.Login)
+	apiGroup.POST("/logout", authenticationHandler.Logout)
+	apiGroup.POST("/token/refresh", authenticationHandler.RefreshToken)
 
 	apiGroup.GET("/users", usersHandler.GetUsers)
 
