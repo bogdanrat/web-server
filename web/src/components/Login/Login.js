@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import './Login.css'
+import axios from "axios";
 
 function Login({setToken}) {
     const handleSubmit = async e => {
@@ -45,7 +46,7 @@ function Login({setToken}) {
 }
 
 async function loginUser(body) {
-    return fetch('/api/login', {
+    return fetch(`${process.env.REACT_APP_API_URL}/api/login`, {
         method: 'POST',
         body: body
     }).then(data => data.json()).catch(err => console.log("error login:", err))
