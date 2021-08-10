@@ -1,7 +1,6 @@
 import React from 'react';
 import './App.css'
 import 'bootstrap/dist/css/bootstrap.min.css';
-import {BrowserRouter, Route, Switch} from 'react-router-dom';
 import Dashboard from '../Dashboard/Dashboard';
 import Login from '../Login/Login';
 import useToken from './useToken';
@@ -14,13 +13,7 @@ function App() {
 
     return (
         <div className="wrapper">
-            <BrowserRouter>
-                <Switch>
-                    <Route path="/dashboard">
-                        <Dashboard token={token} setToken={setToken}/>
-                    </Route>
-                </Switch>
-            </BrowserRouter>
+            <Dashboard token={token} setToken={setToken}/>
         </div>
     );
 }
