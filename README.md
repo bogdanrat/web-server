@@ -22,5 +22,7 @@
 #### Reverse Proxy
 - NGINX
 
-![Services Architecture](https://github.com/bogdanrat/web-server/blob/master/Services Architecture.svg?raw=true)
-![AWS Architecture](https://github.com/bogdanrat/web-server/blob/master/AWS Architecture.png?raw=true)
+Services Architecture
+![ServicesArchitecture](https://files.fm/thumb_show.php?i=33erqkjj4)
+AWS Architecture
+![AWSArchitecture](https://files.fm/thumb_show.php?i=bs8xf9xgm)
