@@ -21,3 +21,6 @@
 - OpenCensus
 #### Reverse Proxy
 - NGINX
+
+![Services Architecture](https://github.com/bogdanrat/web-server/blob/master/Services Architecture.svg?raw=true)
+![AWS Architecture](https://github.com/bogdanrat/web-server/blob/master/AWS Architecture.png?raw=true)
