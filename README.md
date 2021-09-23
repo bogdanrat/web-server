@@ -23,7 +23,7 @@
 - NGINX
 
 Services Architecture\
-![ServicesArchitecture](https://files.fm/thumb_show.php?i=33erqkjj4)
+![ServicesArchitecture](https://files.fm/thumb_show.php?i=pc2pfvkms)
 \
 AWS Architecture\
 ![AWSArchitecture](https://files.fm/thumb_show.php?i=bs8xf9xgm)
