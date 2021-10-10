@@ -26,7 +26,7 @@ Services Architecture\
 ![ServicesArchitecture](https://files.fm/thumb_show.php?i=7bw6pmfsv)
 \
 AWS Architecture (V1)\
-![AWSArchitecture](https://files.fm/thumb_show.php?i=wdk6qf7uj)
+![AWSArchitecture](https://files.fm/thumb_show.php?i=kcs34y8xf)
 \
 AWS Architecture (V2)\
 ![AWSArchitecture](https://files.fm/thumb_show.php?i=bs8xf9xgm)
